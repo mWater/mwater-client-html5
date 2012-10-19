@@ -119,10 +119,10 @@ pages.Main = function() {
 		if (id == "sync") {
 			synchronize();
 		} else if (id == "logout") {
-			this.syncServer.logout();
-
-			// Close and go to login page
-			this.pager.closePage("Login");
+			this.syncServer.logout(function() {
+				// Close and go to login page
+				this.pager.closePage("Login");
+			}, page.error);
 		} else
 			alert(id);
 	};
