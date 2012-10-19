@@ -29,7 +29,7 @@ Pager = function(container, context) {
 		touchActivity = true;
 	});
 
-	$(document).delegate(container, 'mouseup', function(e) {
+	container.on('mouseup', function(e) {
 		if (!touchActivity)
 			$(e.target).trigger('tap');
 	});

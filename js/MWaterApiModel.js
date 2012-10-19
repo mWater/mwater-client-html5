@@ -3,8 +3,7 @@ function MWaterApiModel(syncServer) {
 
 	this.init = function(success, error) {
 		success();
-	}
-
+	};
 
 	this.transaction = function(callback, error, success) {
 		var tx = {
@@ -68,8 +67,13 @@ function MWaterApiModel(syncServer) {
 
 
 	this.queryNearbySources = function(latitude, longitude, search, success, error) {
+		var lat = (latitude - 1) + "," + (latitude + 1);
+		var lng = (longitude - 1) + "," + (longitude + 1);
 		// TODO
-		$.get(makeUrl("sources"), function(data) {
+		$.get(makeUrl("sources"), {
+			latitude : lat,
+			longitude : lng
+		}, function(data) {
 			success(data.sources);
 		}).error(error);
 	}
@@ -84,7 +88,7 @@ function MWaterApiModel(syncServer) {
 
 	this.querySamplesAndTests = function(sourceUid, success, error) {
 		$.get(makeUrl("sources/" + sourceUid), {
-			samples: "all"
+			samples : "all"
 		}, function(data) {
 			success(data.samples);
 		}).error(error);

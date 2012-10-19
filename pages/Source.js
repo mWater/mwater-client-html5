@@ -1,7 +1,7 @@
 var pages = pages || {}
 
 /* Displays details of a source */
-pages.Source = function(uid, setLocation) {
+pages.Source = function(uid, setLocation, hideLocation) {
 	this.uid = uid;
 
 	var page = this;
@@ -29,6 +29,9 @@ pages.Source = function(uid, setLocation) {
 						longitude : source.longitude
 					}]);
 			});
+			
+			if (hideLocation)
+				page.$("#location").hide();
 
 			page.$("#add_test_button").on("tap", function() {
 				page.pager.loadPage("NewTest", [source.uid]);

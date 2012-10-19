@@ -69,14 +69,11 @@ SyncServer.prototype.downloadChanges = function(sliceMap, success, error) {
 }
 
 SyncServer.prototype.getImageThumbnailUrl = function(imageUid) {
-    return this.baseUrl + "images/" + imageUid 
-    	+ "?clientuid=" + this.getClientUid()
-    	+ "&thumbnail=true";
+    return this.baseUrl + "images/" + imageUid + "/thumbnail"; 
 }
 
 SyncServer.prototype.getImageUrl = function(imageUid) {
-    return this.baseUrl + "images/" + imageUid 
-    	+ "?clientuid=" + this.getClientUid();
+    return this.baseUrl + "images/" + imageUid; 
 }
 
 SyncServer.prototype.requestSourceCodes = function(number, success, error) {

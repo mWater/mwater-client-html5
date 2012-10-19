@@ -124,7 +124,8 @@ function CachedImageManager(syncServer, cachePath) {
 					} else
 						error(fileTransferError);
 				}, {
-					fileKey : "image"
+					fileKey : "image",
+					params: {"clientuid" : syncServer.getClientUid()}
 				});
 			}, error);
 		}, error);

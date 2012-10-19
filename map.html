@@ -115,25 +115,32 @@
 
 			};
 
-            var infowindow = new google.maps.InfoWindow({
-                    maxWidth : 410});
-                    
+			var infowindow = new google.maps.InfoWindow({
+				maxWidth : 410
+			});
 
 			function sourceClick(source, marker) {
-                var content = $($("#info_window").html());
-                
+				var content = $($("#info_window").html());
+
 				// Create info window
 				var opts = {};
 				opts.serverUrl = "/mwater/apiv2/";
 				opts.cacheImages = false;
 				opts.initialPage = "Source";
-				opts.initialPageArgs = [source.uid];
+				opts.initialPageArgs = [source.uid, false, true];
 				opts.anchorState = false;
 				opts.pageContainer = content.find("#page_container");
 				opts.localDb = false;
+				opts.requireLogin = false;
 				var application = new Application(opts);
 
-                infowindow.setContent(content.get(0));
+				content.find("#navbar_brand").click(function() {
+					if (application.pager.stack.length > 1)
+						application.pager.closePage();
+					return false;
+				});
+
+				infowindow.setContent(content.get(0));
 
 				infowindow.open(sourceMap.gmap, marker);
 			}
@@ -148,7 +155,7 @@
         <script id="info_window" type="text/html">
             <div style="height: 500px; width: 400px; overflow-x:hidden; overflow-y: auto">
             <div class="navbar navbar-inverse">
-            <div class="navbar-inner" style="padding-left: 10px;">
+            <div class="navbar-inner">
             <a class="brand" id="navbar_brand"><span id="navbar_title">mWater</span></a>
             <ul class="nav pull-right" id="navbar_items">
             </ul>
@@ -161,6 +168,33 @@
     </head>
 
     <body>
+        <!-- Navbar ================================================== -->
+        <div class="navbar navbar-inverse" id="header">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- the next tag is necessary for bootstrap menus, do not remove -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+
+                    <style>
+						.navbar .brand {
+							background: url('images/mwater-small.png') no-repeat left center;
+							padding-left: 55px;
+						}
+						.navbar {
+							margin-bottom: 0px;
+						}
+						.navbar-inverse .navbar-inner {
+							border-radius: 0px;
+							/*background-color: #404040;*/
+						}
+
+                    </style>
+                    <a class="brand" href="#">mWater</a>
+                    <div id="navbar"></div>
+                    <div class="nav-collapse"></div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div><!--/top navbar -->
         <div id="map_canvas">
 
         </div>

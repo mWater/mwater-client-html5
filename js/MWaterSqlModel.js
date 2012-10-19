@@ -5,8 +5,8 @@ function MWaterSqlModel(db, syncDb) {
 	this.init = function(success, error) {
 		db.transaction(function(tx) {
 			// Create model tables
-			that.model.createTables(tx);
-			that.syncDb.createTables(tx);
+			that.createTables(tx);
+			syncDb.createTables(tx);
 		}, error, success);
 	};
     
