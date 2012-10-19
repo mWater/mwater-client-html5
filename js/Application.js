@@ -1,32 +1,41 @@
-function Application(isCordova) {
+function Application(opts) {
 	var that = this;
 
-	// Open database
-	var db = window.openDatabase("mwater", "1.0", "mWater", 1000000);
-
-	// Create sync database
-	this.syncDb = new SyncDb(db, MWaterSqlModel.tableDefs);
-
-	// Create model
-	this.model = new MWaterSqlModel(db, this.syncDb);
-
-	// Determine server url
-	var serverUrl;
-	if (isCordova)
-		serverUrl = "http://data.mwater.co/mwater2/apiv2/";
-	else
-		serverUrl = "/mwater/apiv2/";
+	// Setup options
+	opts = _.extend({
+		localDb : true,
+		serverUrl : "http://data.mwater.co/mwater2/apiv2/",
+		cacheImages : true,
+		anchorState : true,
+		initialPage : "Main",
+		initialPageArgs : [],
+		requireLogin : true
+	}, opts);
 
 	// Create sync server
-	var syncServer = new SyncServer(serverUrl);
+	var syncServer = new SyncServer(opts.serverUrl);
+
+	// Open database
+	var syncClient;
+	if (opts.localDb) {
+		var db = window.openDatabase("mwater", "1.0", "mWater", 1000000);
+
+		// Create sync database
+		this.syncDb = new SyncDb(db, MWaterSqlModel.tableDefs);
+
+		// Create model
+		this.model = new MWaterSqlModel(db, this.syncDb);
+
+		// Create sync client
+		syncClient = new SyncClient(this.syncDb, syncServer);
+	} else {
+		this.model = new MWaterApiModel(opts.serverUrl);
+	}
 
 	// Create problem reporter
-	new ProblemReporter(serverUrl, "0.1", function() {
+	new ProblemReporter(opts.serverUrl, "0.1", function() {
 		return syncServer.getClientUid();
 	});
-
-	// Create sync client
-	var syncClient = new SyncClient(this.syncDb, syncServer);
 
 	// Create source code manager
 	var sourceCodeManager = new SourceCodeManager(syncServer);
@@ -38,32 +47,10 @@ function Application(isCordova) {
 		},
 		canDelete : function(row) {
 			return row.created_by == syncServer.getUsername();
+		},
+		canAdd : function(table) {
+			return syncServer.loggedIn();
 		}
-
-	}
-
-	function error(err) {
-		var errStr = "Unknown";
-		if (err)
-			errStr = err.message || err.code || err.statusText
-		alert("Error: " + errStr)
-		console.error(JSON.stringify(err));
-	}
-
-	if (isCordova) {
-		var imageManager = new CachedImageManager(syncServer, "Android/data/co.mwater.clientapp/images");
-	} else {
-		var imageManager = new SimpleImageManager(syncServer);
-	}
-
-	// Create template engine
-	dust.onLoad = function(name, callback) {
-		// Load from template
-		$.get('templates/' + name + '.html', null, function(data) {
-			callback(null, data);
-		}, "text").error(function(error) {
-			callback(error);
-		});
 	}
 
 	// Load pages dynamically
@@ -77,6 +64,78 @@ function Application(isCordova) {
 				error(exception);
 			});
 		}
+	}
+	
+	function error(err) {
+		var errStr = "Unknown";
+		if (err)
+			errStr = err.message || err.code || err.statusText
+		alert("Error: " + errStr)
+		console.error(JSON.stringify(err));
+	}
+
+	if (opts.cacheImages) {
+		var imageManager = new CachedImageManager(syncServer, "Android/data/co.mwater.clientapp/images");
+	} else {
+		var imageManager = new SimpleImageManager(syncServer);
+	}
+
+	imageManager.init(function() {
+		db.transaction(function(tx) {
+			// Create model tables
+			that.model.createTables(tx);
+			that.syncDb.createTables(tx);
+		}, function(err) {
+			alert(err.message);
+		}, function() {
+			// Create pager
+			that.pager = new Pager($("#page_container"), {
+				model : that.model,
+				template : that.createTemplate(),
+				syncClient : syncClient,
+				syncServer : syncServer,
+				imageManager : imageManager,
+				sourceCodeManager : sourceCodeManager,
+				error : error,
+				auth : auth
+			});
+
+			that.pager.onLoad = pagerOnLoad;
+
+			if (opts.anchorState) {
+				// Save state to anchor
+				that.pager.onStateChanged = function(state) {
+					window.location.href = "#" + JSON.stringify(state);
+				};
+			}
+
+			// Listen for back button
+			if (window.device && window.device.platform == "Android") {
+				document.addEventListener("backbutton", function() {
+					that.pager.closePage();
+				}, false);
+			}
+
+			// Check if logged in
+			if (opts.requireLogin && !syncServer.loggedIn())
+				that.pager.loadPage("Login");
+			else if (opts.anchorState && window.location.hash)// Restore state if possible
+				that.pager.setState(JSON.parse(window.location.hash.substr(1)));
+			else
+				that.pager.loadPage(opts.initialPage, opts.initialPageArgs);
+		});
+	}, error);
+}
+
+Application.prototype.createTemplate = function () {
+	// Create template engine
+	dust.onLoad = function(name, callback) {
+		// Load from template
+		$.get('templates/' + name + '.html', null, function(data) {
+			callback(null, data);
+		}, "text").error(function(error) {
+			callback(error);
+		});
 	}
 
 	var base = dust.makeBase({
@@ -100,7 +159,7 @@ function Application(isCordova) {
 
 	});
 
-	function template(name, view, callback) {
+	return function(name, view, callback) {
 		dust.render(name, base.push(view), function(err, out) {
 			if (err)
 				error(err);
@@ -113,48 +172,4 @@ function Application(isCordova) {
 		});
 	}
 
-
-	imageManager.init(function() {
-		db.transaction(function(tx) {
-			// Create model tables
-			that.model.createTables(tx);
-			that.syncDb.createTables(tx);
-		}, function(err) {
-			alert(err.message);
-		}, function() {
-			// Create pager
-			that.pager = new Pager($("#page_container"), {
-				model : that.model,
-				template : template,
-				syncClient : syncClient,
-				syncServer : syncServer,
-				imageManager : imageManager,
-				sourceCodeManager : sourceCodeManager,
-				error : error,
-				auth : auth
-			});
-
-			that.pager.onLoad = pagerOnLoad;
-
-			// Save state to anchor
-			that.pager.onStateChanged = function(state) {
-				window.location.href = "#" + JSON.stringify(state);
-			};
-
-			// Listen for back button
-			if (window.device && window.device.platform == "Android") {
-				document.addEventListener("backbutton", function() {
-					that.pager.closePage();
-				}, false);
-			}
-
-			// Check if logged in
-			if (!syncServer.loggedIn())
-				that.pager.loadPage("Login");
-			else if (window.location.hash)// Restore state if possible
-				that.pager.setState(JSON.parse(window.location.hash.substr(1)));
-			else
-				that.pager.loadPage("Main");
-		});
-	}, error);
 }

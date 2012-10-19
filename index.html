@@ -67,8 +67,15 @@
 
 			function onDeviceReady() {
 				$(function() {
-				    configureDevice();
-					application = new Application(isCordova);
+					configureDevice();
+
+					var opts = {};
+					if (!isCordova) {
+						opts.serverUrl = "/mwater/apiv2/";
+						// TODO
+						opts.cacheImages = false;
+					}
+					application = new Application(opts);
 				});
 			}
 
