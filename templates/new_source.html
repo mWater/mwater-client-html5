@@ -1,0 +1,27 @@
+<div class="page">
+	<label class="control-label">Source Type</label>
+	<select id="source_type">
+		<option value=""></option>
+		{#sourceTypes}
+		<option value="{.}">{#loc field="sources.source_type" value=./}</option>
+		{/sourceTypes}
+	</select>
+	<label class="checkbox">
+		<input id="set_location" type="checkbox" checked="checked">
+		Set to current location</label>
+	<div>
+		<input id="name" type="text" placeholder="Optional name" />
+	</div>
+	<div>
+		<input id="desc" type="text" placeholder="Optional description" />
+	</div>
+	<div>
+		<button id="create_button" type="button" class="btn btn-large btn-primary margined">
+			Create
+		</button>
+		&nbsp;
+		<button id="cancel_button" type="button" class="btn btn-large margined">
+			Cancel
+		</button>
+	</div>
+</div>

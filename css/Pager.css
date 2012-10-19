@@ -1,0 +1,25 @@
+tr.pressed > td {
+    background-color: #60B0FF;
+}
+    
+.pressed { background-color: #60B0FF;  }
+.pressed:active { background-color: #60B0FF;  }
+.pressed:hover { background-color: #60B0FF;  }
+.pressed:focus { background-color: #60B0FF;  }
+
+.page {
+    margin: 5px;
+}
+
+*:focus  
+{  
+    outline: none;  
+}  
+* { -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);} 
+
+.btn { background-image:none; }
+
+.buttoned {
+	display:inline-block; 
+	vertical-align:middle;
+}

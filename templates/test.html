@@ -1,0 +1,70 @@
+<style>
+    .result {
+        font-weight: bold;
+    }
+</style>
+
+<div class="page">
+	<div style="border: 1px solid gray; padding: 5px; width: 100px; min-height: 75px; float:right;">
+		<img id="photo" style="max-width: 100px; display: block; margin-left: auto; margin-right: auto"/>
+	</div>
+	<h3>{#loc field="tests.test_type" value=test_type/}</h3>
+	{?sample.source.code}
+	<div class="margined">
+		<div>
+			<b>Source:</b> {sample.source.name} - {sample.source.code}
+		</div>
+		<div>
+			<b>Source Type:</b> {#loc field="sources.source_type" value=sample.source.source_type/}
+		</div>
+	</div>
+	{:else}
+	<div class="muted">
+		No source associated
+	</div>
+	{/sample.source.code}
+	
+	<div><b>Dilution:</b> {dilution}<span class="muted">x</span></div>
+	{?started_on}<div><b>Started:</b> {#date value=started_on/}</div>{/started_on}
+	{?read_on}<div><b>Read:</b> {#date value=started_on/}</div>{/read_on}
+	
+	<div class="row-fluid">
+		<div class="span12">
+			<h4>Results</h4>
+			<div id="edit_results" style="display: none">
+				{+edit_results}
+				{/edit_results}
+				<div>
+					<button id="save_results_button" type="button" class="btn btn-primary margined">Save</button>
+					&nbsp;
+					<button id="cancel_results_button" type="button" class="btn margined">Cancel</button>
+				</div>
+			</div>
+			<div id="display_results">
+				{?results}
+				{+display_results}
+				{/display_results}
+				<div>
+					<button id="edit_results_button" type="button" class="btn">Edit Results</button>
+				</div>
+				{:else}
+				<div>
+					<button id="record_results_button" type="button" class="btn btn-primary">Record Results</button>
+				</div>
+				{/results}
+			</div>
+
+			<h4>Notes</h4>
+			<div>
+				{?notes}
+				{notes}
+				{:else}
+				<div class="muted">
+					None
+				</div>
+				{/notes}
+			</div>
+			<button id="edit_notes_button" class="btn margined"><i class="icon-edit"></i> Edit</button>
+		</div>
+	</div>
+</div>

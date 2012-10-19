@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, target-densitydpi=medium-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<!-- Load standard libraries -->
+		<script src="js/libs/cordova-2.1.0.js"></script>
+		<script src="js/libs/underscore-min.js"></script>
+		<script src="js/libs/jquery-1.8.2.min.js"></script>
+		<script src="js/libs/dust-full-0.3.0.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css" />
+		<script src="bootstrap/js/bootstrap.js"></script>
+
+		<!-- Load plugins -->
+		<script src="js/libs/webintent.js"></script>
+		<script src="js/libs/actionbar.js"></script>
+		<script src="js/libs/camera.js"></script>
+
+		<!-- Load custom libraries -->
+		<script src="js/libs/zeptotouch.js"></script>
+
+		<!-- Load application files -->
+		<script src="js/i18n.js"></script>
+		<script src="js/utils.js"></script>
+
+		<script src="js/Pager.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/Pager.css" />
+
+		<script src="js/dragscroll.js"></script>
+		<script src="js/GeoLoadTracker.js"></script>
+		<script src="js/MapMarkerManager.js"></script>
+		<script src="js/MWaterSqlModel.js"></script>
+		<script src="js/sampleAnalysis.js"></script>
+		<script src="js/Application.js"></script>
+		<script src="js/SyncDb.js"></script>
+		<script src="js/SyncServer.js"></script>
+		<script src="js/SyncClient.js"></script>
+		<script src="js/SourceCodeManager.js"></script>
+		<script src="js/ImageManager.js"></script>
+
+		<!-- Load pages -->
+		<script src="pages/Login.js"></script>
+		<script src="pages/Main.js"></script>
+		<script src="pages/Sources.js"></script>
+		<script src="pages/Source.js"></script>
+		<script src="pages/Map.js"></script>
+		<script src="pages/NewSource.js"></script>
+		<script src="pages/Tests.js"></script>
+
+		<style>
+			html {
+				height: 100%
+			}
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0
+			}
+			#map_canvas {
+				height: 100%;
+				width: 100%;
+			}
+			#page_container {
+				height: 100%;
+			}
+			#info_control {
+				background-color: #FFFFA0;
+				font-weight: bold;
+				padding: 5px;
+				margin-top: 10px;
+				border: 1px black solid;
+			}
+		</style>
+
+		<script>
+			var map;
+
+			function createMarker(source) {
+				var color;
+				// Determine color
+				if (source.samples.length > 0)
+				{
+					color = "#404040";
+					var anl = sampleAnalysis.getAnalyses(_.last(source.samples));
+					if (anl.length > 0)
+						color = anl[0].color;
+				}
+				else
+					color = "D0D0D0";
+
+				icon = {
+					path : google.maps.SymbolPath.CIRCLE,
+					fillColor : color,
+					fillOpacity : 0.8,
+					scale : 5,
+					strokeColor : "black",
+					strokeWeight : 1
+				};
+
+				return new google.maps.Marker({
+					position : new google.maps.LatLng(source.latitude, source.longitude),
+					icon: icon
+				});
+			}
+
+			function markerLoader(need, success, error) {
+				var params = {
+					limit : 100,
+					latitude : need.rect.y1 + "," + need.rect.y2,
+					longitude : need.rect.x1 + "," + need.rect.x2,
+					samples : "latest"
+				};
+
+				if (need.since)
+					params.uid_gt = need.since;
+
+				// Query server for sources
+				$.get("/mwater2/apiv2/sources", params).success(function(data) {
+					// Make into marker
+					var dict = {}
+					_.each(data, function(d) {
+						dict[d.uid] = createMarker(d);
+					});
+
+					// Determine if completely loaded
+					var until;
+					if (data.length >= 100)
+						until = _.last(data).uid;
+					else
+						until = null;
+
+					success(need.rect, until, dict);
+				}).error(function() {
+					alert("Error getting data");
+				});
+			}
+
+			function addMarkers() {
+				// Add control
+				map.controls[google.maps.ControlPosition.TOP_CENTER].push($($("#info_control_template").html()).get(0));
+
+				var geoLoadTracker = new GeoLoadTracker();
+				var mapMarkerManager = new MapMarkerManager(map, geoLoadTracker, markerLoader);
+				mapMarkerManager.addListener(function(event) {
+					if (event == "completed")
+						$("#info_control").hide();
+					else if (event == "too_many")
+						$("#info_control").text("Zoom in to see more").show();
+					else if (event == "loading")
+						$("#info_control").text("Loading...").show();
+				});
+			}
+
+			$(function() {
+				$.getScript("https://www.google.com/jsapi").done(function() {
+					google.load("maps", 3, {
+						"other_params" : "sensor=true",
+						"callback" : function() {
+
+							var mapOptions = {
+								zoom : 8,
+								center : new google.maps.LatLng(-2.55, 32.95),
+								mapTypeId : google.maps.MapTypeId.ROADMAP
+							}
+							map = new google.maps.Map($("#map_canvas").get(0), mapOptions);
+							addMarkers();
+						}
+
+					});
+				});
+
+			});
+		</script>
+
+	</head>
+
+	<script id="info_control_template" type="text/html">
+		<div id="info_control" style="display:none"></div>
+	</script>
+
+	<body>
+		<div id="map_canvas">
+
+		</div>
+	</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+<!-- Load standard libraries -->
+<script src="js/libs/jquery-1.8.2.min.js"></script>
+<script src="js/libs/dust-full-0.3.0.min.js"></script>
+
+<script id="template" type="text/html">
+    <div>some text {'asdf'}</div>
+</script>
+
+<script>
+    dust.onLoad = function(name, callback) {
+	// Load from template
+	$.get('templates/' + name + '.dust')
+	    .success(function(data) {
+		callback(null, data);
+	    }).error(function(error) {
+		callback(error);
+	    });
+    }
+		
+    var base = dust.makeBase({
+	t: function(chunk, context, bodies, params) {
+	    return chunk.map(function(chunk) {
+		chunk.tap(function(p1, p2, p3) {
+		    return "asdfas";
+		});
+		chunk.render(bodies.block, context).end();
+	    });
+	},
+	t2: function(chunk, context, bodies, params) {
+	    chunk.tap(function(p1) {
+		return "asdfas";
+	    });
+	    chunk.render(bodies.block, context);
+	    chunk.untap();
+	    return chunk;
+	}
+    });		
+    
+    //dust.compile($("#template").html(), "intro");
+    dust.render("test", base.push({ x:5 }), function(err, out) {
+	$("body").html(out);
+    });
+</script>
+
+
+</head>
+<body>
+</body>
+</html>
