@@ -112,8 +112,10 @@ pages.Test = function() {
 	this.actionbarMenuClick = function(id) {
 		var page = this;
 		if (id == "delete") {
-			if (!page.auth.canDelete(page.test))
+			if (!page.auth.canDelete(page.test)) {
 				alert("Insufficient permissions");
+				return;
+			}
 
 			if (confirm("Permanently delete test?")) {
 				page.model.transaction(function(tx) {

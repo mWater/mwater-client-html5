@@ -80,8 +80,10 @@ pages.SourceNote = function(sourceUid, uid) {
 			if (!note.uid)
 				page.pager.closePage();
 
-			if (!page.auth.canDelete(note))
+			if (!page.auth.canDelete(note)) {
 				alert("Insufficient permissions");
+				return;
+			}
 
 			if (confirm("Permanently delete note?")) {
 				page.model.transaction(function(tx) {

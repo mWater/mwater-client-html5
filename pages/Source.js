@@ -53,6 +53,14 @@ pages.Source = function(uid, setLocation) {
 				page.$("#edit_source_button, #location_set").attr("disabled", true);
 			}
 			
+			if (!page.auth.canAdd("source_notes")) {
+				page.$("#add_note_button").attr("disabled", true);
+			}
+
+			if (!page.auth.canAdd("samples")) {
+				page.$("#add_test_button").attr("disabled", true);
+			}
+			
 			displayLocation();
 
 			// Fill water analyses
@@ -176,8 +184,10 @@ pages.Source = function(uid, setLocation) {
 
 	this.actionbarMenuClick = function(id) {
 		if (id == "delete") {
-			if (!page.auth.canDelete(source))
+			if (!page.auth.canDelete(source)) {
 				alert("Insufficient permissions");
+				return;
+			}
 				
 			if (confirm("Permanently delete source?")) {
 				page.model.transaction(function(tx) {

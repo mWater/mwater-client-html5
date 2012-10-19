@@ -9,7 +9,8 @@ function Application(opts) {
 		anchorState : true,
 		initialPage : "Main",
 		initialPageArgs : [],
-		requireLogin : true
+		requireLogin : true, 
+		pageContainer: $("#page_container")
 	}, opts);
 
 	// Create sync server
@@ -89,7 +90,7 @@ function Application(opts) {
 			alert(err.message);
 		}, function() {
 			// Create pager
-			that.pager = new Pager($("#page_container"), {
+			that.pager = new Pager(opts.pageContainer, {
 				model : that.model,
 				template : that.createTemplate(),
 				syncClient : syncClient,

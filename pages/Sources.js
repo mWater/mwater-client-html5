@@ -63,8 +63,13 @@ pages.Sources = function() {
 	this.actionbarMenuClick = function(id) {
 		if (id == "search")
 			this.refresh(prompt("Search for:"));
-		else if (id == "new")
-			this.pager.loadPage("NewSource");
+		else if (id == "new") {
+			if (!page.auth.canAdd("sources")) {
+				alert("Insufficient permissions");
+			}
+			else 
+				page.pager.loadPage("NewSource");
+		}
 		else
 			alert(id);
 	}
