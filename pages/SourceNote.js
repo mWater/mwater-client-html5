@@ -47,7 +47,7 @@ pages.SourceNote = function(sourceUid, uid) {
 				page.$("#note").val(note.note);
 				page.$("#operational").val(note.operational);
 
-				if (!page.auth.canEdit(note))
+				if (uid && !page.auth.canEdit(note))
 					page.$("#save_button").attr("disabled", true);
 
 				setupEvents();

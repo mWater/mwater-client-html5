@@ -121,7 +121,7 @@ pages.Main = function() {
 		} else if (id == "logout") {
 			this.syncServer.logout(function() {
 				// Close and go to login page
-				this.pager.closePage("Login");
+				page.pager.closePage("Login");
 			}, page.error);
 		} else
 			alert(id);

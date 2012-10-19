@@ -13,8 +13,8 @@ _.extend(pages.Login.prototype, {
 			page.$("#login_button").on("tap", function() {
 				page.$("#login_button").attr("disabled", true);
 
-				var username = page.$("#login [name='username']").val();
-				var password = page.$("#login [name='password']").val();
+				var username = page.$("#login_username").val();
+				var password = page.$("#login_password").val();
 				page.syncServer.login(username, password, function() {
 					page.pager.closePage("Main");
 				}, function() {
@@ -26,9 +26,9 @@ _.extend(pages.Login.prototype, {
 			page.$("#signup_button").on("tap", function() {
 				page.$("#signup_button").attr("disabled", true);
 
-				var email = page.$("#signup [name='email']").val();
-				var username = page.$("#signup [name='username']").val();
-				var password = page.$("#signup [name='password']").val();
+				var email = page.$("#signup_email").val();
+				var username = page.$("#signup_username").val();
+				var password = page.$("#signup_password").val();
 				page.syncServer.signup(email, username, password, function() {
 					page.pager.closePage("Main");
 				}, function() {
