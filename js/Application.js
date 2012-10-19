@@ -30,7 +30,7 @@ function Application(opts) {
 		// Create sync client
 		syncClient = new SyncClient(this.syncDb, syncServer);
 	} else {
-		this.model = new MWaterApiModel(opts.serverUrl);
+		this.model = new MWaterApiModel(syncServer);
 	}
 
 	// Create problem reporter
@@ -82,13 +82,7 @@ function Application(opts) {
 	}
 
 	imageManager.init(function() {
-		db.transaction(function(tx) {
-			// Create model tables
-			that.model.createTables(tx);
-			that.syncDb.createTables(tx);
-		}, function(err) {
-			alert(err.message);
-		}, function() {
+		that.model.init(function() {
 			// Create pager
 			that.pager = new Pager(opts.pageContainer, {
 				model : that.model,
@@ -124,7 +118,7 @@ function Application(opts) {
 				that.pager.setState(JSON.parse(window.location.hash.substr(1)));
 			else
 				that.pager.loadPage(opts.initialPage, opts.initialPageArgs);
-		});
+		}, error);
 	}, error);
 }
 

@@ -96,6 +96,7 @@ function ModelTests(model) {
         });
     });
     
+    /*
     asyncTest("queryLatLngSources simple", function() {
         model.transaction(function (tx){
             resetdb(tx);
@@ -149,11 +150,7 @@ function ModelTests(model) {
             });
         });
     });
-    
-    test("sourceTypes", function() {
-    	ok(model.sourceTypes.length > 10); 
-    });
-    
+
     asyncTest("queryLatLngSources limit", function() {
         model.transaction(function (tx){
             resetdb(tx);
@@ -172,6 +169,12 @@ function ModelTests(model) {
         });
     });
 
+   	*/
+    
+    test("sourceTypes", function() {
+    	ok(model.sourceTypes.length > 10); 
+    });
+    
     asyncTest("Insert tests and query", function() {
         model.transaction(function (tx){
             resetdb(tx);

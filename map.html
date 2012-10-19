@@ -37,6 +37,7 @@
         <script src="js/GeoLoadTracker.js"></script>
         <script src="js/MapMarkerManager.js"></script>
         <script src="js/MWaterSqlModel.js"></script>
+        <script src="js/MWaterApiModel.js"></script>
         <script src="js/sampleanalysis.js"></script>
         <script src="js/Application.js"></script>
         <script src="js/SyncDb.js"></script>
@@ -129,6 +130,7 @@
 				opts.initialPageArgs = [source.uid];
 				opts.anchorState = false;
 				opts.pageContainer = content.find("#page_container");
+				opts.localDb = false;
 				var application = new Application(opts);
 
                 infowindow.setContent(content.get(0));

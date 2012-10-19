@@ -1,6 +1,14 @@
 
 function MWaterSqlModel(db, syncDb) {
     var that = this;
+
+	this.init = function(success, error) {
+		db.transaction(function(tx) {
+			// Create model tables
+			that.model.createTables(tx);
+			that.syncDb.createTables(tx);
+		}, error, success);
+	};
     
     // Create tables if they don't exist
     this.createTables = function (tx) {
@@ -54,11 +62,11 @@ function MWaterSqlModel(db, syncDb) {
         tx.executeSql("DROP TABLE IF EXISTS source_notes;");
         tx.executeSql("DROP TABLE IF EXISTS samples;");
         tx.executeSql("DROP TABLE IF EXISTS tests;");
-    }
+    };
     
     this.transaction = function(callback, error, success) {
         db.transaction(callback, error, success);
-    }
+    };
     
     this.insertRow = function(tx, table, values) {
         tx.executeSql("INSERT INTO " + table
@@ -70,7 +78,7 @@ function MWaterSqlModel(db, syncDb) {
                 + ");",
                 _.values(values));
         syncDb.recordInsert(tx, table, values.uid);
-    }
+    };
     
     this.updateRow = function(tx, row, values) {
         tx.executeSql("UPDATE " + row.table
@@ -81,12 +89,12 @@ function MWaterSqlModel(db, syncDb) {
                 + " WHERE uid=?",
                 _.values(values).concat([row.uid]));
         syncDb.recordUpdate(tx, row.table, row.uid);
-    }
+    };
 
     this.deleteRow = function(tx, row) {
         tx.executeSql("DELETE FROM " + row.table + " WHERE uid=?", [row.uid]);
         syncDb.recordDelete(tx, row.table, row.uid);
-    }
+    };
     
     function Row(table) {
         this.table = table;
@@ -126,11 +134,11 @@ function MWaterSqlModel(db, syncDb) {
         if (search)
             params.unshift(search + "%", search + "%", search + "%");
         query(sql, params, new Row("sources"), success, error);
-    }
+    };
 
     this.querySourceByUid = function(uid, success, error) {
         queryRowByField("sources", "uid", uid, new Row("sources"), success, error);
-    }
+    };
     
     this.querySamplesAndTests = function(sourceUid, success, error) {
         query("SELECT * FROM samples WHERE source=?", [sourceUid], new Row("samples"), function(samples) {
@@ -210,7 +218,7 @@ function MWaterSqlModel(db, syncDb) {
     	}, error);
     }
 
-    this.queryLatLngSources = function(rect, since, limit, success, error) {
+    /* Obsolote: this.queryLatLngSources = function(rect, since, limit, success, error) {
     	var where;
     	// If wraps
     	if (rect.x1 >= rect.x2) 
@@ -230,7 +238,7 @@ function MWaterSqlModel(db, syncDb) {
         	params.push(since);
 
         query(sql, params, new Row("sources"), success, error);
-    }
+    }*/
     
     // List of source type ids
     this.sourceTypes = _.range(16); 

@@ -97,6 +97,11 @@ pages.Main = function() {
 	}
 
 	function synchronize() {
+		if (!page.syncClient) {
+			syncSuccess();
+			return;
+		}
+			
 		if (syncInProgress)
 			return;
 

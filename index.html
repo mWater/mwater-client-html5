@@ -33,6 +33,7 @@
         <script src="js/geoslicing.js"></script>
         <script src="js/GeoLoadTracker.js"></script>
         <script src="js/MapMarkerManager.js"></script>
+        <script src="js/MWaterApiModel.js"></script>
         <script src="js/MWaterSqlModel.js"></script>
         <script src="js/sampleanalysis.js"></script>
         <script src="js/Application.js"></script>
@@ -74,6 +75,7 @@
 						opts.serverUrl = "/mwater/apiv2/";
 						// TODO
 						opts.cacheImages = false;
+						opts.localDb=false; //###
 					}
 					application = new Application(opts);
 				});
