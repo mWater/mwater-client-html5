@@ -2,7 +2,7 @@
     module("SyncDb");
     var db = window.openDatabase("test", "", "test", 100000);
     
-    var tableDefs = [{name: "test1", cols: ["uid", "a"]}]
+    var tableDefs = [{name: "test1", cols: ["uid", "a"]}, {name: "test2", cols: ["uid", "b"]}]
     
     var syncDb = new SyncDb(db, tableDefs);
 
@@ -10,8 +10,11 @@
     function createTables(tx) {
         // Create test tables
         tx.executeSql("DROP TABLE IF EXISTS test1;");
+        tx.executeSql("DROP TABLE IF EXISTS test2;");
         tx.executeSql("CREATE TABLE test1 (id integer primary key autoincrement, uid text, a text);");
         tx.executeSql("INSERT INTO test1 (uid,a) VALUES ('uid1', 'test1');");
+        tx.executeSql("CREATE TABLE test2 (id integer primary key autoincrement, uid text, b text);");
+        tx.executeSql("INSERT INTO test2 (uid,b) VALUES ('uid2', 'test2');");
     }
 
     // Simple failure function
@@ -128,6 +131,34 @@
                 tables: [{
                             name: "test1",
                             deletes: ['uid1']
+                        }],
+                until: 2
+            }
+        );
+    });
+    
+    asyncTest("multi-table insert recorded", function() {
+        testPendingChanges(
+            function(tx) {
+                tx.executeSql("INSERT INTO test1 (uid, a) VALUES ('uid3', 'test3');");
+                syncDb.recordInsert(tx, 'test1', 'uid3');
+                tx.executeSql("INSERT INTO test2 (uid, b) VALUES ('uid4', 'test4');");
+                syncDb.recordInsert(tx, 'test2', 'uid4');
+            },
+            {
+                tables: [{
+                            name: "test1",
+                            upserts: {
+                                cols: ['uid', 'a'],
+                                rows: [['uid3', 'test3']]
+                            }
+                        },
+                        {
+                            name: "test2",
+                            upserts: {
+                                cols: ['uid', 'b'],
+                                rows: [['uid4', 'test4']]
+                            }
                         }],
                 until: 2
             }

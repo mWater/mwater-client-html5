@@ -81,6 +81,28 @@ SyncDb.prototype.getPendingChanges = function(success, error) {
         return rows;
     }
 
+	function gatherUpserts(tx, cstable, upserts) {
+        // Get tableDef
+        var tableDef = _.find(that.tableDefs, function(td) { return td.name==cstable.name; });
+
+	    // Gather upserts
+	    tx.executeSql("SELECT * FROM " + cstable.name + " WHERE uid in ("
+	        + newFilledArray(upserts.length, "?")
+	        + ");",
+	        upserts,
+	        function(tx, results) {
+	            var rows = resultsToList(results);
+	            if (rows.length > 0)
+	            {
+	                // Record upserts, ignoring ignored columns
+	                cstable.upserts = { cols: _.keys(_.pick(rows[0], tableDef.cols)), rows: [] }
+	                _.each(rows, function(row) {
+	                    cstable.upserts.rows.push(_.values(_.pick(row, tableDef.cols)));
+	                });
+	            }
+	        });
+	}
+
     // Processes the list of changes
     function processChanges(tx, results) {
         // Group by table
@@ -115,24 +137,8 @@ SyncDb.prototype.getPendingChanges = function(success, error) {
                 
                 // Upserts are inserts/updates without deletes
                 var upserts = _.difference(_.union(inserts, updates), deletes);
-                
-                // Gather upserts
-                tx.executeSql("SELECT * FROM " + tbl + " WHERE uid in ("
-                    + newFilledArray(upserts.length, "?")
-                    + ");",
-                    upserts,
-                    function(tx, results) {
-                        var rows = resultsToList(results);
-                        if (rows.length > 0)
-                        {
-                            // Record upserts, ignoring ignored columns
-                            cstable.upserts = { cols: _.keys(_.pick(rows[0], tableDef.cols)), rows: [] }
-                            _.each(rows, function(row) {
-                                cstable.upserts.rows.push(_.values(_.pick(row, tableDef.cols)));
-                            });
-                        }
-                    });
-            }
+                gatherUpserts(tx, cstable, upserts);
+			}
         }, error, function() {
             success(cs.tables.length>0 ? cs : null);
         });
