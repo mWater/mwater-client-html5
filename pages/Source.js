@@ -142,13 +142,13 @@ pages.Source = function(uid, setLocation, hideLocation) {
 
 		// If setting location, indicate
 		if (setLocation)
-			page.$("#location").text("Setting location...");
+			page.$("#location_relative").text("Setting location...");
 		else if (!source.latitude)// If no position, indicate
-			page.$("#location").html('Unspecified location');
+			page.$("#location_relative").html('Unspecified location');
 		else if (!position)// If waiting for position
-			page.$("#location").html('<img src="images/ajax-loader.gif"/>Waiting for GPS');
+			page.$("#location_relative").html('<img src="images/ajax-loader.gif"/>Waiting for GPS');
 		else
-			page.$("#location").text(utils.getRelativeLocation(position.coords.longitude, position.coords.latitude, source.longitude, source.latitude));
+			page.$("#location_relative").text(utils.getRelativeLocation(position.coords.longitude, position.coords.latitude, source.longitude, source.latitude));
 	}
 
 
