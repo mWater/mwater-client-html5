@@ -69,12 +69,25 @@ function MWaterApiModel(syncServer) {
 	this.queryNearbySources = function(latitude, longitude, search, success, error) {
 		var lat = (latitude - 1) + "," + (latitude + 1);
 		var lng = (longitude - 1) + "," + (longitude + 1);
-		// TODO
+
+		// TODO include own sources with no location?
+		
 		$.get(makeUrl("sources"), {
 			latitude : lat,
 			longitude : lng
 		}, function(data) {
-			success(data.sources);
+			var src = data.sources;
+			src = _.sortBy(src, function(s) {
+				return (latitude - s.latitude)*(latitude - s.latitude) +
+					(longitude - s.longitude)*(longitude - s.longitude);
+			});
+			
+			if (search)
+				src = _.filter(src, function(s) {
+					return (s.name && s.name.indexOf(search)!=-1) ||
+						(s.code && s.code.indexOf(search)!=-1); 
+				});
+			success(src);
 		}).error(error);
 	}
 
@@ -95,24 +108,32 @@ function MWaterApiModel(syncServer) {
 	};
 
 	this.querySourceNotes = function(sourceUid, success, error) {
-		success([]);
-		// TODO
+		$.get(makeUrl("sources/" + sourceUid + "/source_notes"), function(data) {
+			success(data.source_notes);
+		}).error(error);
 	}
 
 
 	this.querySourceNoteByUid = function(uid, success, error) {
-		queryRowByField("source_notes", "uid", uid, new Row("source_notes"), success, error);
-		// TODO
+		$.get(makeUrl("source_notes/" + uid), function(data) {
+			success(data);
+		}).error(error);
 	}
 
 
 	this.queryTests = function(createdBy, success, error) {
-		// TODO
+		$.get(makeUrl("sources"), {
+			created_by : createdBy
+		}, function(data) {
+			success(data.tests);
+		}).error(error);
 	}
 
 
 	this.queryTestByUid = function(uid, success, error) {
-		// TODO
+		$.get(makeUrl("tests/" + uid), function(data) {
+			success(data);
+		}).error(error);
 	}
 
 	// List of source type ids

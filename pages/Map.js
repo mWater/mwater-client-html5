@@ -6,17 +6,20 @@ pages.Map = function(center) {
 	var page = this;
 
 	function sourceClick(source, marker) {
-		sourceMap.displayStatus("Loading source...");
-
 		// Synchronize single source
-		slices = ["source.uid:" + source.uid];
-		page.syncClient.sync(slices, function() {
-			sourceMap.displayStatus();
+		if (page.syncClient) {
+			sourceMap.displayStatus("Loading source...");
+
+			slices = ["source.uid:" + source.uid];
+			page.syncClient.sync(slices, function() {
+				sourceMap.displayStatus();
+				page.pager.loadPage("Source", [source.uid]);
+			}, function(error) {
+				sourceMap.displayStatus();
+				alert("Unable to connect to server");
+			});
+		} else
 			page.pager.loadPage("Source", [source.uid]);
-		}, function(error) {
-			sourceMap.displayStatus();
-			alert("Unable to connect to server");
-		});
 	}
 
 	function centerCurrentLocation() {
@@ -24,6 +27,7 @@ pages.Map = function(center) {
 			sourceMap.gmap.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
 		});
 	}
+
 
 	this.create = function(callback) {
 		this.template("map", null, function(out) {
