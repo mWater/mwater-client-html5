@@ -37,7 +37,7 @@ var HtmlActionbar = function(container, opts) {
 				return false;
 			});
 
-			navbar.find("#navbar_items").append(nitem);
+			navbar.find("#navbar_items").append('<li class="divider-vertical"></li>').append(nitem);
 		});
 	};
 

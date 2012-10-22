@@ -28,6 +28,10 @@ pages.Main = function() {
 		});
 	};
 
+	this.activate = function() {
+		synchronize();
+	}
+
 	this.actionbarMenu = [{
 		id : "sync",
 		title : "Sync",

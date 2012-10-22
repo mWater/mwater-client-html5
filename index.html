@@ -73,7 +73,7 @@
 				$(function() {
 					configureDevice();
 
-					var opts = {};
+					var opts = { actionbar: window.actionbar};
 					if (!isCordova) {
 						opts.serverUrl = "/mwater2/apiv2/";
 						// TODO

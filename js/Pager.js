@@ -22,7 +22,7 @@ Pager = function(container, context, actionbar) {
 			pressedElem = null;
 		}
 	});
-	
+
 	// Make checkboxes tappable
 	container.on("tap", ".checkbox", function(e) {
 		$(this).toggleClass("checked");
@@ -32,22 +32,24 @@ Pager = function(container, context, actionbar) {
 	this.state = new Array();
 
 	this.activatePage = function() {
-		// Create actionbar if present
 		var page = _.last(this.stack);
 
-		actionbar.menu(page.actionbarMenu || [], function(id) {
-			if (id == "home")
-				that.closePage();
-			else if (page.actionbarMenuClick)
-				page.actionbarMenuClick(id);
-		});
+		// Create actionbar if present
+		if (actionbar) {
+			actionbar.menu(page.actionbarMenu || [], function(id) {
+				if (id == "home")
+					that.closePage();
+				else if (page.actionbarMenuClick)
+					page.actionbarMenuClick(id);
+			});
 
-		if (page.actionbarTitle)
-			actionbar.title(page.actionbarTitle);
-		else 
-			actionbar.title(null);
+			if (page.actionbarTitle)
+				actionbar.title(page.actionbarTitle);
+			else
+				actionbar.title(null);
 
-		actionbar.up(this.stack.length > 1, this.stack.length > 1 ? this.stack[this.stack.length-2].actionbarTitle : null);
+			actionbar.up(this.stack.length > 1, this.stack.length > 1 ? this.stack[this.stack.length - 2].actionbarTitle : null);
+		}
 
 		if (page.activate)
 			page.activate();
@@ -95,7 +97,7 @@ Pager = function(container, context, actionbar) {
 			function activatePage() {
 				that.container.html('');
 				that.container.append(page.$el);
-				
+
 				// Scroll to top
 				container.parent().scrollTop(0)
 

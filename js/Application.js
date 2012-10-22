@@ -11,7 +11,7 @@ function Application(opts) {
 		initialPageArgs : [],
 		requireLogin : true, 
 		pageContainer: $("#page_container"),
-		actionbar: window.actionbar
+		actionbar: undefined
 	}, opts);
 
 	// Create sync server

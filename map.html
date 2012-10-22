@@ -97,17 +97,23 @@
         </style>
 
         <script>
+			var apiUrl = "/mwater2/apiv2/";
 			var infowindow = new google.maps.InfoWindow({
 				maxWidth : 410
 			});
 
+			// Create sync server
+			var syncServer = new SyncServer(apiUrl);
+
 			function sourceClick(source, marker) {
 				var content = $($("#info_window").html());
-                var actionbar = new HtmlActionbar(content, { fixedTop: false });
+				var actionbar = new HtmlActionbar(content, {
+					fixedTop : false
+				});
 
 				// Create info window
 				var opts = {};
-				opts.serverUrl = "/mwater2/apiv2/";
+				opts.serverUrl = apiUrl;
 				opts.cacheImages = false;
 				opts.initialPage = "Source";
 				opts.initialPageArgs = [source.uid, false, true];
@@ -130,13 +136,53 @@
 					mapTypeId : google.maps.MapTypeId.HYBRID
 				};
 
-				sourceMap = new SourceMap($("#map_canvas").get(0), "/mwater2/apiv2/", mapOptions, sourceClick);
+				sourceMap = new SourceMap($("#map_canvas").get(0), apiUrl, mapOptions, sourceClick);
+
+				function refreshLogin() {
+					if (syncServer.loggedIn())
+						$("#login_button").text("Logout " + syncServer.getUsername());
+					else
+						$("#login_button").text("Login");
+				}
+
+				refreshLogin();
+
+				$("#login_button").click(function() {
+					if (syncServer.loggedIn()) {
+						syncServer.logout(refreshLogin);
+					} else {
+						// Display modal
+						var modal = $($("#login_modal").html());
+						opts = {
+							localDb : false,
+							serverUrl : apiUrl,
+							cacheImages : false,
+							requireLogin : false,
+							initialPage : "Login",
+							initialPageArgs : [
+							function() {
+								modal.modal('hide');
+								refreshLogin();
+							}],
+							pageContainer : modal.find("#page_container")
+						};
+						var application = new Application(opts);
+						modal.modal();
+					}
+				});
 			});
 
         </script>
 
         <script id="info_window" type="text/html">
             <div style="height: 500px; width: 400px; overflow-x:hidden; overflow-y: auto">
+            <div id="page_container"></div>
+            </div>
+        </script>
+
+        <script id="login_modal" type="text/html">
+            <div class="modal" role="dialog">
+            <div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button><h2 id="myModalLabel">Login</h3></div>
             <div id="page_container"></div>
             </div>
         </script>
@@ -162,7 +208,13 @@
                     </style>
                     <a class="brand" href="#" style="background: url('images/mwater-small.png') no-repeat left center; padding-left: 55px;">mWater</a>
                     <div id="navbar"></div>
-                    <div class="nav-collapse"></div><!--/.nav-collapse -->
+                    <div class="nav-collapse">
+                        <ul class="nav pull-right">
+                            <li>
+                                <a href="#" id="login_button">Login</a>
+                            </li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
                 </div>
             </div>
         </div><!--/top navbar -->

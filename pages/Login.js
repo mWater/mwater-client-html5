@@ -1,11 +1,9 @@
 var pages = pages || {}
 
 /* Login page of application */
-pages.Login = function () {
-}
+pages.Login = function (success) {
 
-_.extend(pages.Login.prototype, {
-	create : function(callback) {
+	this.create = function(callback) {
 		var page = this;
 		this.template("login", null, function(out) {
 			page.$el.html(out);
@@ -16,7 +14,10 @@ _.extend(pages.Login.prototype, {
 				var username = page.$("#login_username").val();
 				var password = page.$("#login_password").val();
 				page.syncServer.login(username, password, function() {
-					page.pager.closePage("Main");
+					if (success)
+						success(username);
+					else
+						page.pager.closePage("Main");
 				}, function() {
 					alert("Login failed");
 					page.$("#login_button").attr("disabled", false);
@@ -30,7 +31,10 @@ _.extend(pages.Login.prototype, {
 				var username = page.$("#signup_username").val();
 				var password = page.$("#signup_password").val();
 				page.syncServer.signup(email, username, password, function() {
-					page.pager.closePage("Main");
+					if (success)
+						success(username);
+					else
+						page.pager.closePage("Main");
 				}, function() {
 					alert("Signup failed");
 					page.$("#signup_button").attr("disabled", false);
@@ -40,4 +44,4 @@ _.extend(pages.Login.prototype, {
 			callback();
 		});
 	}
-}); 
+}
