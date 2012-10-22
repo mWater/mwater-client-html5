@@ -61,8 +61,10 @@ Pager = function(container, context) {
 
 		if (page.actionbarTitle)
 			actionbar.title(page.actionbarTitle);
+		else 
+			actionbar.title(null);
 
-		actionbar.up(this.stack.length > 1);
+		actionbar.up(this.stack.length > 1, this.stack.length > 1 ? this.stack[this.stack.length-2].actionbarTitle : null);
 
 		if (page.activate)
 			page.activate();
@@ -110,6 +112,9 @@ Pager = function(container, context) {
 			function activatePage() {
 				that.container.html('');
 				that.container.append(page.$el);
+				
+				// Scroll to top
+				container.parent().scrollTop(0)
 
 				that.activatePage(page);
 			}

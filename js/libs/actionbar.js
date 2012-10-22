@@ -25,13 +25,13 @@ ActionBar.prototype.title = function(title) {
 };
 
 // Sets enable state of up button
-ActionBar.prototype.up = function(enabled) {
+ActionBar.prototype.up = function(enabled, prevTitle) {
 	return cordova.exec(
 		function() {},
 		function(args) {
 		        alert("fail: "+ args);
 		},
-		'ActionBar', 'up', [enabled]);
+		'ActionBar', 'up', [enabled, prevTitle]);
 };
 
 cordova.addConstructor(function() {
