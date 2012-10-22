@@ -12,6 +12,9 @@
         <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
         <script src="bootstrap/js/bootstrap.min.js"></script>
 
+        <link rel="stylesheet" type="text/css" href="css/HtmlActionBar.css" />
+        <script src="js/libs/HtmlActionBar.js"></script>
+        
         <!-- Load plugins -->
         <script src="js/libs/webintent.js"></script>
         <script src="js/libs/actionbar.js"></script>
@@ -84,33 +87,13 @@
 			function configureDevice() {
 				// Handle special cases for not in Cordova
 				if (!window.device || window.device.platform != "Android") {
-					actionbar = {
-						menu : function(items, callback) {
-							$("#navbar_items").html('');
-							_.each(items, function(item) {
-								nitem = $('<li><a href="#">' + (item.icon ? '<img height="20" width="20" src="' + item.icon + '">' : '') + item.title + '</a></li>')
-								nitem.click(function() {
-									callback(item.id);
-									return false;
-								});
-
-								$("#navbar_items").append(nitem);
-							});
-						},
-						title : function(title) {
-							$("#navbar_title").text(title);
-						},
-						up : function(enabled) {
-						}
-
-					};
+				    actionbar = new HtmlActionBar($("body"), "mWater");
 					$(function() {
-						$("#misc").append($("#desktop_navbar").html());
-						$("#navbar_brand").click(function() {
+						/*$("#navbar_brand").click(function() {
 							if (application.pager.stack.length > 1)
 								application.pager.closePage();
 							return false;
-						});
+						});*/
 						$("body").css("padding-top", "40px");
 						$(document).keyup(function(e) {
 							if (e.keyCode == 27) {
@@ -135,14 +118,12 @@
         <script id="desktop_navbar" type="text/html">
             <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner" style="padding-left: 10px; text-align:center">
-            <div class="black">
             <div class="button bordered back pull-left">
                     <span class="pointer"></span>
                     <div class="content">
                         Back
                     </div>
                 </div>         
-            </div>       
             <ul class="nav pull-right" id="navbar_items">
             </ul>
             <span class="brand" id="navbar_brand" style="float:none; color:white"><span id="navbar_title">mWater</span></span>

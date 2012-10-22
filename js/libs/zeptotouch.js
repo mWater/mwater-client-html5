@@ -3,6 +3,18 @@
 //     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
+	
+	// Convert clicks into taps unless touch activity detected
+	var touchActivity = false;
+	$(document).on("touchstart touchmove", function(e) {
+		touchActivity = true;
+	});
+
+	$(document).on('mouseup', function(e) {
+		if (!touchActivity)
+			$(e.target).trigger('tap');
+	});
+		
   var touch = {},
     touchTimeout, tapTimeout, swipeTimeout,
     longTapDelay = 750, longTapTimeout

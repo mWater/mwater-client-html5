@@ -23,18 +23,8 @@ Pager = function(container, context) {
 		}
 	});
 
-	// Convert clicks into taps unless touch activity detected
-	var touchActivity = false;
-	container.on("touchstart touchmove", function(e) {
-		touchActivity = true;
-	});
 
-	container.on('mouseup', function(e) {
-		if (!touchActivity)
-			$(e.target).trigger('tap');
-	});
-	
-	// Handle taps instead
+	/*// Handle taps instead
 	container.on("tap", "a", function(e) {
 		e.preventDefault();
 		window.location.href = this.href;
@@ -43,7 +33,7 @@ Pager = function(container, context) {
 	// Ignore clicks on links
 	container.on("click", "a", function(e) {
 		e.preventDefault();
-	});
+	});*/
 
 	this.stack = new Array();
 	this.state = new Array();

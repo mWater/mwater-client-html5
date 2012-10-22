@@ -1,0 +1,82 @@
+/* Bordered Button Styles */
+.button.bordered {
+	display: inline-block;
+	cursor: pointer;
+	padding: 0px 10px;
+	font-size: 12px;
+	line-height: 28px;
+	height: 30px;
+	margin-top: 5px;
+	-webkit-box-sizing: border-box;
+	-webkit-border-radius: 5px;
+	color: #fff;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-user-select: none;
+	
+	-webkit-box-shadow: 0 1px 1px #242424, 0 -1px 1px #323232;
+	border: solid 1px #54617d;
+	border-color: #404040 #262626 #404040 #262626;
+	background-image: -webkit-gradient(linear, left top, left bottom,
+	from(#838383),
+	color-stop(0.5, #444444),
+	color-stop(0.5, #303030),
+	to(#333333));
+}
+
+.button.bordered:hover, .button.bordered.touched {
+	background-image: -webkit-gradient(linear, left top, left bottom,
+	from(#4286f5),
+	color-stop(0.5, #4286f5),
+	color-stop(0.5, #194fdb),
+	to(#194fdb));
+	-webkit-tap-highlight-color: transparent;
+}
+/* End Bordered Button Styles */
+
+/* Back Bordered Button Styles */
+.button.bordered.back {
+	padding: 0px 7px 0px 3px;
+	margin-left: 10px;
+	position: relative;
+}
+.button.bordered.back > span {
+	position: relative;
+	z-index: 1;
+}
+.button.bordered.back > span.pointer {
+	z-index: 0;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 4px;
+	height: 23.5px;
+	width: 23.5px;
+	display: inline-block;
+	-webkit-transform: rotate(45deg);
+	-webkit-mask-image: -webkit-gradient(linear, left bottom, right top,
+	from(#000000),
+	color-stop(0.5,#000000),
+	color-stop(0.5, transparent),
+	to(transparent));
+	position: absolute;
+	left: -9px;
+	top: 2.35px;
+	-webkit-background-clip: content;
+			background-image: 
+				-webkit-gradient(linear, left top, right bottom, 
+					color-stop(0.05, #838383), 
+					color-stop(0.5, #444444), 
+					color-stop(0.5, #303030), 
+					color-stop(0.98, #333333)); 
+			border-left: solid 1px #262626;
+			border-bottom: solid 1px #404040;
+}
+
+.button.bordered.back:hover > span.pointer, .button.bordered.back.touched > span.pointer {
+	background-image: -webkit-gradient(linear, left top, right bottom,
+	from(#4286f5),
+	color-stop(0.5, #4286f5),
+	color-stop(0.5, #194fdb),
+	to(#194fdb));
+
+}
+

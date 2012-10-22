@@ -1,25 +1,27 @@
 /* Actionbar implemented in html in iOS style within twitter bootstrap navbar */
 var HtmlActionBar = function(container, defaultTitle) {
+	var menuCallback; 
 	
-	var navbar = $('<div class="navbar navbar-inverse navbar-fixed-top"> \
-            <div class="navbar-inner" style="padding-left: 10px; text-align:center"> \
-            <div class="black"> \
-            <div id="navbar_back" class="button bordered back pull-left"> \
-                    <span class="pointer"></span> \
-                    <div class="content"> \
-                        Back \
-                    </div> \
-                </div> \   
-            </div> \ 
-            <ul class="nav pull-right" id="navbar_items"> \
-            </ul> \
-            <span class="brand" id="navbar_brand" style="float:none; color:white"><span id="navbar_title"></span></span> \
-            </div> \
-            </div>');
+	var html = '<div class="navbar navbar-inverse navbar-fixed-top">';
+	html+='<div class="navbar-inner" style="padding-left: 10px; text-align:center">';
+    html+='<div class="black">';
+    html+='<div id="navbar_back" class="button bordered back pull-left">';
+    html+='<span class="pointer"></span>';
+    html+='<div class="content">Back</div></div></div>'; 
+    html+='<ul class="nav pull-right" id="navbar_items"></ul>';
+    html+='<span class="brand" id="navbar_brand" style="float:none; color:white"><span id="navbar_title"></span></span></div></div>';
+	var navbar = $(html);
             
 	container.prepend(navbar);
 	
+	navbar.find("#navbar_back").on("tap", function() {
+		if (menuCallback)
+			menuCallback("home");
+	});
+	
 	this.menu = function(items, callback) {
+		menuCallback = callback;
+		
 		navbar.find("#navbar_items").html('');
 		_.each(items, function(item) {
 			nitem = $('<li><a href="#">' + (item.icon ? '<img height="20" width="20" src="' + item.icon + '">' : '') + item.title + '</a></li>')
@@ -37,8 +39,10 @@ var HtmlActionBar = function(container, defaultTitle) {
 	};
 
 	this.up = function(enabled, prevTitle) {
-		if (enabled)
-			navbar.find("#navbar_back").text(prevTitle ? prevTitle : defaultTitle).show();
+		if (enabled) {
+			navbar.find("#navbar_back").show();
+			navbar.find("#navbar_back > .content").text(prevTitle ? prevTitle : defaultTitle).show();
+		}
 		else
 			navbar.find("#navbar_back").hide();
 	};
