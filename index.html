@@ -87,7 +87,7 @@
 			function configureDevice() {
 				// Handle special cases for not in Cordova
 				if (!window.device || window.device.platform != "Android") {
-				    actionbar = new HtmlActionbar($("body"), "mWater");
+				    actionbar = new HtmlActionbar($("body"), {defaultTitle: "mWater"});
 				}
 			}
 
