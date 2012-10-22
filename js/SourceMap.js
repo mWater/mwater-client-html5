@@ -98,7 +98,7 @@ function SourceMap(elem, apiUrl, mapOptions, sourceClick) {
 
 	if (!mapOptions) {
 		mapOptions = {
-			zoom : 8,
+			zoom : 11,
 			center : new google.maps.LatLng(-2.55, 32.95),
 			mapTypeId : google.maps.MapTypeId.ROADMAP
 		};

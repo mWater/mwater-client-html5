@@ -147,7 +147,13 @@
 
 			var sourceMap;
 			$(function() {
-				sourceMap = new SourceMap($("#map_canvas").get(0), "/mwater/apiv2/", null, sourceClick);
+				mapOptions = {
+					zoom : 12,
+					center : new google.maps.LatLng(-2.55, 32.95),
+					mapTypeId : google.maps.MapTypeId.HYBRID
+				};
+
+				sourceMap = new SourceMap($("#map_canvas").get(0), "/mwater/apiv2/", mapOptions, sourceClick);
 			});
 
         </script>
