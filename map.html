@@ -124,7 +124,7 @@
 
 				// Create info window
 				var opts = {};
-				opts.serverUrl = "/mwater/apiv2/";
+				opts.serverUrl = "/mwater2/apiv2/";
 				opts.cacheImages = false;
 				opts.initialPage = "Source";
 				opts.initialPageArgs = [source.uid, false, true];
@@ -153,7 +153,7 @@
 					mapTypeId : google.maps.MapTypeId.HYBRID
 				};
 
-				sourceMap = new SourceMap($("#map_canvas").get(0), "/mwater/apiv2/", mapOptions, sourceClick);
+				sourceMap = new SourceMap($("#map_canvas").get(0), "/mwater2/apiv2/", mapOptions, sourceClick);
 			});
 
         </script>
