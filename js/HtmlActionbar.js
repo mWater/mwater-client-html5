@@ -1,19 +1,26 @@
 /* Actionbar implemented in html in iOS style within twitter bootstrap navbar */
-var HtmlActionBar = function(container, defaultTitle) {
+var HtmlActionbar = function(container, opts) {
+	opts = _.extend({
+		defaultTitle : '',
+		fixedTop : true,
+	}, opts || {});
+
+	// Create sync server
 	var menuCallback; 
 	
-	var html = '<div class="navbar navbar-inverse navbar-fixed-top">';
+	var html = '<div class="navbar navbar-inverse' + (opts.fixedTop ? ' navbar-fixed-top' : '') + '">';
+    html+='<ul class="nav pull-right" id="navbar_items"></ul>';
 	html+='<div class="navbar-inner" style="padding-left: 10px; text-align:center">';
-    html+='<div class="black">';
     html+='<div id="navbar_back" class="button bordered back pull-left">';
     html+='<span class="pointer"></span>';
-    html+='<div class="content">Back</div></div></div>'; 
-    html+='<ul class="nav pull-right" id="navbar_items"></ul>';
+    html+='<div class="content">Back</div></div>'; 
     html+='<span class="brand" id="navbar_brand" style="float:none; color:white"><span id="navbar_title"></span></span></div></div>';
 	var navbar = $(html);
             
 	container.prepend(navbar);
-	
+	if (opts.fixedTop)
+		container.css("padding-top", "40px");
+
 	navbar.find("#navbar_back").on("tap", function() {
 		if (menuCallback)
 			menuCallback("home");

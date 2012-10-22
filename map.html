@@ -15,6 +15,9 @@
         <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
         <script src="bootstrap/js/bootstrap.min.js"></script>
 
+        <link rel="stylesheet" type="text/css" href="css/HtmlActionbar.css" />
+        <script src="js/HtmlActionbar.js"></script>
+
         <!-- Load plugins -->
         <script src="js/libs/webintent.js"></script>
         <script src="js/libs/actionbar.js"></script>
@@ -94,33 +97,13 @@
         </style>
 
         <script>
-			var actionbar = {
-				menu : function(items, callback) {
-					$("#navbar_items").html('');
-					_.each(items, function(item) {
-						nitem = $('<li><a href="#">' + (item.icon ? '<img height="20" width="20" src="' + item.icon + '">' : '') + item.title + '</a></li>')
-						nitem.click(function() {
-							callback(item.id);
-							return false;
-						});
-
-						$("#navbar_items").append(nitem);
-					});
-				},
-				title : function(title) {
-					$("#navbar_title").text(title);
-				},
-				up : function(enabled) {
-				}
-
-			};
-
 			var infowindow = new google.maps.InfoWindow({
 				maxWidth : 410
 			});
 
 			function sourceClick(source, marker) {
 				var content = $($("#info_window").html());
+                var actionbar = new HtmlActionbar(content, { fixedTop: false });
 
 				// Create info window
 				var opts = {};
@@ -132,16 +115,10 @@
 				opts.pageContainer = content.find("#page_container");
 				opts.localDb = false;
 				opts.requireLogin = false;
+				opts.actionbar = actionbar;
 				var application = new Application(opts);
 
-				content.find("#navbar_brand").click(function() {
-					if (application.pager.stack.length > 1)
-						application.pager.closePage();
-					return false;
-				});
-
 				infowindow.setContent(content.get(0));
-
 				infowindow.open(sourceMap.gmap, marker);
 			}
 
@@ -160,17 +137,9 @@
 
         <script id="info_window" type="text/html">
             <div style="height: 500px; width: 400px; overflow-x:hidden; overflow-y: auto">
-            <div class="navbar navbar-inverse">
-            <div class="navbar-inner">
-            <a class="brand" id="navbar_brand"><span id="navbar_title">mWater</span></a>
-            <ul class="nav pull-right" id="navbar_items">
-            </ul>
-            </div>
-            </div>
             <div id="page_container"></div>
             </div>
         </script>
-        <script id="desktop_navbar" type="text/html"></script>
     </head>
 
     <body>
@@ -182,10 +151,6 @@
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
 
                     <style>
-						.navbar .brand {
-							background: url('images/mwater-small.png') no-repeat left center;
-							padding-left: 55px;
-						}
 						.navbar {
 							margin-bottom: 0px;
 						}
@@ -195,7 +160,7 @@
 						}
 
                     </style>
-                    <a class="brand" href="#">mWater</a>
+                    <a class="brand" href="#" style="background: url('images/mwater-small.png') no-repeat left center; padding-left: 55px;">mWater</a>
                     <div id="navbar"></div>
                     <div class="nav-collapse"></div><!--/.nav-collapse -->
                 </div>

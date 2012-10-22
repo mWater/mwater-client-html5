@@ -3,7 +3,7 @@
  * pages reside in a container when active, and are detached when not visible.
  * context: Object whose members will be inserted into each page before create is called
  * container: DOM element wrapped in jQuery where to display pages */
-Pager = function(container, context) {
+Pager = function(container, context, actionbar) {
 	this.container = container;
 	this.context = context;
 
@@ -22,18 +22,6 @@ Pager = function(container, context) {
 			pressedElem = null;
 		}
 	});
-
-
-	/*// Handle taps instead
-	container.on("tap", "a", function(e) {
-		e.preventDefault();
-		window.location.href = this.href;
-	});
-
-	// Ignore clicks on links
-	container.on("click", "a", function(e) {
-		e.preventDefault();
-	});*/
 
 	this.stack = new Array();
 	this.state = new Array();

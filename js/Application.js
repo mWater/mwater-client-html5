@@ -10,7 +10,8 @@ function Application(opts) {
 		initialPage : "Main",
 		initialPageArgs : [],
 		requireLogin : true, 
-		pageContainer: $("#page_container")
+		pageContainer: $("#page_container"),
+		actionbar: window.actionbar
 	}, opts);
 
 	// Create sync server
@@ -93,7 +94,7 @@ function Application(opts) {
 				sourceCodeManager : sourceCodeManager,
 				error : error,
 				auth : auth
-			});
+			}, opts.actionbar);
 
 			that.pager.onLoad = pagerOnLoad;
 

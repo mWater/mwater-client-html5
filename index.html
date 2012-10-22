@@ -12,8 +12,8 @@
         <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
         <script src="bootstrap/js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="css/HtmlActionBar.css" />
-        <script src="js/libs/HtmlActionBar.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/HtmlActionbar.css" />
+        <script src="js/HtmlActionbar.js"></script>
         
         <!-- Load plugins -->
         <script src="js/libs/webintent.js"></script>
@@ -87,23 +87,7 @@
 			function configureDevice() {
 				// Handle special cases for not in Cordova
 				if (!window.device || window.device.platform != "Android") {
-				    actionbar = new HtmlActionBar($("body"), "mWater");
-					$(function() {
-						/*$("#navbar_brand").click(function() {
-							if (application.pager.stack.length > 1)
-								application.pager.closePage();
-							return false;
-						});*/
-						$("body").css("padding-top", "40px");
-						$(document).keyup(function(e) {
-							if (e.keyCode == 27) {
-								application.pager.closePage();
-							}
-						});
-
-						// Add drag scrolling
-						// TODO dragscroll();
-					});
+				    actionbar = new HtmlActionbar($("body"), "mWater");
 				}
 			}
 
@@ -114,26 +98,8 @@
 				//this is the browser
 			}
         </script>
-
-        <script id="desktop_navbar" type="text/html">
-            <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner" style="padding-left: 10px; text-align:center">
-            <div class="button bordered back pull-left">
-                    <span class="pointer"></span>
-                    <div class="content">
-                        Back
-                    </div>
-                </div>         
-            <ul class="nav pull-right" id="navbar_items">
-            </ul>
-            <span class="brand" id="navbar_brand" style="float:none; color:white"><span id="navbar_title">mWater</span></span>
-            </div>
-            </div>
-        </script>
-
     </head>
     <body>
-        <div id="misc"></div>
         <div id="page_container"></div>
     </body>
 </html>

@@ -12,8 +12,6 @@ pages.Source = function(uid, setLocation, hideLocation) {
 
 	this.refresh = function() {
 		function displaySource() {
-			actionbar.title("Source " + source.code);
-
 			// Display photo
 			new PhotoDisplayer(page, page.$("#photo"), source, page.error);
 
