@@ -42,13 +42,13 @@ var HtmlActionbar = function(container, opts) {
 	};
 
 	this.title = function(title) {
-		navbar.find("#navbar_title").text(title ? title : defaultTitle);
+		navbar.find("#navbar_title").text(title ? title : opts.defaultTitle);
 	};
 
 	this.up = function(enabled, prevTitle) {
 		if (enabled) {
 			navbar.find("#navbar_back").show();
-			navbar.find("#navbar_back > .content").text(prevTitle ? prevTitle : defaultTitle).show();
+			navbar.find("#navbar_back > .content").text(prevTitle ? prevTitle : opts.defaultTitle).show();
 		}
 		else
 			navbar.find("#navbar_back").hide();

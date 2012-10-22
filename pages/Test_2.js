@@ -7,14 +7,14 @@ pages.Test_2 = function(uid) {
 
 	this.displayResults = function() {
 		if (page.test.resultsData) {
-			page.$("#bluegreen_color").attr('checked', page.test.resultsData.ecoli);
+			page.$("#bluegreen_color").toggleClass('checked', page.test.resultsData.ecoli == true);
 		}
 	}
 
 
 	this.saveResults = function() {
 		return {
-			ecoli : $("#bluegreen_color").attr('checked') == "checked",
+			ecoli : $("#bluegreen_color").hasClass('checked'),
 		};
 	}
 

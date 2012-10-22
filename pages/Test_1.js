@@ -7,16 +7,16 @@ pages.Test_1 = function(uid) {
 
 	this.displayResults = function() {
 		if (page.test.resultsData) {
-			page.$("#blue_color").attr('checked', page.test.resultsData.ecoli);
-			page.$("#yellow_color").attr('checked', page.test.resultsData.tc);
+			page.$("#blue_color").toggleClass('checked', page.test.resultsData.ecoli == true);
+			page.$("#yellow_color").toggleClass('checked', page.test.resultsData.tc == true);
 		}
 	}
 
 
 	this.saveResults = function() {
 		return {
-			ecoli : $("#blue_color").attr('checked') == "checked",
-			tc : $("#yellow_color").attr('checked') == "checked"
+			ecoli : $("#blue_color").hasClass('checked'),
+			tc : $("#yellow_color").hasClass('checked')
 		};
 	}
 

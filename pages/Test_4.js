@@ -7,7 +7,7 @@ pages.Test_4 = function(uid) {
 
 	this.displayResults = function() {
 		if (page.test.resultsData) {
-			page.$("#present").attr('checked', page.test.resultsData.present);
+			page.$("#present").toggleClass('checked', page.test.resultsData.present == true);
 			$("#mgPerL").val(page.test.resultsData.mgPerL);
 			if (!page.test.resultsData.present)
 				page.$("#chlorine_value").hide();
@@ -16,7 +16,7 @@ pages.Test_4 = function(uid) {
 		}
 		
 		page.$("#present").on('click', function() {
-			if ($("#present").attr('checked') == "checked")
+			if ($("#present").hasClass('checked'))
 				page.$("#chlorine_value").show();
 			else
 				page.$("#chlorine_value").hide();
@@ -27,7 +27,7 @@ pages.Test_4 = function(uid) {
 
 	this.saveResults = function() {
 		var val = {}
-		val.present = $("#present").attr('checked') == "checked";
+		val.present = $("#present").hasClass('checked');
 		if (val.present && $("#mgPerL").val() != "") {
 			val.mgPerL = parseFloat($("#mgPerL").val());
 			if (val.mgPerL == NaN) {

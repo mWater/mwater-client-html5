@@ -2,6 +2,10 @@
     .result {
         font-weight: bold;
     }
+    
+     .edit-label {
+         font-weight: bold;
+     }
 </style>
 
 <div class="page">
@@ -34,7 +38,7 @@
 			<div id="edit_results" style="display: none">
 				{+edit_results}
 				{/edit_results}
-				<div>
+				<div style="margin-top: 5px;">
 					<button id="save_results_button" type="button" class="btn btn-primary margined">Save</button>
 					&nbsp;
 					<button id="cancel_results_button" type="button" class="btn margined">Cancel</button>
@@ -44,7 +48,7 @@
 				{?results}
 				{+display_results}
 				{/display_results}
-				<div>
+                <div style="margin-top: 5px;">
 					<button id="edit_results_button" type="button" class="btn">Edit Results</button>
 				</div>
 				{:else}

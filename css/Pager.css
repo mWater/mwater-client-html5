@@ -35,3 +35,26 @@ tr.pressed > td {
 	vertical-align: middle;
 }
 
+.checkbox {
+	background-repeat: no-repeat;
+	vertical-align: middle;
+	line-height: 30px;
+	padding-left: 25px;
+    background-image: url('../images/checkbox.png');
+	font-size: 12pt;
+	font-weight: bold;
+    
+    background-position-y: 6px;
+	margin-left: 8px;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	cursor: pointer;
+
+}
+ 
+.checkbox.checked {
+    background-image: url('../images/checkbox_checked.png');
+}
+
+
+ 

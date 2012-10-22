@@ -22,6 +22,11 @@ Pager = function(container, context, actionbar) {
 			pressedElem = null;
 		}
 	});
+	
+	// Make checkboxes tappable
+	container.on("tap", ".checkbox", function(e) {
+		$(this).toggleClass("checked");
+	});
 
 	this.stack = new Array();
 	this.state = new Array();
