@@ -25,5 +25,7 @@ i18n = {
 	"source_notes.operational.null" : "Unknown",
 	"source_notes.operational.0" : "Broken",
 	"source_notes.operational.1" : "Working",
+	"source_notes.operational.false" : "Broken",
+	"source_notes.operational.true" : "Working",
 }
 

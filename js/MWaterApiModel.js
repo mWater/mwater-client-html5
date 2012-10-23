@@ -155,7 +155,7 @@ function MWaterApiModel(syncServer) {
 
 	this.queryTestByUid = function(uid, success, error) {
 		$.get(makeUrl("tests/" + uid), function(data) {
-			success(_.extend(data, "tests"));
+			success(_.extend(data, new Row("tests")));
 		}).error(error);
 	}
 
