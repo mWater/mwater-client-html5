@@ -45,5 +45,14 @@ function ProblemReporter(baseUrl, version, getClientUid) {
 		
 		debouncedReportProblem("Internal Error");
 	}
+}
 
+ProblemReporter.register = function(baseUrl, version, getClientUid) {
+	if (!ProblemReporter.instances)
+		ProblemReporter.instances = {}
+		
+	if (ProblemReporter.instances[baseUrl])
+		return;
+	
+	new ProblemReporter(baseUrl, version, getClientUid);
 }

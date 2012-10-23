@@ -60,7 +60,7 @@ pages.Main = function() {
 
 		page.$("#sync_progress").hide();
 		page.$("#sync_success").hide();
-		page.$("#sync_error").text(error).show().delay(5000).slideUp();
+		page.$("#sync_error").text("Unable to synchronize: " + error).show().delay(5000).slideUp();
 	}
 
 	function uploadImages() {

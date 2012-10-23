@@ -137,6 +137,7 @@ function MWaterApiModel(syncServer) {
 	}
 
 	// List of source type ids
+	// TODO replace with query
 	this.sourceTypes = _.range(16);
 
 	/* Obsolote: this.queryLatLngSources = function(rect, since, limit, success, error) {

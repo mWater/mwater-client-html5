@@ -8,7 +8,7 @@ var HtmlActionbar = function(container, opts) {
 	// Create sync server
 	var menuCallback; 
 	
-	var html = '<div class="navbar navbar-inverse' + (opts.fixedTop ? ' navbar-fixed-top' : '') + '">';
+	var html = '<div class="navbar navbar-inverse' + (opts.fixedTop ? ' navbar-fixed-top' : '" style="position: relative') + '">';
     html+='<a class="btn btn-navbar dropdown-toggle pull-right" data-toggle="dropdown" id="navbar_dropdown_button"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>';
     html+='<ul class="dropdown-menu pull-right" id="navbar_items_dropdown" role="menu"></ul>'
     html+='<ul class="nav pull-right" id="navbar_items"></ul>';
@@ -48,6 +48,7 @@ var HtmlActionbar = function(container, opts) {
 				navbar.find("#navbar_items").append('<li class="divider-vertical"></li>').append(nitem);
 			else {
 				navbar.find("#navbar_dropdown_button").show();
+				nitem.addClass("dropdown");
 				navbar.find("#navbar_items_dropdown").append(nitem);
 			}
 		});
