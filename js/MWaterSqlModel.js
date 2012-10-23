@@ -128,13 +128,23 @@ function MWaterSqlModel(db, syncDb) {
 
     this.queryNearbySources = function(latitude, longitude, search, success, error) {
         var where = search ? " WHERE code LIKE ? OR name LIKE ? OR desc LIKE ?" : "";
-        var sql = "SELECT * FROM sources" + where + " ORDER BY (latitude IS NULL) ASC, \
-            ((latitude-?)*(latitude-?)+(longitude-?)*(longitude-?))";
+        var sql = "SELECT * FROM sources" + where + " ORDER BY ((latitude-?)*(latitude-?)+(longitude-?)*(longitude-?))";
         var params = [latitude, latitude, longitude, longitude];
         if (search)
             params.unshift(search + "%", search + "%", search + "%");
         query(sql, params, new Row("sources"), success, error);
     };
+
+    this.queryUnlocatedSources = function(createdBy, search, success, error) {
+    	var where = " WHERE created_by = ?";
+        where += search ? " AND (code LIKE ? OR name LIKE ? OR desc LIKE ?)" : "";
+        var sql = "SELECT * FROM sources" + where + " ORDER BY uid";
+        var params = [createdBy];
+        if (search)
+            params.push(search + "%", search + "%", search + "%");
+        query(sql, params, new Row("sources"), success, error);
+    };
+
 
     this.querySourceByUid = function(uid, success, error) {
         queryRowByField("sources", "uid", uid, new Row("sources"), success, error);
@@ -158,7 +168,7 @@ function MWaterSqlModel(db, syncDb) {
     };
 
 	function queryTestsGeneric(where, params, success, error) {
-    	cols = []
+    	var cols = []
     	cols = cols.concat(_.map(_.where(MWaterSqlModel.tableDefs, {name:"sources"})[0].cols, function(col) { return "sources."+col+" AS sources__"+col; }));
     	cols = cols.concat(_.map(_.where(MWaterSqlModel.tableDefs, {name:"samples"})[0].cols, function(col) { return "samples."+col+" AS samples__"+col; }));
     	cols = cols.concat(_.map(_.where(MWaterSqlModel.tableDefs, {name:"tests"})[0].cols, function(col) { return "tests."+col+" AS tests__"+col; }));
@@ -179,7 +189,7 @@ function MWaterSqlModel(db, syncDb) {
                     
                     // Copy test values
                     _.each(r, function(value, key) {
-                    	spl = key.split("__");
+                    	var spl = key.split("__");
                     	if (spl[0]=="tests" && spl[1] != "sample")
                     		row[spl[1]]=value;
                     	else if (spl[0]=="samples" && spl[1] != "source")

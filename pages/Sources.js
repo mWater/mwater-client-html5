@@ -7,7 +7,7 @@ pages.Sources = function() {
 	this.create = function(callback) {
 		this.template("sources", null, function(out) {
 			page.$el.html(out);
-			
+
 			Pager.makeTappable(page.$("#table"), function(row) {
 				page.pager.loadPage("Source", [row.id]);
 			});
@@ -20,16 +20,26 @@ pages.Sources = function() {
 	};
 
 	this.refresh = function(query) {
+		function displaySources(sources) {
+			page.$("#message_bar").hide();
+			page.template("sources_rows", {
+				"rows" : sources
+			}, page.$("#table"));
+		}
+
 		// Get location
 		function locationSuccess(position) {
 			page.location = position;
 
 			// Query sources
 			page.model.queryNearbySources(position.coords.latitude, position.coords.longitude, query, function(rows) {
-				page.$("#message_bar").hide();
-				page.template("sources_rows", {
-					"rows" : rows
-				}, page.$("#table"));
+				// Add unlocated sources to bottom
+				if (page.syncServer.loggedIn()) {
+					page.model.queryUnlocatedSources(page.syncServer.getUsername(), query, function(rows2) {
+						displaySources(rows.concat(rows2));
+					}, page.error);
+				} else
+					displaySources(rows);
 			}, page.error);
 		}
 
@@ -66,11 +76,9 @@ pages.Sources = function() {
 		else if (id == "new") {
 			if (!page.auth.canAdd("sources")) {
 				alert("Insufficient permissions");
-			}
-			else 
+			} else
 				page.pager.loadPage("NewSource");
-		}
-		else
+		} else
 			alert(id);
 	}
 

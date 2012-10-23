@@ -3,7 +3,7 @@ var geoslicing = geoslicing || {};
 (function() {
 	// Get slice ids for a location, with slice size of size
 	geoslicing.getSlices = function(size, lat, lng) {
-		slices = []
+		var slices = []
 
 		function wrapLat(x) {
 			return ((x + 90 + 360) % 180) - 90;
@@ -18,7 +18,7 @@ var geoslicing = geoslicing || {};
 		lng = Math.round(lng / size) * size;
 
 		// Create 4 regions
-		rects = []
+		var rects = []
 		rects.push([wrapLat(lat - size), wrapLat(lat), wrapLng(lng - size), wrapLng(lng)])
 		rects.push([wrapLat(lat), wrapLat(lat + size), wrapLng(lng - size), wrapLng(lng)])
 		rects.push([wrapLat(lat - size), wrapLat(lat), wrapLng(lng), wrapLng(lng + size)])

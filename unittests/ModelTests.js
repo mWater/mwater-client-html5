@@ -1,19 +1,37 @@
 function ModelTests(model, resetTests) {
 	// Simple failure function
 	function error(err) {
-		ok(false, "sql error: " + err.message);
+		ok(false, "model error: " + err.message);
 		start();
 	}
 
-	asyncTest("Insert source and query", function() {
+	asyncTest("Insert source and query unlocated not nearby", function() {
 		resetTests(function() {
 			model.transaction(function(tx) {
 				model.insertRow(tx, "sources", {
 					uid : "uid1",
-					code : "code1"
+					code : "code1",
+					created_by : "test"
 				});
 			}, error, function() {
 				model.queryNearbySources(0, 0, "", function(rows) {
+					equal(rows.length, 0);
+					start();
+				});
+			});
+		});
+	});
+
+	asyncTest("Insert source and query unlocated", function() {
+		resetTests(function() {
+			model.transaction(function(tx) {
+				model.insertRow(tx, "sources", {
+					uid : "uid1",
+					code : "code1",
+					created_by : "test"
+				});
+			}, error, function() {
+				model.queryUnlocatedSources("test", "", function(rows) {
 					equal(rows.length, 1);
 					start();
 				});
@@ -31,24 +49,24 @@ function ModelTests(model, resetTests) {
 				model.insertRow(tx, "sources", {
 					uid : "uid2",
 					code : "code1",
-					latitude : 1,
-					longitude : 1
+					latitude : 0.1,
+					longitude : 0.1
 				});
 				model.insertRow(tx, "sources", {
 					uid : "uid3",
 					code : "code1",
-					latitude : 1,
-					longitude : 2
+					latitude : 0.1,
+					longitude : 0.2
 				});
 				model.insertRow(tx, "sources", {
 					uid : "uid4",
 					code : "code1",
-					latitude : 1,
-					longitude : 10
+					latitude : 0.1,
+					longitude : 0.9
 				});
 			}, error, function() {
-				model.queryNearbySources(0, 3, "", function(rows) {
-					ok(_.isEqual(_.pluck(rows, "uid"), ["uid3", "uid2", "uid4", "uid1"]));
+				model.queryNearbySources(0, 0.3, "", function(rows) {
+					ok(_.isEqual(_.pluck(rows, "uid"), ["uid3", "uid2", "uid4"]));
 					start();
 				});
 			});
@@ -65,25 +83,25 @@ function ModelTests(model, resetTests) {
 				model.insertRow(tx, "sources", {
 					uid : "uid2",
 					code : "code1",
-					latitude : 1,
-					longitude : 1
+					latitude : 0.1,
+					longitude : 0.1
 				});
 				model.insertRow(tx, "sources", {
 					uid : "uid3",
 					code : "code1",
 					name : "abc",
-					latitude : 1,
-					longitude : 2
+					latitude : 0.1,
+					longitude : 0.2
 				});
 				model.insertRow(tx, "sources", {
 					uid : "uid4",
 					code : "code1",
 					name : "xyz",
-					latitude : 1,
-					longitude : 10
+					latitude : 0.1,
+					longitude : 0.9
 				});
 			}, error, function() {
-				model.queryNearbySources(0, 3, "x", function(rows) {
+				model.queryNearbySources(0, 0.3, "x", function(rows) {
 					ok(_.isEqual(_.pluck(rows, "uid"), ["uid4"]));
 					start();
 				});
@@ -96,7 +114,9 @@ function ModelTests(model, resetTests) {
 			model.transaction(function(tx) {
 				model.insertRow(tx, "sources", {
 					uid : "uid1",
-					code : "code1"
+					code : "code1",
+					latitude : 0.1,
+					longitude : 0.1
 				});
 			}, error, function() {
 				model.queryNearbySources(0, 0, "", function(rows) {
@@ -121,7 +141,9 @@ function ModelTests(model, resetTests) {
 			model.transaction(function(tx) {
 				model.insertRow(tx, "sources", {
 					uid : "uid1",
-					code : "code1"
+					code : "code1",
+					latitude : 0.1,
+					longitude : 0.1
 				});
 			}, error, function() {
 				model.queryNearbySources(0, 0, "", function(rows) {
@@ -224,21 +246,21 @@ function ModelTests(model, resetTests) {
 				model.insertRow(tx, "tests", {
 					uid : "uid1",
 					test_type : 1,
-					created_by : "usr1"
+					created_by : "test"
 				});
 				model.insertRow(tx, "tests", {
 					uid : "uid2",
 					test_type : 1,
-					created_by : "usr2"
+					created_by : "test"
 				});
 				model.insertRow(tx, "tests", {
 					uid : "uid3",
 					test_type : 2,
-					created_by : "usr1"
+					created_by : "test"
 				});
 			}, error, function() {
-				model.queryTests("usr1", function(rows) {
-					equal(rows.length, 2);
+				model.queryTests("test", function(rows) {
+					equal(rows.length, 3);
 					start();
 				}, error);
 			});
@@ -256,10 +278,10 @@ function ModelTests(model, resetTests) {
 					uid : "uidt1",
 					test_type : 1,
 					sample : "uids1",
-					created_by : "usr1"
+					created_by : "test"
 				});
 			}, error, function() {
-				model.queryTests("usr1", function(rows) {
+				model.queryTests("test", function(rows) {
 					equal(rows.length, 1);
 					equal(rows[0].uid, "uidt1");
 					equal(rows[0].sample.uid, "uids1");
@@ -285,10 +307,9 @@ function ModelTests(model, resetTests) {
 					uid : "uidt1",
 					test_type : 1,
 					sample : "uids1",
-					created_by : "usr1"
 				});
 			}, error, function() {
-				model.queryTests("usr1", function(rows) {
+				model.queryTests("test", function(rows) {
 					equal(rows.length, 1);
 					equal(rows[0].uid, "uidt1");
 					equal(rows[0].sample.uid, "uids1");
@@ -310,7 +331,6 @@ function ModelTests(model, resetTests) {
 					uid : "uidt1",
 					test_type : 1,
 					sample : "uids1",
-					created_by : "usr1"
 				});
 			}, error, function() {
 				model.queryTestByUid("uidt1", function(row) {

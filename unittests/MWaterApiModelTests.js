@@ -8,6 +8,8 @@
 	var model = new MWaterApiModel(syncServer);
 
 	function reset(success) {
+		syncServer.manualLogin("test", "0000");
+
 		$.ajax(syncServer.baseUrl + "reset", {
 			type : "POST",
 			success : success,

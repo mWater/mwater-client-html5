@@ -2,9 +2,11 @@
 
 // baseUrl: api url, ending in "/"
 function SyncServer(baseUrl) {
+	var that = this;
+	
 	this.baseUrl = baseUrl;
 
-	function storeLogin(username, clientUid) {
+	this.manualLogin = function(username, clientUid) {
 		localStorage.setItem("username", username);
 		localStorage.setItem("clientUid", clientUid);
 	}
@@ -18,7 +20,7 @@ function SyncServer(baseUrl) {
 				password : password
 			}
 		}).success(function(data) {
-			storeLogin(username, data.clientuid);
+			that.manualLogin(username, data.clientuid);
 			success();
 		}).error(error);
 	}
@@ -28,19 +30,17 @@ function SyncServer(baseUrl) {
 		$.post(baseUrl + "users/" + username, {
 			password : password
 		}).success(function(data) {
-			storeLogin(username, data.clientuid);
+			that.manualLogin(username, data.clientuid);
 			success();
 		}).error(error);
 	}
 
 
 	this.logout = function(success, error) {
+		that.manualLogin("", "");
 		$.ajax(baseUrl + "clients/" + this.getClientUid(), {
 			type : "DELETE",
-			success : function() {
-				storeLogin("", "");
-				success();
-			},
+			success : success,
 			error : error
 		});
 	}

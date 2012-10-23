@@ -128,10 +128,12 @@ pages.Main = function() {
 		if (id == "sync") {
 			synchronize();
 		} else if (id == "logout") {
-			this.syncServer.logout(function() {
+			function gotoLoginPage() {
 				// Close and go to login page
 				page.pager.closePage("Login");
-			}, page.error);
+			}
+			// Always allow logout
+			this.syncServer.logout(gotoLoginPage, gotoLoginPage);
 		} else
 			alert(id);
 	};
