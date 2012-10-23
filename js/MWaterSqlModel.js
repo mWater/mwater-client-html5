@@ -136,7 +136,7 @@ function MWaterSqlModel(db, syncDb) {
     };
 
     this.queryUnlocatedSources = function(createdBy, search, success, error) {
-    	var where = " WHERE created_by = ?";
+    	var where = " WHERE created_by = ? AND latitude IS NULL";
         where += search ? " AND (code LIKE ? OR name LIKE ? OR desc LIKE ?)" : "";
         var sql = "SELECT * FROM sources" + where + " ORDER BY uid";
         var params = [createdBy];
