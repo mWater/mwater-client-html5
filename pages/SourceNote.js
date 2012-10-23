@@ -20,6 +20,7 @@ pages.SourceNote = function(sourceUid, uid) {
 					note.uid = utils.createUid();
 					note.created_on = Math.floor(new Date().getTime() / 1000);
 					note.source = sourceUid;
+					note.created_by = page.syncServer.getUsername();
 					page.model.insertRow(tx, "source_notes", note);
 				} else {
 					page.model.updateRow(tx, note, {

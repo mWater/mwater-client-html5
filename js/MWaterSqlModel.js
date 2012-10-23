@@ -234,7 +234,7 @@ function MWaterSqlModel(db, syncDb) {
 
 MWaterSqlModel.tableDefs = [
     { name: "sources", cols: ["uid", "row_version", "code", "source_type", "name", "desc", "latitude", "longitude", "photo", "created_by"]},
-    { name: "source_names", cols: ["uid", "row_version", "source", "created_on", "operational", "note", "created_by"]},
+    { name: "source_notes", cols: ["uid", "row_version", "source", "created_on", "operational", "note", "created_by"]},
     { name: "samples", cols: ["uid", "row_version", "source", "code", "desc", "sampled_on", "created_by"]},
     { name: "tests", cols: ["uid", "row_version", "sample", "test_type", "test_version", "code", "started_on", "read_on", "dilution", "results", "notes", "photo", "created_by"]},
     ];
