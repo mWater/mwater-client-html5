@@ -5,22 +5,6 @@ function MWaterApiModel(syncServer) {
 		success();
 	};
 
-	function processJqXhrs(jqXhrs, success, error) {
-		// If none left, call success
-		if (jqXhrs.length == 0) {
-			success();
-			return;
-		}
-
-		// Call error or recurse next success
-		var jq = _.first(jqXhrs);
-		jq.success(function() {
-			processJqXhrs(_.rest(jqXhrs), success, error);
-		});
-		jq.error(error);
-	}
-
-
 	this.transaction = function(callback, error, success) {
 		var tx = {
 			jqXhrs : [],
@@ -35,25 +19,17 @@ function MWaterApiModel(syncServer) {
 
 
 	this.insertRow = function(tx, table, values) {
-		console.log("Begin insert");
 		tx.jqXhrs.push($.ajax(makeUrl(table + "/" + values.uid), {
 			type : "PUT",
 			data : values,
-			success: function() {
-				console.log("Insert completed");
-			}
 		}));
 	}
 
 
 	this.updateRow = function(tx, row, values) {
-		console.log("Begin update");
 		tx.jqXhrs.push($.ajax(makeUrl(row.table + "/" + row.uid), {
 			type : "POST",
 			data : values,
-			success: function() {
-				console.log("Update completed");
-			}
 		}));
 	}
 
@@ -162,26 +138,4 @@ function MWaterApiModel(syncServer) {
 	// List of source type ids
 	// TODO replace with query
 	this.sourceTypes = _.range(16);
-
-	/* Obsolote: this.queryLatLngSources = function(rect, since, limit, success, error) {
-	 var where;
-	 // If wraps
-	 if (rect.x1 >= rect.x2)
-	 where = " WHERE (latitude >= ? AND latitude <= ?) AND (longitude >= ? OR longitude <= ?)"
-	 else
-	 where = " WHERE (latitude >= ? AND latitude <= ?) AND (longitude >= ? AND longitude <= ?)"
-
-	 if (since)
-	 where += " AND uid > ?";
-
-	 var sql = "SELECT * FROM sources" + where + " ORDER BY uid";
-	 if (limit)
-	 sql += " LIMIT " + limit;
-
-	 var params = [rect.y1, rect.y2, rect.x1, rect.x2];
-	 if (since)
-	 params.push(since);
-
-	 query(sql, params, new Row("sources"), success, error);
-	 }*/
 }

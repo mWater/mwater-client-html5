@@ -31,6 +31,10 @@ pages.Source = function(uid, setLocation, hideLocation) {
 			if (hideLocation)
 				page.$("#location").hide();
 
+			page.$("#edit_source_button").on("tap", function() {
+				page.pager.loadPage("SourceEdit", [source.uid]);
+			});
+
 			page.$("#add_test_button").on("tap", function() {
 				page.pager.loadPage("NewTest", [source.uid]);
 			});

@@ -228,28 +228,6 @@ function MWaterSqlModel(db, syncDb) {
     	}, error);
     }
 
-    /* Obsolote: this.queryLatLngSources = function(rect, since, limit, success, error) {
-    	var where;
-    	// If wraps
-    	if (rect.x1 >= rect.x2) 
-    		where = " WHERE (latitude >= ? AND latitude <= ?) AND (longitude >= ? OR longitude <= ?)" 
-    	else
-    		where = " WHERE (latitude >= ? AND latitude <= ?) AND (longitude >= ? AND longitude <= ?)" 
-    	
-    	if (since)
-    		where += " AND uid > ?";
-    		
-        var sql = "SELECT * FROM sources" + where + " ORDER BY uid";
-        if (limit)
-        	sql += " LIMIT " + limit;
-        	
-        var params = [rect.y1, rect.y2, rect.x1, rect.x2];
-        if (since)
-        	params.push(since);
-
-        query(sql, params, new Row("sources"), success, error);
-    }*/
-    
     // List of source type ids
     this.sourceTypes = _.range(16); 
   }

@@ -21,7 +21,7 @@ pages.NewSource = function() {
 			page.model.transaction(function(tx) {
 				page.model.insertRow(tx, "sources", source);
 			}, page.error, function() {
-				page.pager.closePage("Source", [uid]);
+				page.pager.closePage("Source", [uid, page.$("#set_location").hasClass("checked")]);
 			});
 
 		}, function(error) {
