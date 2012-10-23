@@ -16,6 +16,7 @@ pages.NewSource = function() {
 				name : page.$("#name").val(),
 				desc : page.$("#desc").val(),
 				source_type : parseInt(page.$("#source_type").val()),
+				created_by : page.syncServer.getUsername()
 			};
 
 			page.model.transaction(function(tx) {
