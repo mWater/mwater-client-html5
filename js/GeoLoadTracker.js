@@ -1,6 +1,10 @@
 function GeoLoadTracker() {
 	var loads = []
 
+	this.reset = function() {
+		loads = [];
+	}
+
 	this.getNeeded = function(rect) {
 		var best;
 		_.each(loads, function(l) {

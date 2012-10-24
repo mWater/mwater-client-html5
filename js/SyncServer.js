@@ -37,12 +37,12 @@ function SyncServer(baseUrl) {
 
 
 	this.logout = function(success, error) {
-		that.manualLogin("", "");
-		$.ajax(baseUrl + "clients/" + this.getClientUid(), {
+		$.ajax(baseUrl + "clients/" + that.getClientUid(), {
 			type : "DELETE",
 			success : success,
 			error : error
 		});
+		that.manualLogin("", "");
 	}
 
 

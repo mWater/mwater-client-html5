@@ -38,6 +38,8 @@ function MapMarkerManager(map, geoLoadTracker, markerLoader) {
 	this.removeListener = function(listener) {
 		listeners = _.without(listeners, listener);
 	}
+	
+	this.updateMarkers = updateMarkers;	
 
 	function extendBounds(bounds, extra) {
 		var span = bounds.toSpan();

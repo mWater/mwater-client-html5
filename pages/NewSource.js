@@ -1,7 +1,7 @@
 var pages = pages || {}
 
 /* Creates a source */
-pages.NewSource = function() {
+pages.NewSource = function(location, result) {
 	var page = this;
 
 	function createSource() {
@@ -18,11 +18,18 @@ pages.NewSource = function() {
 				source_type : parseInt(page.$("#source_type").val()),
 				created_by : page.syncServer.getUsername()
 			};
+			
+			// Add location 
+			if (location)
+				_.extend(source, location);
 
 			page.model.transaction(function(tx) {
 				page.model.insertRow(tx, "sources", source);
 			}, page.error, function() {
-				page.pager.closePage("Source", [uid, page.$("#set_location").hasClass("checked")]);
+				if (result)
+					result(uid);
+				else
+					page.pager.closePage("Source", [uid, page.$("#set_location").hasClass("checked")]);
 			});
 
 		}, function(error) {
@@ -37,6 +44,10 @@ pages.NewSource = function() {
 		}, function(out) {
 			page.$el.html(out);
 
+			// Hide location button if
+			if (location)
+				page.$("#set_location").hide();
+
 			page.$("#create_button").on("tap", function() {
 				if (page.$("#source_type").val() == "")
 					alert("Select source type");
@@ -44,7 +55,10 @@ pages.NewSource = function() {
 					createSource();
 			});
 			page.$("#cancel_button").on("tap", function() {
-				page.pager.closePage();
+				if (result)
+					result();
+				else
+					page.pager.closePage();
 			});
 			callback();
 		});

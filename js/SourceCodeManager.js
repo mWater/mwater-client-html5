@@ -2,6 +2,9 @@
 
 function SourceCodeManager(syncServer) {
 	this.requestCode = function(success, error) {
-		syncServer.requestSourceCodes(1, success, error);
+		syncServer.requestSourceCodes(1, function(codes) {
+			success(codes[0]);
+		}, error);
 	}
+
 }

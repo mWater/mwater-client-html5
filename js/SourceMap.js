@@ -2,6 +2,11 @@
 function SourceMap(elem, apiUrl, mapOptions, sourceClick) {
 	var that = this;
 
+	this.updateMarkers = function() {
+		this.geoLoadTracker.reset();
+		this.mapMarkerManager.updateMarkers();
+	}
+
 	this.displayStatus = function(status) {
 		if (status)
 			$("#status_control").text(status).show();
@@ -78,7 +83,6 @@ function SourceMap(elem, apiUrl, mapOptions, sourceClick) {
 			alert("Error getting data");
 		});
 	}
-
 
 	function addMarkers() {
 		// Add info control
