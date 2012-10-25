@@ -72,7 +72,7 @@ pages.Test = function() {
 	}
 
 	this.createTemplateView = function() {
-		return _.clone(test);
+		return _.clone(page.test);
 	}
 
 	this.refresh = function() {
