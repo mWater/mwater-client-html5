@@ -23,7 +23,7 @@ function SourceMap(elem, apiUrl, mapOptions, sourceClick) {
 			if (anl.length > 0)
 				color = anl[0].color;
 		} else
-			color = "D0D0D0";
+			color = "#D0D0D0";
 
 		icon = {
 			path : google.maps.SymbolPath.CIRCLE,
