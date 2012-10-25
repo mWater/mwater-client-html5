@@ -71,11 +71,9 @@ pages.Test = function() {
 		this.refresh();
 	}
 
-
-	this.parseResults = function(results) {
-		return JSON.parse(results);
+	this.createTemplateView = function() {
+		return _.clone(test);
 	}
-
 
 	this.refresh = function() {
 		var page = this;
@@ -88,13 +86,13 @@ pages.Test = function() {
 				return;
 			}
 
-			// Deserialize results
+			// Parse JSON
 			if (t.results)
-				t.resultsData = page.parseResults(t.results);
+				t.resultsData = JSON.parse(t.results);
 
 			page.test = t;
 
-			page.template("test_" + t.test_type, page.test, function(out) {
+			page.template("test_" + t.test_type, page.createTemplateView(), function(out) {
 				page.$el.html(out);
 				page.displayTest();
 			});

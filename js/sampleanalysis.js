@@ -61,7 +61,7 @@ sampleanalysis = {};
 		}
 
 		var results = $.parseJSON(test.results)
-		if (test.test_type == 4)// Chlorine
+		if (test.test_type == 4) // Chlorine
 		{
 			if (results.positive)
 				return {
@@ -73,6 +73,13 @@ sampleanalysis = {};
 					text : "Negative",
 					color : "Red"
 				};
+		}
+
+		if (test.test_type == 5) // General
+		{
+			return {
+				text: i18n.localizeField("tests.test_type.5.type", results.type) + ": " + results.value + "/100mL"
+			}
 		}
 
 		// Create sample to analyse

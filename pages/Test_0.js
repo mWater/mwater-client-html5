@@ -25,14 +25,17 @@ pages.Test_0 = function(uid) {
 	}
 
 
-	this.parseResults = function(results) {
-		var r = JSON.parse(results);
+	this.createTemplateView = function() {
+		var view = _.clone(page.test)
 
-		r.ecoli = r.manualEcoli || r.autoEcoli;
-		r.tc = r.manualTC || r.autoTC;
-		r.other = r.manualOther || r.autoOther;
+		if (view.resultsData) {
+			var r = view.resultsData;
 
-		return r;
+			r.ecoli = r.manualEcoli || r.autoEcoli;
+			r.tc = r.manualTC || r.autoTC;
+			r.other = r.manualOther || r.autoOther;
+		}
+		return view;
 	}
 
 }

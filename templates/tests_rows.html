@@ -2,8 +2,10 @@
 <tr id="{uid}">
     <td>
         <strong>{#loc field="tests.test_type" value=test_type/}</strong>
-        <br/><span>{sample.source.name}&nbsp;</span>
+        <br/>{?sample.source.code}<strong>{sample.source.code}</strong> - <span>{sample.source.name}</span>{/sample.source.code}&nbsp;
     </td>
-    <td><strong>{sample.source.code}</strong></td>
+    <td>
+        <span class="text" {?summary.color}style="background-color:{summary.color}"{/summary.color}>{summary.text}</span>
+    </td>
 </tr>
 {/rows}

@@ -27,6 +27,11 @@ pages.Tests = function() {
 		// Query sources
 		// TODO query
 		page.model.queryTests(page.syncServer.getUsername(), function(rows) {
+			// Summarize rows
+			_.each(rows, function(row) {
+				row.summary = sampleanalysis.summarizeTest(row);
+			});
+			
 			page.template("tests_rows", {
 				"rows" : rows
 			}, page.$("#table"));
