@@ -45,10 +45,11 @@ function MWaterApiModel(syncServer) {
 	}
 
 	function rowifyArray(array, table) {
-		for (var i=0;i<array.length;i++)
+		for (var i = 0; i < array.length; i++)
 			_.extend(array[i], new Row(table));
 		return array;
 	}
+
 
 	this.queryNearbySources = function(latitude, longitude, search, success, error) {
 		console.log("Begin query");
@@ -70,15 +71,17 @@ function MWaterApiModel(syncServer) {
 				src = _.filter(src, function(s) {
 					return (s.name && s.name.indexOf(search) != -1) || (s.code && s.code.indexOf(search) != -1);
 				});
-			
+
 			rowifyArray(src, "sources");
 			success(src);
 		}).error(error);
 	}
 
-    this.queryUnlocatedSources = function(createdBy, search, success, error) {
+
+	this.queryUnlocatedSources = function(createdBy, search, success, error) {
 		$.get(makeUrl("sources"), {
 			latitude : "null",
+			created_by : createdBy
 		}, function(data) {
 			var src = data.sources;
 			if (search)
@@ -88,8 +91,9 @@ function MWaterApiModel(syncServer) {
 			rowifyArray(src, "sources");
 			success(src);
 		}).error(error);
-    	
-    }
+
+	}
+
 
 	this.querySourceByUid = function(uid, success, error) {
 		$.get(makeUrl("sources/" + uid), function(data) {
