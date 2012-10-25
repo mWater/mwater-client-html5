@@ -68,7 +68,8 @@ pages.Source = function(uid, setLocation, hideLocation) {
 				page.$("#add_test_button").attr("disabled", true);
 			}
 
-			displayLocation();
+			if (!hideLocation)
+				displayLocation();
 
 			// Fill water analyses
 			page.model.querySamplesAndTests(source.uid, function(samples) {
@@ -169,16 +170,19 @@ pages.Source = function(uid, setLocation, hideLocation) {
 		}
 
 		// Start location watch
-		locationWatchId = navigator.geolocation.watchPosition(geolocationSuccess, geolocationError, {
-			maximumAge : 3000,
-			enableHighAccuracy : true
-		});
+		if (displayLocation) {
+			locationWatchId = navigator.geolocation.watchPosition(geolocationSuccess, geolocationError, {
+				maximumAge : 3000,
+				enableHighAccuracy : true
+			});
+		}
 	}
 
 
 	this.deactivate = function() {
 		// End location watch
-		navigator.geolocation.clearWatch(locationWatchId);
+		if (displayLocation) 
+			navigator.geolocation.clearWatch(locationWatchId);
 	}
 
 
