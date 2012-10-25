@@ -9,9 +9,9 @@ function Application(opts) {
 		anchorState : true,
 		initialPage : "Main",
 		initialPageArgs : [],
-		requireLogin : true, 
-		pageContainer: $("#page_container"),
-		actionbar: undefined
+		requireLogin : true,
+		pageContainer : $("#page_container"),
+		actionbar : undefined
 	}, opts);
 
 	// Create sync server
@@ -53,6 +53,7 @@ function Application(opts) {
 		canAdd : function(table) {
 			return syncServer.loggedIn();
 		}
+
 	}
 
 	// Load pages dynamically
@@ -67,7 +68,7 @@ function Application(opts) {
 			});
 		}
 	}
-	
+
 	function error(err) {
 		var errStr = "Unknown";
 		if (err)
@@ -123,7 +124,7 @@ function Application(opts) {
 	}, error);
 }
 
-Application.prototype.createTemplate = function () {
+Application.prototype.createTemplate = function() {
 	// Create template engine
 	dust.onLoad = function(name, callback) {
 		// Load from template
@@ -141,10 +142,10 @@ Application.prototype.createTemplate = function () {
 			}
 
 			var d = new Date(params.value * 1000);
-			return chunk.write(d.getFullYear() + "-" + pad2(d.getMonth()) + "-" + pad2(d.getDay()));
+			return chunk.write(d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()));
 		},
 		loc : function(chunk, context, bodies, params) {
-			if (params.field) 
+			if (params.field)
 				return chunk.write(i18n.localizeField(params.field, params.value));
 			return chunk;
 		}
