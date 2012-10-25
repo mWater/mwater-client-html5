@@ -38,7 +38,7 @@ var HtmlActionbar = function(container, opts) {
 		
 		_.each(items, function(item) {
 			nitem = $('<li><a href="#">' + (item.icon ? '<img height="20" width="20" src="' + item.icon + '">' : '') + item.title + '</a></li>')
-			nitem.click(function() {
+			nitem.on("mouseup touchend", function() {
 				navbar.find('[data-toggle="dropdown"]').parent().removeClass('open');
 				callback(item.id);
 				return false;

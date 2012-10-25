@@ -14,7 +14,7 @@
 
         <link rel="stylesheet" type="text/css" href="css/HtmlActionbar.css" />
         <script src="js/HtmlActionbar.js"></script>
-        
+
         <!-- Load plugins -->
         <script src="js/libs/webintent.js"></script>
         <script src="js/libs/actionbar.js"></script>
@@ -69,17 +69,24 @@
 
         <script>
 			isCordova = utils.parseQuery().cordova;
+			isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
 
 			function onDeviceReady() {
 				$(function() {
 					configureDevice();
 
-					var opts = { actionbar: window.actionbar};
+					var opts = {
+						actionbar : window.actionbar
+					};
 					if (!isCordova) {
-						opts.serverUrl = "/mwater2/apiv2/";
-						// TODO
+						opts.serverUrl = "/mwater/apiv2/";
 						opts.cacheImages = false;
-						//opts.localDb=false; ///####
+
+						// Offline db only on iphone
+						if (isIPhone)
+							opts.localDb = true;
+						else
+							opts.localDb = false;
 					}
 					application = new Application(opts);
 				});
@@ -88,7 +95,9 @@
 			function configureDevice() {
 				// Handle special cases for not in Cordova
 				if (!window.device || window.device.platform != "Android") {
-				    actionbar = new HtmlActionbar($("body"), {defaultTitle: "mWater"});
+					actionbar = new HtmlActionbar($("body"), {
+						defaultTitle : "mWater"
+					});
 				}
 			}
 

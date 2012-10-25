@@ -4,7 +4,7 @@ function Application(opts) {
 	// Setup options
 	opts = _.extend({
 		localDb : true,
-		serverUrl : "http://data.mwater.co/mwater2/apiv2/",
+		serverUrl : "http://data.mwater.co/mwater/apiv2/",
 		cacheImages : true,
 		anchorState : true,
 		initialPage : "Main",
