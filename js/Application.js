@@ -144,12 +144,8 @@ Application.prototype.createTemplate = function () {
 			return chunk.write(d.getFullYear() + "-" + pad2(d.getMonth()) + "-" + pad2(d.getDay()));
 		},
 		loc : function(chunk, context, bodies, params) {
-			if (params.field) {
-				var key = params.field + "." + params.value;
-				if (i18n[key])
-					return chunk.write(i18n[key]);
-				return chunk.write(key);
-			}
+			if (params.field) 
+				return chunk.write(i18n.localizeField(params.field, params.value));
 			return chunk;
 		}
 

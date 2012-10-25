@@ -61,6 +61,14 @@ sampleanalysis = {};
 		}
 
 		var results = $.parseJSON(test.results)
+		
+		// Create sample to analyse
+		var sample = {
+			tests : [test]
+		}
+		var anl = sampleanalysis.getEcoliAnalysis(sample);
+
+		
 		if (test.test_type == 4) // Chlorine
 		{
 			if (results.positive)
@@ -78,15 +86,11 @@ sampleanalysis = {};
 		if (test.test_type == 5) // General
 		{
 			return {
-				text: i18n.localizeField("tests.test_type.5.type", results.type) + ": " + results.value + "/100mL"
+				text: i18n.localizeField("tests.test_type.5.type", results.type) + ": " + results.value + "/100mL",
+				color: anl ? anl.color : null
 			}
 		}
 
-		// Create sample to analyse
-		var sample = {
-			tests : [test]
-		}
-		var anl = sampleanalysis.getEcoliAnalysis(sample);
 		if (!anl)
 			return {
 				text : ""
@@ -170,6 +174,14 @@ sampleanalysis = {};
 				max : null
 			};
 		}
+		if (test.test_type == 5) {// General microbiology
+			if (results.type == "ecoli")
+				return {
+					min : test.dilution * results.value,
+					max : test.dilution * results.value
+				};
+		}
+
 		return {
 			min : null,
 			max : null
