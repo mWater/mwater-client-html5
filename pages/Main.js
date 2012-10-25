@@ -101,11 +101,9 @@ pages.Main = function() {
 	}
 
 	function synchronize() {
-		if (!page.syncClient) {
-			syncSuccess();
+		if (!page.syncClient) 
 			return;
-		}
-			
+		
 		if (syncInProgress)
 			return;
 
