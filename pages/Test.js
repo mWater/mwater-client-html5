@@ -71,8 +71,8 @@ pages.Test = function() {
 		this.refresh();
 	}
 
-	this.createTemplateView = function() {
-		return _.clone(page.test);
+	this.createTemplateView = function(test) {
+		return _.clone(test);
 	}
 
 	this.refresh = function() {
@@ -92,7 +92,7 @@ pages.Test = function() {
 
 			page.test = t;
 
-			page.template("test_" + t.test_type, page.createTemplateView(), function(out) {
+			page.template("test_" + t.test_type, page.createTemplateView(page.test), function(out) {
 				page.$el.html(out);
 				page.displayTest();
 			});

@@ -20,8 +20,8 @@ pages.Test_5 = function(uid) {
 		};
 	}
 
-	this.createTemplateView = function() {
-		var view = _.clone(page.test)
+	this.createTemplateView = function(test) {
+		var view = _.clone(test)
 
 		view.types = ["ecoli", "total_coliforms", "thermotolerant_coliforms", "enterococci", "heterotrophic_plate_count", "faecal_streptococci", "clostridium_perfringens"];	
 		return view;

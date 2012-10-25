@@ -25,8 +25,8 @@ pages.Test_0 = function(uid) {
 	}
 
 
-	this.createTemplateView = function() {
-		var view = _.clone(page.test)
+	this.createTemplateView = function(test) {
+		var view = _.clone(test)
 
 		if (view.resultsData) {
 			var r = view.resultsData;
