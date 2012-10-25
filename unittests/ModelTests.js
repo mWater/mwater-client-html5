@@ -221,17 +221,20 @@ function ModelTests(model, resetTests) {
 			model.transaction(function(tx) {
 				model.insertRow(tx, "sources", {
 					uid : "uidss1",
-					code : "1234"
+					code : "1234",
+					created_by: "test"
 				});
 				model.insertRow(tx, "samples", {
 					uid : "uids1",
 					source : "uidss1",
-					desc : "desc1"
+					desc : "desc1",
+					created_by: "test"
 				});
 				model.insertRow(tx, "tests", {
 					uid : "uidt1",
 					test_type : 1,
 					sample : "uids1",
+					created_by: "test"
 				});
 			}, error, function() {
 				model.queryTests("test", function(rows) {

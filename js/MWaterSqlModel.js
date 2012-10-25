@@ -127,7 +127,8 @@ function MWaterSqlModel(db, syncDb) {
     }
 
     this.queryNearbySources = function(latitude, longitude, search, success, error) {
-        var where = search ? " WHERE code LIKE ? OR name LIKE ? OR desc LIKE ?" : "";
+    	var where = " WHERE latitude IS NOT NULL AND longitude IS NOT NULL";
+        where += search ? " AND (code LIKE ? OR name LIKE ? OR desc LIKE ?)" : "";
         var sql = "SELECT * FROM sources" + where + " ORDER BY ((latitude-?)*(latitude-?)+(longitude-?)*(longitude-?))";
         var params = [latitude, latitude, longitude, longitude];
         if (search)

@@ -16,8 +16,10 @@ pages.Source = function(uid, setLocation, hideLocation) {
 			new PhotoDisplayer(page, page.$("#photo"), source, page.error);
 
 			page.$("#location_set").on("tap", function() {
-				setLocation = true;
-				displayLocation();
+				if (confirm("Set to current location?")) {
+					setLocation = true;
+					displayLocation();
+				}
 			});
 
 			page.$("#location_map").on("tap", function() {
@@ -27,7 +29,7 @@ pages.Source = function(uid, setLocation, hideLocation) {
 						longitude : source.longitude
 					}]);
 			});
-			
+
 			if (hideLocation)
 				page.$("#location").hide();
 
@@ -49,15 +51,15 @@ pages.Source = function(uid, setLocation, hideLocation) {
 					page.pager.loadPage("Test_" + test.test_type, [test.uid]);
 				}, page.error);
 			});
-			
+
 			Pager.makeTappable(page.$("#notes"), function(row) {
 				page.pager.loadPage("SourceNote", [source.uid, row.id]);
 			});
-			
+
 			if (!page.auth.canEdit(source)) {
 				page.$("#edit_source_button, #location_set").attr("disabled", true);
 			}
-			
+
 			if (!page.auth.canAdd("source_notes")) {
 				page.$("#add_note_button").attr("disabled", true);
 			}
@@ -65,7 +67,7 @@ pages.Source = function(uid, setLocation, hideLocation) {
 			if (!page.auth.canAdd("samples")) {
 				page.$("#add_test_button").attr("disabled", true);
 			}
-			
+
 			displayLocation();
 
 			// Fill water analyses
@@ -193,7 +195,7 @@ pages.Source = function(uid, setLocation, hideLocation) {
 				alert("Insufficient permissions");
 				return;
 			}
-				
+
 			if (confirm("Permanently delete source?")) {
 				page.model.transaction(function(tx) {
 					page.model.deleteRow(tx, source);

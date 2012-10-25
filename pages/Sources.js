@@ -51,7 +51,8 @@ pages.Sources = function() {
 			// Set status
 			page.$("#message_text").text("Obtaining location...");
 			page.$("#message_bar").show();
-			navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
+			navigator.geolocation.getCurrentPosition(locationSuccess, locationError, 
+				{ maximumAge: 3600, timeout: 10000, enableHighAccuracy: false });
 		} else
 			locationSuccess(page.location);
 	};
