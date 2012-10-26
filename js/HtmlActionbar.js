@@ -29,6 +29,10 @@ var HtmlActionbar = function(container, opts) {
 			menuCallback("home");
 	});
 	
+	$('a.dropdown-toggle, .dropdown-menu a').on('touchstart', function(e) {
+  		e.stopPropagation();
+	});
+	
 	this.menu = function(items, callback) {
 		menuCallback = callback;
 		
@@ -37,16 +41,22 @@ var HtmlActionbar = function(container, opts) {
 		navbar.find("#navbar_dropdown_button").hide();
 		
 		_.each(items, function(item) {
-			nitem = $('<li><a href="#">' + (item.icon ? '<img height="20" width="20" src="' + item.icon + '">' : '') + item.title + '</a></li>')
-			nitem.on("mouseup touchend", function() {
-				navbar.find('[data-toggle="dropdown"]').parent().removeClass('open');
-				callback(item.id);
-				return false;
-			});
-
-			if (item.ifRoom) 
-				navbar.find("#navbar_items").append('<li class="divider-vertical"></li>').append(nitem);
+			if (item.ifRoom) {
+				var nitem = $('<li><a href="#">' + (item.icon ? '<img height="20" width="20" src="' + item.icon + '">' : item.title) + '</a></li>')
+				nitem.click(function(e) {
+					navbar.find('[data-toggle="dropdown"]').parent().removeClass('open');
+					callback(item.id);
+					return false;
+				});
+				navbar.find("#navbar_items").append(nitem);
+			}
 			else {
+				var nitem = $('<li><a href="#">' + (item.icon ? '<img height="20" width="20" src="' + item.icon + '">' : '') + item.title + '</a></li>')
+				nitem.on("tap", function(e) {
+					navbar.find('[data-toggle="dropdown"]').parent().removeClass('open');
+					callback(item.id);
+					return false;
+				});
 				navbar.find("#navbar_dropdown_button").show();
 				nitem.addClass("dropdown");
 				navbar.find("#navbar_items_dropdown").append(nitem);

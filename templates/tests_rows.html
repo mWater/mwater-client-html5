@@ -8,4 +8,10 @@
         <span class="text" {?summary.color}style="background-color:{summary.color}"{/summary.color}>{summary.text}</span>
     </td>
 </tr>
+{:else}
+<tr>
+    <td align="center">
+        <strong>No water sources found nearby</strong>
+    </td>
+</tr>
 {/rows}

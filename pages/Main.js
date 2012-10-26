@@ -58,9 +58,12 @@ pages.Main = function() {
 	function syncError(error) {
 		syncInProgress = false;
 
+		var text = (error.message || error.responseText || "Error connecting");
+		console.warn("SyncError:" + JSON.stringify(error));
+
 		page.$("#sync_progress").hide();
 		page.$("#sync_success").hide();
-		page.$("#sync_error").text("Unable to synchronize: " + error).show().delay(5000).slideUp();
+		page.$("#sync_error").text("Unable to synchronize: " + text).show().delay(5000).slideUp();
 	}
 
 	function uploadImages() {
@@ -96,7 +99,7 @@ pages.Main = function() {
 		slices.push("source.created_by:" + page.syncServer.getUsername());
 
 		page.syncClient.sync(slices, uploadImages, function(error) {
-			syncError((error.message || error.responseText));
+			syncError(error);
 		});
 	}
 

@@ -35,7 +35,7 @@ function Application(opts) {
 	}
 
 	// Create problem reporter
-	ProblemReporter.register(opts.serverUrl, "0.22", function() {
+	ProblemReporter.register(opts.serverUrl, "0.23", function() {
 		return syncServer.getClientUid();
 	});
 
