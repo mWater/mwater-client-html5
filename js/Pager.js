@@ -26,6 +26,7 @@ Pager = function(container, context, actionbar) {
 	// Make checkboxes tappable
 	container.on("tap", ".checkbox", function(e) {
 		$(this).toggleClass("checked");
+		$(this).triggerHandler("checked");
 	});
 	
 	// Prevent links from launching

@@ -15,7 +15,7 @@ pages.Test_4 = function(uid) {
 			page.$("#chlorine_value").hide();
 		}
 		
-		page.$("#present").on('click', function() {
+		page.$("#present").on('checked', function() {
 			if ($("#present").hasClass('checked'))
 				page.$("#chlorine_value").show();
 			else
