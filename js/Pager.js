@@ -27,6 +27,11 @@ Pager = function(container, context, actionbar) {
 	container.on("tap", ".checkbox", function(e) {
 		$(this).toggleClass("checked");
 	});
+	
+	// Prevent links from launching
+	container.on("click", "a", function(e) {
+		return false;
+	})
 
 	this.stack = new Array();
 	this.state = new Array();
