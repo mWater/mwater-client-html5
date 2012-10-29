@@ -12,7 +12,7 @@ var HtmlActionbar = function(container, opts) {
     html+='<a class="btn btn-navbar dropdown-toggle pull-right" data-toggle="dropdown" id="navbar_dropdown_button"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>';
     html+='<ul class="dropdown-menu pull-right" id="navbar_items_dropdown" role="menu"></ul>'
     html+='<ul class="nav pull-right" id="navbar_items"></ul>';
-	html+='<div class="navbar-inner" style="text-align:center">';
+	html+='<div class="navbar-inner" style="text-align:center; padding-left:0px">';
 	html+='<a class="btn-back pull-left" href="#">Back</a>';
     html+='<span class="brand" id="navbar_brand" style="float:none; color:white"><span id="navbar_title"></span></span></div></div>';
     
