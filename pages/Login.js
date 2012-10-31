@@ -43,5 +43,5 @@ pages.Login = function (success) {
 			});
 			callback();
 		});
-	}
-}
+	};
+};
