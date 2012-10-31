@@ -4,15 +4,26 @@ var pages = pages || {}
 pages.Settings = function() {
     var page = this;
 
-    this.create = function(callback) {
-        this.template("settings", null, function(out) {
+    function refresh(callback) {
+        var view = {
+            offlineSourceCodes : page.sourceCodeManager.getNumberAvailableCodes()
+        }
+
+        page.template("settings", view, function(out) {
             page.$el.html(out);
 
-            page.$("#auto_sync").toggleClass("checked", localStorage.getItem("auto_sync") != "false");
+            page.$("#auto_sync").toggleClass("checked", localStorage.getItem("autoSync") != "false");
             page.$("#auto_sync").on("checked", function() {
-                localStorage.setItem("auto_sync", page.$("#auto_sync").hasClass("checked") ? "true" : "false");
+                localStorage.setItem("autoSync", page.$("#auto_sync").hasClass("checked") ? "true" : "false");
             });
-            
+
+            page.$("#request_source_codes").on("tap", function() {
+                page.sourceCodeManager.replenishCodes(view.offlineSourceCodes + 5, function() {
+                    refresh();
+                }, function() {
+                    alert("Unable to contact server");
+                });
+            });
 
             if (!(page.model instanceof MWaterSqlModel))
                 page.$("#reset_database_block").hide();
@@ -23,8 +34,12 @@ pages.Settings = function() {
                         alert("Reset complete");
                     }, page.error);
             });
-
-            callback();
+            
+            if (callback)
+                callback();
         });
-    };
+
+    }
+
+    this.create = refresh;
 };

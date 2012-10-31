@@ -30,7 +30,7 @@ pages.Main = function() {
 
     this.activate = function() {
         // If auto sync
-        if (localStorage.getItem("auto_sync") != "false")
+        if (localStorage.getItem("autoSync") != "false")
             synchronize();
     };
 
@@ -120,9 +120,13 @@ pages.Main = function() {
         page.$("#sync_error").hide();
         page.$("#sync_success").hide();
 
-        navigator.geolocation.getCurrentPosition(syncLocationSuccess, function(error) {
-            syncError("Unable to get location");
-        });
+        // Replenish source codes first
+        page.sourceCodeManager.replenishCodes(5, function() {
+            // Sync based on location
+            navigator.geolocation.getCurrentPosition(syncLocationSuccess, function(error) {
+                syncError("Unable to get location");
+            });
+        }, syncError);
     }
 
 
@@ -141,4 +145,4 @@ pages.Main = function() {
         } else
             alert(id);
     };
-}; 
+};

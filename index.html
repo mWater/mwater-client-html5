@@ -52,6 +52,7 @@
         <!-- Load pages -->
         <script src="pages/Login.js"></script>
         <script src="pages/Main.js"></script>
+        <script src="pages/Settings.js"></script>
         <script src="pages/Sources.js"></script>
         <script src="pages/Source.js"></script>
         <script src="pages/Map.js"></script>
@@ -82,11 +83,11 @@
 						opts.serverUrl = "/mwater/apiv2/";
 						opts.cacheImages = false;
 
-						// Offline db only on iphone
+/*###						// Offline db only on iphone
 						if (isIPhone)
 							opts.localDb = true;
 						else
-							opts.localDb = false;
+							opts.localDb = false;*/
 					}
 					application = new Application(opts);
 				});
