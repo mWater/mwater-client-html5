@@ -27,7 +27,7 @@ SyncClient.prototype.sync = function(slices, success, error) {
             that.download(slices, success, error);
         }, error);
     }, error);
-}
+};
 
 /* Downloads any changes. Calls success with parameters:
  * changes: changes that were received. null for none */
@@ -41,7 +41,7 @@ SyncClient.prototype.download = function(slices, success, error) {
             that.applyChanges(changes, slices, success, error);
         }, error);
     }, error);
-}
+};
 
 /* Uploads any local changes. Calls success with parameters:
  * changes: changes that were uploaded, or null if none */
@@ -58,7 +58,7 @@ SyncClient.prototype.upload = function(success, error) {
             success(null);
         }
     }, error);
-}
+};
 
 /* Applies changes that have been downloaded */
 SyncClient.prototype.applyChanges = function(downloadedChanges, slices, success, error) {
@@ -75,4 +75,4 @@ SyncClient.prototype.applyChanges = function(downloadedChanges, slices, success,
             that.syncDb.applyChanges(downloadedChanges, slices, error, success);
         }
     }, error);
-}
+};

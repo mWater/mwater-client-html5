@@ -27,31 +27,31 @@ SyncDb.prototype.createTables = function(tx) {
     tx.executeSql("CREATE TABLE IF NOT EXISTS dataslices ( \
                   id TEXT PRIMARY KEY, \
                   serveruntil INTEGER NOT NULL);");
-}
+};
 
 // Drops all tables if they exist
 SyncDb.prototype.dropTables = function(tx) {
     tx.executeSql("DROP TABLE IF EXISTS syncchanges;");
     tx.executeSql("DROP TABLE IF EXISTS dataslices;");
-}
+};
 
 // Records that an insert was done on a specific table of a row with the specified uid
 SyncDb.prototype.recordInsert = function(tx, table, uid) {
     tx.executeSql("INSERT INTO syncchanges (tablename, rowuid, action) VALUES (?, ?, ?);",
                   [table, uid, 'I']);
-}
+};
 
 // Records that an update was done on a specific table of a row with the specified uid
 SyncDb.prototype.recordUpdate = function(tx, table, uid) {
     tx.executeSql("INSERT INTO syncchanges (tablename, rowuid, action) VALUES (?, ?, ?);",
                   [table, uid, 'U']);
-}
+};
 
 // Records that an delete was done on a specific table of a row with the specified uid
 SyncDb.prototype.recordDelete = function(tx, table, uid) {
     tx.executeSql("INSERT INTO syncchanges (tablename, rowuid, action) VALUES (?, ?, ?);",
                   [table, uid, 'D']);
-}
+};
 
 /* Gets object of changes pending. Structure is:
  * tables: list of tables
@@ -66,8 +66,8 @@ SyncDb.prototype.getPendingChanges = function(success, error) {
     
     // Convenience function to fill an array
     function newFilledArray(length, val) {
-        var array = [];
-        for (var i = 0; i < length; i++) {
+        var array = [], i;
+        for (i = 0; i < length; i++) {
             array[i] = val;
         }
         return array;
@@ -75,8 +75,8 @@ SyncDb.prototype.getPendingChanges = function(success, error) {
     
     // Converts sql results to a list
     function resultsToList(results) {
-        var rows = []
-        for (var i=0;i<results.rows.length;i++)
+        var rows = [], i;
+        for (i=0;i<results.rows.length;i++)
             rows.push(results.rows.item(i));
         return rows;
     }
@@ -119,7 +119,8 @@ SyncDb.prototype.getPendingChanges = function(success, error) {
             });
             
             // For each table
-            for (var tbl in grps) {
+            var tbl;
+            for (tbl in grps) {
                 // Get tableDef
                 var tableDef = _.find(that.tableDefs, function(td) { return td.name==tbl; });
                 
@@ -147,7 +148,7 @@ SyncDb.prototype.getPendingChanges = function(success, error) {
     this.db.transaction(function(tx) {
         tx.executeSql("SELECT * FROM syncchanges ORDER BY tablename, action, rowuid", [], processChanges);
     }, error);
-}
+};
 
 /* Clears pending changes that are contained in changes. If changes null, do nothing */
 SyncDb.prototype.clearPendingChanges = function(changes, success, error) {
@@ -158,7 +159,7 @@ SyncDb.prototype.clearPendingChanges = function(changes, success, error) {
     }
     else
         success();
-}
+};
 
 /* Determines the "until" value of data slices stored. If no data for a
  * slice has ever been received, is zero.
@@ -168,15 +169,15 @@ SyncDb.prototype.getSliceUntils = function(slices, success, error) {
         tx.executeSql("SELECT * FROM dataslices WHERE id IN ("
             + _.map(slices, function() { return "?"}).join()+ ");", slices,
             function(tx, results) {
-                var output = {};
+                var output = {}, i;
                 // Set slices to 0 initially
                 _.each(slices, function(slice) { output[slice]=0; });
-                for (var i=0;i<results.rows.length;i++)
+                for (i=0;i<results.rows.length;i++)
                     output[results.rows.item(i).id] = results.rows.item(i).serveruntil;
                 success(output);
             }, error);
     });
-}
+};
 
 /* Applies changes from the server for the specified slices */
 SyncDb.prototype.applyChanges = function(changes, slices, error, success) {

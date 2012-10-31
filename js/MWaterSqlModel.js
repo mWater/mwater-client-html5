@@ -9,6 +9,19 @@ function MWaterSqlModel(db, syncDb) {
 			syncDb.createTables(tx);
 		}, error, success);
 	};
+	
+	// Resets all databases
+	this.reset = function(success, error) {
+        db.transaction(function(tx) {
+            // Delete tables
+            that.dropTables(tx);
+            syncDb.dropTables(tx);
+            
+            // Create model tables
+            that.createTables(tx);
+            syncDb.createTables(tx);
+        }, error, success);
+	};
     
     // Create tables if they don't exist
     this.createTables = function (tx) {
@@ -55,7 +68,7 @@ function MWaterSqlModel(db, syncDb) {
                       notes TEXT, \
                       photo TEXT, \
                       created_by TEXT);");
-    }
+    };
 
     this.dropTables = function (tx) {
         tx.executeSql("DROP TABLE IF EXISTS sources;");

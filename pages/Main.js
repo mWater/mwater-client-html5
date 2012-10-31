@@ -2,140 +2,143 @@ var pages = pages || {}
 
 /* Main page of application */
 pages.Main = function() {
-	var page = this;
+    var page = this;
 
-	this.create = function(callback) {
-		this.template("main", null, function(out) {
-			page.$el.html(out);
-			page.$("#sources").on("tap", function() {
-				page.pager.loadPage("Sources");
-			});
-			page.$("#map").on("tap", function() {
-				page.pager.loadPage("Map");
-			});
-			page.$("#tests").on("tap", function() {
-				page.pager.loadPage("Tests");
-			});
-			page.$("#settings").on("tap", function() {
-				//console.error("Test");
-			});
-			page.$("#sync_cancel").on("tap", function() {
-				syncCancel = true;
-				page.$("#sync_cancel").attr("disabled", true);
-			});
-			
-			callback();
-		});
-	};
+    this.create = function(callback) {
+        this.template("main", null, function(out) {
+            page.$el.html(out);
+            page.$("#sources").on("tap", function() {
+                page.pager.loadPage("Sources");
+            });
+            page.$("#map").on("tap", function() {
+                page.pager.loadPage("Map");
+            });
+            page.$("#tests").on("tap", function() {
+                page.pager.loadPage("Tests");
+            });
+            page.$("#settings").on("tap", function() {
+                page.pager.loadPage("Settings");
+            });
+            page.$("#sync_cancel").on("tap", function() {
+                syncCancel = true;
+                page.$("#sync_cancel").attr("disabled", true);
+            });
 
-	this.activate = function() {
-		synchronize();
-	}
+            callback();
+        });
+    };
 
-	this.actionbarMenu = [{
-		id : "sync",
-		title : "Sync",
-		icon : "images/sync.png",
-		ifRoom : true
-	}, {
-		id : "logout",
-		title : "Logout"
-	}];
+    this.activate = function() {
+        // If auto sync
+        if (localStorage.getItem("auto_sync") != "false")
+            synchronize();
+    };
 
-	this.actionbarTitle = "mWater";
+    this.actionbarMenu = [{
+        id : "sync",
+        title : "Sync",
+        icon : "images/sync.png",
+        ifRoom : true
+    }, {
+        id : "logout",
+        title : "Logout"
+    }];
 
-	var syncInProgress = false;
-	var syncCancel = false;
+    this.actionbarTitle = "mWater";
 
-	function syncSuccess() {
-		syncInProgress = false;
+    var syncInProgress = false;
+    var syncCancel = false;
 
-		page.$("#sync_error").hide();
-		page.$("#sync_progress").hide();
-		page.$("#sync_success").show().delay(2000).slideUp();
-	}
+    function syncSuccess() {
+        syncInProgress = false;
 
-	function syncError(error) {
-		syncInProgress = false;
+        page.$("#sync_error").hide();
+        page.$("#sync_progress").hide();
+        page.$("#sync_success").show().delay(2000).slideUp();
+    }
 
-		var text = (error.message || error.responseText || "Error connecting");
-		console.warn("SyncError:" + JSON.stringify(error));
+    function syncError(error) {
+        syncInProgress = false;
 
-		page.$("#sync_progress").hide();
-		page.$("#sync_success").hide();
-		page.$("#sync_error").text("Unable to synchronize: " + text).show().delay(5000).slideUp();
-	}
+        var text = (error.message || error.responseText || "Error connecting");
+        console.warn("SyncError:" + JSON.stringify(error));
 
-	function uploadImages() {
-		// Now upload images
-		if (syncCancel) {
-			syncError("Cancelled");
-			return;
-		}
+        page.$("#sync_progress").hide();
+        page.$("#sync_success").hide();
+        page.$("#sync_error").text("Unable to synchronize: " + text).show().delay(5000).slideUp();
+    }
 
-		// If no image upload, go to success
-		if (!page.imageManager.uploadImages) {
-			syncSuccess();
-			return;
-		}
+    function uploadImages() {
+        // Now upload images
+        if (syncCancel) {
+            syncError("Cancelled");
+            return;
+        }
 
-		page.imageManager.uploadImages(function(remaining, percentage) {
-			page.$("#sync_progress_message").text("Uploading images. " + remaining + " remaining.");
-		}, function(remaining) {
-			if (remaining > 0)
-				uploadImages();
-			else
-				syncSuccess();
-		}, function(error) {
-			syncError(error.http_status);
-		});
-	}
+        // If no image upload, go to success
+        if (!page.imageManager.uploadImages) {
+            syncSuccess();
+            return;
+        }
 
-	function syncLocationSuccess(position) {
-		// Determine which slices to get based on location
-		slices = geoslicing.getSlices(1, position.coords.latitude, position.coords.longitude);
+        page.imageManager.uploadImages(function(remaining, percentage) {
+            page.$("#sync_progress_message").text("Uploading images. " + remaining + " remaining.");
+        }, function(remaining) {
+            if (remaining > 0)
+                uploadImages();
+            else
+                syncSuccess();
+        }, function(error) {
+            syncError(error.http_status);
+        });
+    }
 
-		// Always get own sources
-		slices.push("source.created_by:" + page.syncServer.getUsername());
+    function syncLocationSuccess(position) {
+        // Determine which slices to get based on location
+        slices = geoslicing.getSlices(1, position.coords.latitude, position.coords.longitude);
 
-		page.syncClient.sync(slices, uploadImages, function(error) {
-			syncError(error);
-		});
-	}
+        // Always get own sources
+        slices.push("source.created_by:" + page.syncServer.getUsername());
 
-	function synchronize() {
-		if (!page.syncClient) 
-			return;
-		
-		if (syncInProgress)
-			return;
+        page.syncClient.sync(slices, uploadImages, function(error) {
+            syncError(error);
+        });
+    }
 
-		syncInProgress = true;
-		syncCancel = false;
+    function synchronize() {
+        if (!page.syncClient)
+            return;
 
-		page.$("#sync_cancel").attr("disabled", false);
-		page.$("#sync_progress").show();
-		page.$("#sync_error").hide();
-		page.$("#sync_success").hide();
+        if (syncInProgress)
+            return;
 
-		navigator.geolocation.getCurrentPosition(syncLocationSuccess, function(error) {
-			syncError("Unable to get location");
-		});
-	}
+        syncInProgress = true;
+        syncCancel = false;
+
+        page.$("#sync_cancel").attr("disabled", false);
+        page.$("#sync_progress").show();
+        page.$("#sync_error").hide();
+        page.$("#sync_success").hide();
+
+        navigator.geolocation.getCurrentPosition(syncLocationSuccess, function(error) {
+            syncError("Unable to get location");
+        });
+    }
 
 
-	this.actionbarMenuClick = function(id) {
-		// Handle sync event
-		if (id == "sync") {
-			synchronize();
-		} else if (id == "logout") {
-			function gotoLoginPage() {
-				// Close and go to login page
-				page.pager.closePage("Login");
-			}
-			// Always allow logout
-			this.syncServer.logout(gotoLoginPage, gotoLoginPage);
-		} else
-			alert(id);
-	};
-}
+    this.actionbarMenuClick = function(id) {
+        // Handle sync event
+        if (id == "sync") {
+            synchronize();
+        } else if (id == "logout") {
+            function gotoLoginPage() {
+                // Close and go to login page
+                page.pager.closePage("Login");
+            }
+
+            // Always allow logout
+            this.syncServer.logout(gotoLoginPage, gotoLoginPage);
+        } else
+            alert(id);
+    };
+}; 

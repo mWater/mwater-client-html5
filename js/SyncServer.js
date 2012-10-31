@@ -9,8 +9,7 @@ function SyncServer(baseUrl) {
 	this.manualLogin = function(username, clientUid) {
 		localStorage.setItem("username", username);
 		localStorage.setItem("clientUid", clientUid);
-	}
-
+	};
 
 	this.signup = function(email, username, password, success, error) {
 		$.ajax(baseUrl + "users/" + username, {
@@ -23,8 +22,7 @@ function SyncServer(baseUrl) {
 			that.manualLogin(username, data.clientuid);
 			success();
 		}).error(error);
-	}
-
+	};
 
 	this.login = function(username, password, success, error) {
 		$.post(baseUrl + "users/" + username, {
@@ -33,8 +31,7 @@ function SyncServer(baseUrl) {
 			that.manualLogin(username, data.clientuid);
 			success();
 		}).error(error);
-	}
-
+	};
 
 	this.logout = function(success, error) {
 		$.ajax(baseUrl + "clients/" + that.getClientUid(), {
@@ -43,22 +40,21 @@ function SyncServer(baseUrl) {
 			error : error
 		});
 		that.manualLogin("", "");
-	}
+	};
 
 
 	this.getUsername = function() {
 		return localStorage.getItem("username");
-	}
+	};
 
 
 	this.getClientUid = function() {
 		return localStorage.getItem("clientUid");
-	}
-
+	};
 
 	this.loggedIn = function() {
 		return this.getClientUid() != null && this.getClientUid() != "";
-	}
+	};
 
 }
 

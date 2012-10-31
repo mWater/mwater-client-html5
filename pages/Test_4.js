@@ -21,8 +21,7 @@ pages.Test_4 = function(uid) {
 			else
 				page.$("#chlorine_value").hide();
 		});
-
-	}
+	};
 
 
 	this.saveResults = function() {
@@ -37,9 +36,8 @@ pages.Test_4 = function(uid) {
 		}
 
 		return val;
-	}
-
-}
+	};
+};
 
 pages.Test_4.prototype = new pages.Test();
 pages.Test_4.prototype.constructor = pages.Test_4;
