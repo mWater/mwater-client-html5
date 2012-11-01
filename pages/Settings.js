@@ -6,7 +6,8 @@ pages.Settings = function() {
 
     function refresh(callback) {
         var view = {
-            offlineSourceCodes : page.sourceCodeManager.getNumberAvailableCodes()
+            offlineSourceCodes : page.sourceCodeManager.getNumberAvailableCodes(),
+            username: page.syncServer.getUsername()
         }
 
         page.template("settings", view, function(out) {
@@ -26,7 +27,7 @@ pages.Settings = function() {
             });
 
             if (!(page.model instanceof MWaterSqlModel))
-                page.$("#reset_database_block").hide();
+                page.$(".local_db_block").hide();
 
             page.$("#reset_database").on("tap", function() {
                 if (confirm("Completely reset local database?"))
