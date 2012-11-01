@@ -117,7 +117,7 @@ function Application(opts) {
             // Check if logged in
             if (opts.requireLogin && !syncServer.loggedIn())
                 that.pager.loadPage("Login", [function() {
-                    that.pager.loadPage(opts.initialPage, opts.initialPageArgs);
+                    that.pager.closePage(opts.initialPage, opts.initialPageArgs);
                 }]);
             else if (opts.anchorState && window.location.hash)// Restore state if possible
                 that.pager.setState(JSON.parse(window.location.hash.substr(1)));

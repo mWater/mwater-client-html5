@@ -27,15 +27,17 @@ function ProblemReporter(baseUrl, version, getClientUid) {
 
 	this.reportProblem = function(desc) {
 		// Create log string
-		var log = getLog;
+		var log = getLog();
+		
+        console.log("Reporting problem...");
+        
 		$.post(baseUrl + "problem_reports", {
 			clientuid : getClientUid(),
 			version : version,
 			log : log,
 			desc : desc
 		});
-		
-	} 
+	}; 
 	
 	var debouncedReportProblem = _.debounce(this.reportProblem, 5000, true);
 
