@@ -5,14 +5,14 @@ function SourceMap(elem, apiUrl, mapOptions, sourceClick) {
 	this.updateMarkers = function() {
 		this.geoLoadTracker.reset();
 		this.mapMarkerManager.updateMarkers();
-	}
+	};
 
 	this.displayStatus = function(status) {
 		if (status)
 			$("#status_control").text(status).show();
 		else
 			$("#status_control").hide();
-	}
+	};
 
 	this.createMarker = function(source) {
 		var color;
@@ -44,7 +44,7 @@ function SourceMap(elem, apiUrl, mapOptions, sourceClick) {
 		});
 
 		return marker;
-	}
+	};
 
 
 	function markerLoader(need, success, error) {

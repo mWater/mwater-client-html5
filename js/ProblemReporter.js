@@ -35,6 +35,7 @@ function ProblemReporter(baseUrl, version, getClientUid) {
         $.post(baseUrl + "problem_reports", {
             clientuid : getClientUid(),
             version : version,
+            user_agent : navigator.userAgent,
             log : log,
             desc : desc
         });
@@ -47,14 +48,13 @@ function ProblemReporter(baseUrl, version, getClientUid) {
     console.error = function(arg) {
         oldConsoleError(arg);
 
-        debouncedReportProblem("Console Error");
+        debouncedReportProblem(arg);
     };
 
     // Capture window.onerror
     var oldWindowOnError = window.onerror;
     window.onerror = function(errorMsg, url, lineNumber) {
-        console.log("window.onerror:" + errorMsg + ":" + url + ":" + lineNumber);
-        that.reportProblem("Internal Error");
+        that.reportProblem("window.onerror:" + errorMsg + ":" + url + ":" + lineNumber);
         
         // Put up alert instead of old action
         alert("Internal Error\n" + errorMsg + "\n" + url + ":" + lineNumber);

@@ -4,7 +4,7 @@ function SourceCodeManager(syncServer) {
 
     // Gets list of cached source codes in form { code:<code>, expiry:<expiry in s since epoch> }
     function getLocalCodes() {
-        if (localStorage.getItem("sourceCodes") == null)
+        if (!localStorage.getItem("sourceCodes"))
             return [];
         return JSON.parse(localStorage.getItem("sourceCodes"));
     }

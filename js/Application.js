@@ -1,6 +1,6 @@
 function Application(opts) {
     var that = this;
-    var version = 0.25;
+    var version = "0.26";
 
     // Setup options
     opts = _.extend({
