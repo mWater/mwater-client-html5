@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, target-densitydpi=medium-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
         <!--[if lt IE 9]>
-            <script>
-                alert("Browser not supported. Chrome, Safari, Firefox or Internet Explorer 9 required.");
-            </script>
+        <script>
+        alert("Browser not supported. Chrome, Safari, Firefox or Internet Explorer 9 required.");
+        </script>
         <![endif]-->
 
         <!-- Load map api -->
@@ -71,160 +71,174 @@
         <script src="pages/SourceNote.js"></script>
 
         <style>
-									html {
-										height:100%
-									}
-									body {
-										height:100%;
-										margin:0;
-										padding:0
-									}
-									#map_canvas {
-										height:100%;
-										width:100%;
-									}
-									#page_container {
-										height:100%;
-									}
-									#status_control {
-										background-color:#F9EDBE;
-										font-weight:bold;
-										padding:5px;
-										margin-top:10px;
-										border:1px #F0C36D solid;
-										min-width:100px;
-										text-align:center;
-										color:#222;
-										display:block;
-									}
+			html {
+				height: 100%
+			}
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0
+			}
+			div#content {
+				bottom: 0;
+				float: left;
+				overflow: hidden;
+				margin-top: 40px;
+				position: absolute;
+				top: 0;
+				width: 100%;
+			}
+			#map_canvas {
+				height: 100%;
+				width: 100%;
+			}
+			#page_container {
+				height: 100%;
+			}
+			#status_control {
+				background-color: #F9EDBE;
+				font-weight: bold;
+				padding: 5px;
+				margin-top: 10px;
+				border: 1px #F0C36D solid;
+				min-width: 100px;
+				text-align: center;
+				color: #222;
+				display: block;
+			}
         </style>
 
         <script>
-			var apiUrl = "/mwater/apiv2/";
-			var infowindow = new google.maps.InfoWindow({
-				maxWidth : 410
-			});
+            var apiUrl = "/mwater/apiv2/";
+            var infowindow = new google.maps.InfoWindow({
+                maxWidth : 410
+            });
 
-			var appOpts = {
-				serverUrl : apiUrl,
-				cacheImages : false,
-				anchorState : false,
-				localDb : false,
-			}
+            var appOpts = {
+                serverUrl : apiUrl,
+                cacheImages : false,
+                anchorState : false,
+                localDb : false,
+            }
 
-			// Create sync server
-			var syncServer = new SyncServer(apiUrl);
+            // Create sync server
+            var syncServer = new SyncServer(apiUrl);
 
-			function sourceClick(source, marker) {
-				var content = $($("#info_window").html());
-				var actionbar = new HtmlActionbar(content, {
-					fixedTop : false
-				});
+            function sourceClick(source, marker) {
+                var content = $($("#info_window").html());
+                var actionbar = new HtmlActionbar(content, {
+                    fixedTop : false
+                });
 
-				// Create info window
-				var opts = _.defaults({
-					initialPage : "Source",
-					initialPageArgs : [source.uid, false, true],
-					pageContainer : content.find("#page_container"),
-					requireLogin : false, 
-					actionbar : actionbar
-				}, appOpts);
+                // Create info window
+                var opts = _.defaults({
+                    initialPage : "Source",
+                    initialPageArgs : [source.uid, false, true],
+                    pageContainer : content.find("#page_container"),
+                    requireLogin : false,
+                    actionbar : actionbar
+                }, appOpts);
 
-				var application = new Application(opts);
+                var application = new Application(opts);
 
-				infowindow.setContent(content.get(0));
-				infowindow.open(sourceMap.gmap, marker);
-			}
+                infowindow.setContent(content.get(0));
+                infowindow.open(sourceMap.gmap, marker);
+            }
 
             var modal;
-			function displayModal(opts) {
-				// Display modal
-				modal = $($("#app_modal").html());
+            function displayModal(opts) {
+                // Display modal
+                modal = $($("#app_modal").html());
 
-				opts = _.defaults(opts, appOpts);
-				opts.pageContainer = modal.find("#page_container");
+                opts = _.defaults(opts, appOpts);
+                opts.pageContainer = modal.find("#page_container");
 
-				var application = new Application(opts);
-				modal.modal();
-			}
-			function closeModal() {
-			    modal.modal('hide');
-			}
-			
-			function addSource() {
-			    hideMenu();
-			    displayModal({
-			        initialPage:"NewSource",
-			        initialPageArgs: [{ latitude: menu_latLng.lat(),
-			            longitude: menu_latLng.lng() }, 
-			            function(uid) {
-			                closeModal();
-			                if (uid) {
-			                    // Refresh markers
-			                    sourceMap.updateMarkers();
-			                }
-			            }]});
-			}
+                var application = new Application(opts);
+                modal.modal();
+            }
+
+            function closeModal() {
+                modal.modal('hide');
+            }
+
+            function addSource() {
+                hideMenu();
+                displayModal({
+                    initialPage : "NewSource",
+                    initialPageArgs : [{
+                        latitude : menu_latLng.lat(),
+                        longitude : menu_latLng.lng()
+                    },
+                    function(uid) {
+                        closeModal();
+                        if (uid) {
+                            // Refresh markers
+                            sourceMap.updateMarkers();
+                        }
+                    }]
+
+                });
+            }
 
             function hideMenu() {
                 $('#menu').hide();
             }
 
             var menu_latLng;
-			function setupRightClickMenu() {
-				function showMenu(event) {
-					menu_latLng = event.latLng;
-					$('#menu').css({
-						top : event.pixel.y + 40 + 'px',
-						left : event.pixel.x + 'px'
-					}).show();
-				}
+            function setupRightClickMenu() {
+                function showMenu(event) {
+                    menu_latLng = event.latLng;
+                    $('#menu').css({
+                        top : event.pixel.y + 40 + 'px',
+                        left : event.pixel.x + 'px'
+                    }).show();
+                }
 
-				// Handle right-click
-				google.maps.event.addListener(sourceMap.gmap, "rightclick", showMenu);
-				
-				google.maps.event.addListener(sourceMap.gmap, 'click', hideMenu);
-                google.maps.event.addListener(sourceMap.gmap, 'dragstart', hideMenu); 
+                // Handle right-click
+                google.maps.event.addListener(sourceMap.gmap, "rightclick", showMenu);
+
+                google.maps.event.addListener(sourceMap.gmap, 'click', hideMenu);
+                google.maps.event.addListener(sourceMap.gmap, 'dragstart', hideMenu);
                 google.maps.event.addListener(sourceMap.gmap, 'zoom_changed', hideMenu);
-			}
+            }
 
-			var sourceMap;
-			$(function() {
-				mapOptions = {
-					zoom : 12,
-					center : new google.maps.LatLng(-2.55, 32.95),
-					mapTypeId : google.maps.MapTypeId.HYBRID
-				};
+            var sourceMap;
+            $(function() {
+                mapOptions = {
+                    zoom : 12,
+                    center : new google.maps.LatLng(-2.55, 32.95),
+                    mapTypeId : google.maps.MapTypeId.HYBRID
+                };
 
-				sourceMap = new SourceMap($("#map_canvas").get(0), apiUrl, mapOptions, sourceClick);
-				setupRightClickMenu();
+                sourceMap = new SourceMap($("#map_canvas").get(0), apiUrl, mapOptions, sourceClick);
+                setupRightClickMenu();
 
-				function refreshLogin() {
-					if (syncServer.loggedIn())
-						$("#login_button").text("Logout " + syncServer.getUsername());
-					else
-						$("#login_button").text("Login");
-				}
+                function refreshLogin() {
+                    if (syncServer.loggedIn())
+                        $("#login_button").text("Logout " + syncServer.getUsername());
+                    else
+                        $("#login_button").text("Login");
+                }
 
-				refreshLogin();
+                refreshLogin();
 
-				$("#login_button").click(function() {
-					if (syncServer.loggedIn()) {
-						syncServer.logout(refreshLogin);
-					} else {
-						displayModal({
-						    requireLogin: false,
-							initialPage : "Login",
-							initialPageArgs : [
-							function() {
-								modal.modal('hide');
-								refreshLogin();
-							}]
+                $("#login_button").click(function() {
+                    if (syncServer.loggedIn()) {
+                        syncServer.logout(refreshLogin);
+                    } else {
+                        displayModal({
+                            requireLogin : false,
+                            initialPage : "Login",
+                            initialPageArgs : [
+                            function() {
+                                modal.modal('hide');
+                                refreshLogin();
+                            }]
 
-						});
-					}
-				});
-			});
+                        });
+                    }
+                });
+            });
 
         </script>
 
@@ -257,13 +271,13 @@
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
 
                     <style>
-																					.navbar {
-																						margin-bottom:0px;
-																					}
-																					.navbar-inverse .navbar-inner {
-																						border-radius:0px;
-																						/*background-color: #404040;*/
-																					}
+						.navbar {
+							margin-bottom: 0px;
+						}
+						.navbar-inverse .navbar-inner {
+							border-radius: 0px;
+							/*background-color: #404040;*/
+						}
                     </style>
                     <a class="brand" href="#" style="background: url('images/mwater-small.png') no-repeat left center; padding-left: 55px;">mWater</a>
                     <div id="navbar"></div>
@@ -277,8 +291,8 @@
                 </div>
             </div>
         </div><!--/top navbar -->
-        <div id="map_canvas">
-
+        <div id="content">
+            <div id="map_canvas"></div>
         </div>
     </body>
 </html>
