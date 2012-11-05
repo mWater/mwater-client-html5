@@ -71,7 +71,7 @@ sampleanalysis = {};
 		
 		if (test.test_type == 4) // Chlorine
 		{
-			if (results.positive)
+			if (results.present)
 				return {
 					text : "Positive",
 					color : "Green"
