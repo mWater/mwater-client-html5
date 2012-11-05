@@ -28,22 +28,33 @@ pages.Map = function(center) {
         });
     }
 
-    function addMyLocation() {
-        var myloc = new google.maps.Marker({
-            clickable : false,
-            icon : new google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png', new google.maps.Size(22, 22), new google.maps.Point(0, 18), new google.maps.Point(11, 11)),
-            shadow : null,
-            zIndex : 999,
-            map : sourceMap.gmap
-        });
+    var myLocationMarker, locationWatchId;
 
-        if (navigator.geolocation)
-            navigator.geolocation.getCurrentPosition(function(pos) {
+    function addMyLocation() {
+        function geolocationSuccess(pos) {
+            if (sourceMap) {
                 var me = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-                myloc.setPosition(me);
-            }, function(error) {
-                // ...
+                console.log("Got position: "+pos.coords.latitude+ ","+ pos.coords.longitude)
+                myLocationMarker.setPosition(me);
+            }
+        }
+
+        function geolocationError() {
+            // ...
+        }
+
+        if (navigator.geolocation && !locationWatchId)
+            locationWatchId = navigator.geolocation.watchPosition(geolocationSuccess, geolocationError, {
+                maximumAge : 3000,
+                enableHighAccuracy : true
             });
+    }
+
+    function removeMyLocation() {
+        // End location watch
+        if (locationWatchId)
+            navigator.geolocation.clearWatch(locationWatchId);
+        locationWatchId = null;
     }
 
 
@@ -66,6 +77,13 @@ pages.Map = function(center) {
                         if (!center)
                             centerCurrentLocation();
 
+                        myLocationMarker = new google.maps.Marker({
+                            clickable : false,
+                            icon : new google.maps.MarkerImage('images/my_location.png', new google.maps.Size(22, 22), new google.maps.Point(0, 0), new google.maps.Point(11, 11)),
+                            shadow : null,
+                            zIndex : 1000000,
+                            map : sourceMap.gmap
+                        });
                         addMyLocation();
                     }
 
@@ -76,7 +94,14 @@ pages.Map = function(center) {
     };
 
     this.activate = function() {
-        if (sourceMap)
+        if (sourceMap) {
             sourceMap.reset();
+            addMyLocation();
+        }
     };
+
+    this.deactivate = function() {
+        removeMyLocation();
+    };
+
 }

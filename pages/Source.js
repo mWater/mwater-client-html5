@@ -122,7 +122,7 @@ pages.Source = function(uid, setLocation, hideLocation) {
 				displaySource();
 			});
 		}, page.error);
-	}
+	};
 
 	function displayLocation() {
 		if (!source)
@@ -176,14 +176,14 @@ pages.Source = function(uid, setLocation, hideLocation) {
 				enableHighAccuracy : true
 			});
 		}
-	}
+	};
 
 
 	this.deactivate = function() {
 		// End location watch
 		if (displayLocation) 
 			navigator.geolocation.clearWatch(locationWatchId);
-	}
+	};
 
 
 	this.actionbarMenu = [{
