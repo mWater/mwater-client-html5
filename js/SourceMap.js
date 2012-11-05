@@ -6,6 +6,7 @@ function SourceMap(elem, apiUrl, mapOptions, sourceClick) {
     this.updateMarkers = function() {
 		this.geoLoadTracker.reset();
 		this.mapMarkerManager.reset();
+        this.mapMarkerManager.updateMarkers();
 	};
 	
 	this.displayStatus = function(status) {

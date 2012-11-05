@@ -51,11 +51,13 @@ SyncClient.prototype.upload = function(success, error) {
         // Check if upload needed
         if (changes != null) {
             that.syncServer.uploadChanges(changes, function() {
-                success(changes);
+                if (success)
+                    success(changes);
             }, error);
         }
         else {
-            success(null);
+            if (success)
+                success(null);
         }
     }, error);
 };
