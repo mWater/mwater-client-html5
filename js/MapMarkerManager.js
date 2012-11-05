@@ -15,131 +15,141 @@
  * 	ms: dict of markers by uid.
  */
 function MapMarkerManager(map, geoLoadTracker, markerLoader) {
-	var markers = {}
-	var markerKeys = []
-	var maxVisible = 300;
-	var loading = 0;
+    var markers = {}
+    var markerKeys = []
+    var maxVisible = 300;
+    var loading = 0;
 
-	google.maps.event.addListener(map, 'idle', updateMarkers);
+    google.maps.event.addListener(map, 'idle', updateMarkers);
 
-	var listeners = []
-	function fireEvent(event) {
-		_.each(listeners, function(e) {
-			e(event);
-		});
-	}
+    var listeners = []
+    function fireEvent(event) {
+        _.each(listeners, function(e) {
+            e(event);
+        });
+    }
 
+    this.addListener = function(listener) {
+        listeners.push(listener);
+    };
 
-	this.addListener = function(listener) {
-		listeners.push(listener);
-	}
+    this.removeListener = function(listener) {
+        listeners = _.without(listeners, listener);
+    };
 
+    // Remove all markers
+    this.reset = function() {
+        for ( i = 0; i < markerKeys.length; i++) {
+            // Get marker
+            var k = markerKeys[i];
+            var m = markers[k];
+            m.setMap(null);
+        }
+        markers = {}
+        markerKeys = []
+    };
 
-	this.removeListener = function(listener) {
-		listeners = _.without(listeners, listener);
-	}
-	
-	this.updateMarkers = updateMarkers;	
+    this.updateMarkers = updateMarkers;
 
-	function extendBounds(bounds, extra) {
-		var span = bounds.toSpan();
+    function extendBounds(bounds, extra) {
+        var span = bounds.toSpan();
 
-		var x1 = bounds.getSouthWest().lng();
-		var y1 = bounds.getSouthWest().lat();
-		var x2 = bounds.getNorthEast().lng();
-		var y2 = bounds.getNorthEast().lat();
+        var x1 = bounds.getSouthWest().lng();
+        var y1 = bounds.getSouthWest().lat();
+        var x2 = bounds.getNorthEast().lng();
+        var y2 = bounds.getNorthEast().lat();
 
-		x1 += (x1 - x2) * extra;
-		y1 += (y1 - y2) * extra;
-		x2 += (x2 - x1) * extra;
-		y2 += (y2 - y1) * extra;
+        x1 += (x1 - x2) * extra;
+        y1 += (y1 - y2) * extra;
+        x2 += (x2 - x1) * extra;
+        y2 += (y2 - y1) * extra;
 
-		return new google.maps.LatLngBounds(new google.maps.LatLng(y1, x1), new google.maps.LatLng(y2, x2))
-	}
+        return new google.maps.LatLngBounds(new google.maps.LatLng(y1, x1), new google.maps.LatLng(y2, x2))
+    }
 
-	function updateMarkers() {
-		var bounds = map.getBounds();
-		if (bounds == null)
-			return;
-			
-		bounds = extendBounds(bounds, 0.2);
-		var visibleCount = 0;
-		var visibleUntil;
+    function updateMarkers() {
+        var bounds = map.getBounds();
+        if (bounds == null)
+            return;
 
-		for (var i = 0; i < markerKeys.length; i++) {
-			// Get marker
-			var k = markerKeys[i];
-			var m = markers[k];
+        bounds = extendBounds(bounds, 0.2);
+        var visibleCount = 0;
+        var visibleUntil, i;
 
-			// Determine if in bounds
-			var inBounds = bounds.contains(m.getPosition());
+        for ( i = 0; i < markerKeys.length; i++) {
+            // Get marker
+            var k = markerKeys[i];
+            var m = markers[k];
 
-			if (inBounds && m.getMap() == null && visibleCount < maxVisible)
-				m.setMap(map);
-			else if ((!inBounds || visibleCount >= maxVisible) && m.getMap() != null)
-				m.setMap(null);
-			if (inBounds) {
-				if (visibleCount < maxVisible)
-					visibleUntil = k;
-				visibleCount++;
-			}
-		}
+            // Determine if in bounds
+            var inBounds = bounds.contains(m.getPosition());
 
-		// Get needed to load
-		var rect = new utils.Rect(bounds.getSouthWest().lng(), bounds.getSouthWest().lat(), bounds.getNorthEast().lng(), bounds.getNorthEast().lat());
-		var needed = geoLoadTracker.getNeeded(rect);
+            if (inBounds && m.getMap() == null && visibleCount < maxVisible)
+                m.setMap(map);
+            else if ((!inBounds || visibleCount >= maxVisible) && m.getMap() != null)
+                m.setMap(null);
+            if (inBounds) {
+                if (visibleCount < maxVisible)
+                    visibleUntil = k;
+                visibleCount++;
+            }
+        }
 
-		// If nothing to load, display completed or too_many
-		if (needed.length == 0) {
-			if (visibleCount > maxVisible)
-				fireEvent("too_many");
-			else
-				fireEvent("completed");
-			return;
-		}
+        // Get needed to load
+        var rect = new utils.Rect(bounds.getSouthWest().lng(), bounds.getSouthWest().lat(), bounds.getNorthEast().lng(), bounds.getNorthEast().lat());
+        var needed = geoLoadTracker.getNeeded(rect);
 
-		// If needed starts *after* visibleUntil, and we're at max displayable,
-		// then we already have more data than we can display
-		haveEnough = _.all(needed, function(n) {
-			return (visibleUntil !== undefined) && n.since != null && n.since > visibleUntil;
-		});
-		haveEnough &= visibleCount >= maxVisible;
+        // If nothing to load, display completed or too_many
+        if (needed.length == 0) {
+            if (visibleCount > maxVisible)
+                fireEvent("too_many");
+            else
+                fireEvent("completed");
+            return;
+        }
 
-		if (haveEnough) {
-			fireEvent("too_many");
-			return;
-		}
+        // If needed starts *after* visibleUntil, and we're at max displayable,
+        // then we already have more data than we can display
+        haveEnough = _.all(needed, function(n) {
+            return (visibleUntil !== undefined) && n.since != null && n.since > visibleUntil;
+        });
+        haveEnough &= visibleCount >= maxVisible;
 
-		if (loading > 0) {
-			fireEvent("loading");
-			return;
-		}
+        if (haveEnough) {
+            fireEvent("too_many");
+            return;
+        }
 
-		_.each(needed, function(need) {
-			loading++;
-			markerLoader(need, successLoadingMarkers, errorLoadingMarkers);
-		});
-	}
+        if (loading > 0) {
+            fireEvent("loading");
+            return;
+        }
 
-	function successLoadingMarkers(rect, until, ms) {
-		loading--;
+        _.each(needed, function(need) {
+            loading++;
+            markerLoader(need, successLoadingMarkers, errorLoadingMarkers);
+        });
+    }
 
-		geoLoadTracker.recordLoaded(rect, until);
+    function successLoadingMarkers(rect, until, ms) {
+        loading--;
 
-		// Add markers
-		_.each(ms, function(value, key) {
-			if (!markers[key]) {
-				markers[key] = value;
-			}
-		});
+        geoLoadTracker.recordLoaded(rect, until);
 
-		markerKeys = _.keys(markers).sort();
+        // Add markers
+        _.each(ms, function(value, key) {
+            if (!markers[key]) {
+                markers[key] = value;
+            }
+        });
 
-		updateMarkers()
-	}
+        markerKeys = _.keys(markers).sort();
 
-	function errorLoadingMarkers(error) {
-		loading--;
-	}
+        updateMarkers()
+    }
+
+    function errorLoadingMarkers(error) {
+        loading--;
+    }
 
 }

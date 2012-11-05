@@ -100,7 +100,7 @@ SyncServer.prototype.getWelcome = function(version, success, error) {
     }).error(function(jqXHR, textStatus, errorThrown) {
         if (jqXHR.status == 403) {
             success(false, "", false);
-        } else
+        } else if (error)
             error(errorThrown);
     });
 };

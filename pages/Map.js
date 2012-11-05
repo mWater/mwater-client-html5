@@ -28,6 +28,24 @@ pages.Map = function(center) {
         });
     }
 
+    function addMyLocation() {
+        var myloc = new google.maps.Marker({
+            clickable : false,
+            icon : new google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png', new google.maps.Size(22, 22), new google.maps.Point(0, 18), new google.maps.Point(11, 11)),
+            shadow : null,
+            zIndex : 999,
+            map : sourceMap.gmap
+        });
+
+        if (navigator.geolocation)
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                var me = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+                myloc.setPosition(me);
+            }, function(error) {
+                // ...
+            });
+    }
+
 
     this.create = function(callback) {
         this.template("map", null, function(out) {
@@ -40,19 +58,25 @@ pages.Map = function(center) {
                         var mapOptions = {
                             zoom : 13,
                             center : center ? new google.maps.LatLng(center.latitude, center.longitude) : undefined,
-                            mapTypeId : google.maps.MapTypeId.HYBRID
+                            mapTypeId : google.maps.MapTypeId.ROADMAP
                         }
 
                         sourceMap = new SourceMap($("#map_canvas").get(0), page.syncServer.baseUrl, mapOptions, sourceClick);
 
                         if (!center)
                             centerCurrentLocation();
+
+                        addMyLocation();
                     }
 
                 });
             });
             callback();
         });
-    }
+    };
 
+    this.activate = function() {
+        if (sourceMap)
+            sourceMap.reset();
+    };
 }

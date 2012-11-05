@@ -2,11 +2,12 @@
 function SourceMap(elem, apiUrl, mapOptions, sourceClick) {
 	var that = this;
 
-	this.updateMarkers = function() {
+    // Requery to get any new markers
+    this.updateMarkers = function() {
 		this.geoLoadTracker.reset();
-		this.mapMarkerManager.updateMarkers();
+		this.mapMarkerManager.reset();
 	};
-
+	
 	this.displayStatus = function(status) {
 		if (status)
 			$("#status_control").text(status).show();
