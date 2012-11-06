@@ -29,6 +29,14 @@ Pager = function(container, context, actionbar) {
         $(this).triggerHandler("checked");
     });
 
+    // Make radio buttons tappable
+    $("body").on("tap", ".radio-button", function(e) {
+        // Find parent radiogroup
+        $(this).parents(".radio-group").find(".radio-button").removeClass("checked");
+        $(this).addClass("checked");
+        $(this).triggerHandler("checked");
+    });
+
     // Prevent links from launching
     container.on("click", "a", function(e) {
         return false;
@@ -74,8 +82,8 @@ Pager = function(container, context, actionbar) {
     // to create it. Default action is to look in global "pages"
     // for constructor with name
     this.loadPage = function(name, args, callback, onlyCreate) {
-        console.log("Pager.loadPage(" + name + ", " + JSON.stringify(args)+ ")");
-        
+        console.log("Pager.loadPage(" + name + ", " + JSON.stringify(args) + ")");
+
         // Create page
         this.onLoad(name, function(constructor) {
             if (!onlyCreate) {
