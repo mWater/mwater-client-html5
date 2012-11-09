@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, target-densitydpi=medium-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <!-- Load standard libraries -->
+        <script src="js/libs/cordova-2.1.0.js"></script>
+        <script src="js/libs/underscore-min.js"></script>
+        <script src="js/libs/jquery-1.8.2.min.js"></script>
+        <script src="js/libs/dust-full-0.3.0.js"></script>
+        <script src="js/libs/backbone-min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="css/HtmlActionbar.css" />
+        <script src="js/HtmlActionbar.js"></script>
+
+        <!-- Load plugins -->
+        <script src="js/libs/webintent.js"></script>
+        <script src="js/libs/actionbar.js"></script>
+        <script src="js/libs/camera.js"></script>
+
+        <!-- Load custom libraries -->
+        <script src="js/libs/zeptotouch.js"></script>
+
+        <!-- Load application files -->
+        <link rel="stylesheet" type="text/css" href="css/mwater.css" />
+
+        <script src="js/i18n.js"></script>
+        <script src="js/utils.js"></script>
+
+        <script src="js/Pager.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/Pager.css" />
+
+        <script src="js/surveys.js"></script>
+
+        <style>
+			.question {
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+			.btn-group > .btn {
+				min-width: 80px;
+			}
+			.section {
+				font-weight: bold;
+				font-size: 125%;
+				margin-bottom: 15px;
+			}
+			.entry {
+				margin-bottom: 20px;
+			}
+
+        </style>
+
+        <script>
+            $(function() {
+                // Make checkboxes tappable
+                $("body").on("tap", ".checkbox", function(e) {
+                    $(this).toggleClass("checked");
+                    $(this).trigger("checked");
+                });
+
+                // Make radio buttons tappable
+                $("body").on("tap", ".radio-button", function(e) {
+                    // Find parent radiogroup
+                    $(this).parents(".radio-group").find(".radio-button").removeClass("checked");
+                    $(this).addClass("checked");
+                    $(this).trigger("checked");
+                });
+
+                var el = $("body");
+
+                var survey = new Survey();
+
+                var sections = [];
+                var questions = [];
+                questions.push(new RadioQuestion({
+                    id : "q1",
+                    model : survey,
+                    prompt : "Answer this:",
+                    options : [[true, "Yes"], [false, "No"]],
+                }));
+                
+                questions.push(new RadioQuestion({
+                    id : "q2",
+                    model : survey,
+                    prompt : "Second question:",
+                    options : [[true, "Yes"], [false, "No"]],
+                    conditional : function(m) {
+                        return m.get("q1") === true;
+                    }
+
+                }));
+                
+                questions.push(new MulticheckQuestion({
+                    id : "q3",
+                    model : survey,
+                    prompt : "Third question:",
+                    options : [[true, "Yes"], [false, "No"]],
+                    conditional : function(m) {
+                        return m.get("q2") == false;
+                    }
+
+                }));
+                
+                questions.push(new NumberQuestion({
+                    id : "q4",
+                    model : survey,
+                    prompt : "Enter exact value:",
+                }));
+
+                sections.push( section = new Section({
+                    title : "Water Quality",
+                    contents : questions
+                }));
+
+                questions=[]
+                questions.push(new RadioQuestion({
+                    id : "q5",
+                    model : survey,
+                    prompt : "Answer this:",
+                    options : [[true, "Yes"], [false, "No"]],
+                }));
+                questions.push(new RadioQuestion({
+                    id : "q6",
+                    model : survey,
+                    prompt : "Second question:",
+                    options : [[true, "Yes"], [false, "No"]],
+                    conditional : function(m) {
+                        return m.get("q1") === true;
+                    }
+                }));
+
+                sections.push( section = new Section({
+                    title : "Site",
+                    contents : questions
+                }));
+
+                var surveyView = new SurveyView({
+                    title : "",
+                    sections : sections
+                });
+
+                el.append(surveyView.el);
+
+                survey.on("change", function(model, options) {
+                    $("#json").text(JSON.stringify(model.toJSON()));
+                    //alert("changed!");
+                });
+
+                /*var model = {
+                 responses : {}
+                 };
+
+                 function updateDisplay() {
+                 if (model.responses.r1 == "true")
+                 $("#e2,#e3").slideDown();
+                 else
+                 $("#e2,#e3").slideUp();
+
+                 if (model.responses.r3 == "true")
+                 $("#e4").slideDown();
+                 else
+                 $("#e4").slideUp();
+                 }
+
+                 el.on("checked", ".radio-group.response", function(e) {
+                 model.responses[this.id] = $(this).find(".radio-button.checked").attr("data-value");
+                 updateDisplay();
+                 });*/
+            });
+
+        </script>
+    </head>
+    <body class="page">
+        <div id="json"></div>
+
+        <!--        <ul class="breadcrumb">
+        <li>
+        <a href="#">Water Quality</a><span class="divider">/</span>
+        </li>
+        <li class="active">
+        Water System<span class="divider">
+        </li>
+        </ul>
+        <form class="form">
+        <div class="section">
+        Water Quality
+        </div>
+        <div class="entry" id="e1">
+        <div class="question">
+        Has post-installation water analysis EVER been completed for the site?
+        </div>
+        <div class="answer">
+        <div class="radio-group response" id="r1">
+        <div class="radio-button" data-value="true">
+        Yes
+        </div>
+        <div class="radio-button" data-value="false">
+        No
+        </div>
+        </div>
+        </div>
+        </div>
+        <div class="entry" id="e2" style="display: none">
+        <div class="question">
+        When was the last water analysis completed?
+        </div>
+        <div class="answer">
+        <input type="date" id="r2"/>
+        </div>
+        </div>
+        <div class="entry" id="e3" style="display: none">
+        <div class="question">
+        Are all of the water quality parameters below the threshold limits?
+        </div>
+        <div class="answer">
+        <div class="radio-group response" id="r3">
+        <div class="radio-button" data-value="true">
+        Yes
+        </div>
+        <div class="radio-button" data-value="false">
+        No
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <div class="entry" id="e4" style="display: none">
+        <div class="question">
+        If no, which parameters exceed the limits?
+        </div>
+        <div class="answer">
+        <div class="checkbox">
+        Total Coliforms
+        </div>
+        <div class="checkbox">
+        E. Coli
+        </div>
+        <div class="checkbox">
+        Turbidity
+        </div>
+        <div class="checkbox">
+        pH
+        </div>
+        <div class="checkbox">
+        Iron
+        </div>
+        <div class="checkbox">
+        Other
+        </div>
+        </div>
+        </div>
+        </form>-->
+    </body>
+</html>
