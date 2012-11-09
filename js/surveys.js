@@ -5,7 +5,7 @@ SurveyModel = Backbone.Model.extend({
 Survey = Backbone.View.extend({
     className : "survey",
     template : _.template('<h2><%=title%></h2><ul class="breadcrumb"></ul><div class="sections"></div>' 
-        + '<button type="button" class="btn prev">Back <i class="icon-backward"></i></button>&nbsp;' 
+        + '<button type="button" class="btn prev"><i class="icon-backward"></i> Back</button>&nbsp;' 
         + '<button type="button" class="btn btn-primary next">Next <i class="icon-forward icon-white"></i></button>'
         + '<button type="button" class="btn btn-primary finish">Finish</button>'),
 
@@ -131,7 +131,7 @@ Question = Backbone.View.extend({
 
     renderRequired : function() {
         if (this.required)
-            return '<span class="required">*</span>';
+            return '&nbsp;<span class="required">*</span>';
         return '';
     },
 

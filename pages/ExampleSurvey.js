@@ -201,4 +201,18 @@ pages.ExampleSurvey = function(uid) {
     };
     
     this.actionbarTitle = "M&E Grading Survey";
+    
+        this.actionbarMenu = [{
+        id : "reset",
+        title : "Reset",
+    }];
+
+    this.actionbarMenuClick = function(id) {
+        if (id == "reset") {
+            if (confirm("Reset entire survey?")) {
+                page.surveyModel.clear();
+            }
+        }
+    }
+
 }; 
