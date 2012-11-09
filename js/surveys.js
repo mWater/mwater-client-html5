@@ -126,7 +126,8 @@ Question = Backbone.View.extend({
 
         // Check required
         if (this.required) {
-            if (!this.model.get(this.id))
+            if (this.model.get(this.id) === undefined || this.model.get(this.id) === null ||
+                this.model.get(this.id) === "")
                 val = "Required";
         }
 
@@ -145,7 +146,7 @@ Question = Backbone.View.extend({
         return val;
     },
 
-    updateVisibility : function() {
+    updateVisibility : function(e) {
         // slideUp/slideDown
         if (this.shouldBeVisible() && !this.visible)
             this.$el.slideDown();
@@ -163,6 +164,9 @@ Question = Backbone.View.extend({
     initialize : function() {
         // Adjust visibility based on model
         this.model.on("change", this.updateVisibility, this);
+        
+        // Re-render based on model changes
+        this.model.on("change:" + this.id, this.render, this);
 
         this.required = this.options.required;
 
@@ -175,11 +179,8 @@ Question = Backbone.View.extend({
         // Render answer
         this.renderAnswer(this.$(".answer"));
 
-        if (!this.shouldBeVisible()) {
-            this.$el.hide();
-            this.visible = false;
-        } else
-            this.visible = true;
+        this.$el.toggle(this.shouldBeVisible());
+        this.visible = this.shouldBeVisible();
         return this;
     }
 
@@ -204,9 +205,10 @@ RadioQuestion = Question.extend({
         html = "";
         var i;
         for ( i = 0; i < this.options.options.length; i++)
-            html += _.template('<div class="radio-button" data-value="<%=position%>"><%=text%></div>', {
+            html += _.template('<div class="radio-button <%=checked%>" data-value="<%=position%>"><%=text%></div>', {
                 position : i,
-                text : this.options.options[i][1]
+                text : this.options.options[i][1], 
+                checked : this.model.get(this.id) === this.options.options[i][0] ? "checked" : ""
             });
 
         return html;
@@ -223,8 +225,9 @@ MulticheckQuestion = Question.extend({
         // Get all checked
         var value = [];
         var opts = this.options.options;
-        this.$(".checkbox.checked").each(function(index) {
-            value.push(opts[index][0]);
+        this.$(".checkbox").each(function(index) {
+            if ($(this).hasClass("checked"))
+                value.push(opts[index][0]);
         });
         this.model.set(this.id, value);
     },
@@ -232,9 +235,10 @@ MulticheckQuestion = Question.extend({
     renderAnswer : function(answerEl) {
         var i;
         for ( i = 0; i < this.options.options.length; i++)
-            answerEl.append($(_.template('<div class="checkbox" data-value="<%=position%>"><%=text%></div>', {
+            answerEl.append($(_.template('<div class="checkbox <%=checked%>" data-value="<%=position%>"><%=text%></div>', {
                 position : i,
-                text : this.options.options[i][1]
+                text : this.options.options[i][1],
+                checked : (this.model.get(this.id) && _.contains(this.model.get(this.id), this.options.options[i][0])) ? "checked" : ""
             })));
     }
 
@@ -243,6 +247,7 @@ MulticheckQuestion = Question.extend({
 TextQuestion = Question.extend({
     renderAnswer : function(answerEl) {
         answerEl.html(_.template('<input type="text"/>', this));
+        answerEl.find("input").val(this.model.get(this.id));
     },
 
     events : {
@@ -257,6 +262,7 @@ TextQuestion = Question.extend({
 NumberQuestion = Question.extend({
     renderAnswer : function(answerEl) {
         answerEl.html(_.template('<input type="number"/>', this));
+        answerEl.find("input").val(this.model.get(this.id));
     },
 
     events : {
@@ -284,14 +290,24 @@ PhotoQuestion = Question.extend({
 });
 
 DateQuestion = Question.extend({
+    events : {
+        "change" : "changed"
+    },
+    
+    changed: function() {
+        this.model.set(this.id, this.$el.find('input[name="date"]').val());
+    },
     renderAnswer : function(answerEl) {
         answerEl.html(_.template('<input name="date" />', this));
+        
+        answerEl.find('input').val(this.model.get(this.id));
+        
         answerEl.find('input').scroller({
             preset : 'date',
             theme : 'ios',
             display : 'modal',
             mode : 'scroller',
-            dateOrder : 'mmD ddyy'
+            dateOrder : 'mmD ddyy',
         });
     },
 

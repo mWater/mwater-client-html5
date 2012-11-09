@@ -10,37 +10,86 @@ pages.ExampleSurvey = function(uid) {
         questions.push(new RadioQuestion({
             id : "q1",
             model : model,
-            prompt : "Answer this:",
+            required : true,
+            prompt : "Has post-installation water analysis EVER been completed for the site?",
             options : [[true, "Yes"], [false, "No"]],
         }));
 
-        questions.push(new RadioQuestion({
+        questions.push(new DateQuestion({
             id : "q2",
             model : model,
-            prompt : "Second question:",
-            options : [[true, "Yes"], [false, "No"]],
+            required : true,
+            prompt : "When was the last water analysis completed?",
             conditional : function(m) {
                 return m.get("q1") === true;
             }
 
         }));
 
-        questions.push(new MulticheckQuestion({
+        questions.push(new RadioQuestion({
             id : "q3",
             model : model,
-            prompt : "Third question:",
+            required : true,
+            prompt : "Are all of the water quality parameters below the threshold limits?",
             options : [[true, "Yes"], [false, "No"]],
             conditional : function(m) {
-                return m.get("q2") == false;
+                return m.get("q1") === true;
             }
+        }));
 
+        questions.push(new MulticheckQuestion({
+            id : "q4",
+            model : model,
+            prompt : "Which parameters exceed the limits?",
+            options : [["tc", "Total Coliforms"], ["ecoli", "E.Coli"], ["turbidity", "Turbidity"], ["ph", "pH"], ["iron", "Iron"], ["other", "Other"]],
+            conditional : function(m) {
+                return m.get("q3") === false && m.get("q1") === true;
+            }
         }));
 
         questions.push(new NumberQuestion({
-            id : "q4",
+            id : "q5",
             model : model,
-            required : true,
-            prompt : "Enter exact value:",
+            prompt : "What is the concentration of Total Coliforms?",
+            conditional : function(m) {
+                return m.get("q3") === false && m.get("q4") && _.contains(m.get("q4"), "tc") && m.get("q1") === true;
+            }
+        }));
+
+        questions.push(new NumberQuestion({
+            id : "q6",
+            model : model,
+            prompt : "What is the concentration of E. Coli?",
+            conditional : function(m) {
+                return m.get("q3") === false && m.get("q4") && _.contains(m.get("q4"), "ecoli") && m.get("q1") === true;
+            }
+        }));
+
+        questions.push(new NumberQuestion({
+            id : "q7",
+            model : model,
+            prompt : "What is the turbidity?",
+            conditional : function(m) {
+                return m.get("q3") === false && m.get("q4") && _.contains(m.get("q4"), "turbidity") && m.get("q1") === true;
+            }
+        }));
+        
+        questions.push(new NumberQuestion({
+            id : "q8",
+            model : model,
+            prompt : "What is the pH?",
+            conditional : function(m) {
+                return m.get("q3") === false && m.get("q4") && _.contains(m.get("q4"), "ph") && m.get("q1") === true;
+            }
+        }));
+        
+        questions.push(new NumberQuestion({
+            id : "q9",
+            model : model,
+            prompt : "What is the concentration of iron?",
+            conditional : function(m) {
+                return m.get("q3") === false && m.get("q4") && _.contains(m.get("q4"), "iron") && m.get("q1") === true;
+            }
         }));
 
         sections.push( section = new Section({
@@ -50,30 +99,59 @@ pages.ExampleSurvey = function(uid) {
 
         questions = []
         questions.push(new RadioQuestion({
-            id : "q5",
+            id : "q10",
             model : model,
-            prompt : "Answer this:",
+            prompt : "Is there a cover for the system?",
             options : [[true, "Yes"], [false, "No"]],
         }));
+
         questions.push(new RadioQuestion({
-            id : "q6",
+            id : "q11",
             model : model,
-            prompt : "Second question:",
+            prompt : "Is there a lock and key for the cover?",
             options : [[true, "Yes"], [false, "No"]],
             conditional : function(m) {
-                return m.get("q1") === true;
+                return m.get("q10") === true;
             }
 
         }));
 
-        questions.push(new PhotoQuestion({
-            id : "q7",
+        questions.push(new RadioQuestion({
+            id : "q12",
             model : model,
-            prompt : "Take a photo:",
+            prompt : "Was the cover locked when you arrived on site?",
+            options : [[true, "Yes"], [false, "No"]],
+            conditional : function(m) {
+                return m.get("q10") === true && m.get("q11") === true;
+            }
+
+        }));
+
+        questions.push(new RadioQuestion({
+            id : "q13",
+            model : model,
+            prompt : "Is there ANY dust built up on the system?",
+            options : [[true, "Yes"], [false, "No"]],
+        }));
+
+        questions.push(new RadioQuestion({
+            id : "q14",
+            model : model,
+            prompt : "Is there ANY grease collected on the system?",
+            options : [[true, "Yes"], [false, "No"]],
+        }));
+
+        questions.push(new PhotoQuestion({
+            id : "q15",
+            model : model,
+            prompt : "Please take a picture of any dust or grease on the system.",
+            conditional : function(m) {
+                return m.get("q13") === true || m.get("q14") === true;
+            }
         }));
 
         sections.push( section = new Section({
-            title : "Site",
+            title : "Water System",
             contents : questions
         }));
 
@@ -81,26 +159,40 @@ pages.ExampleSurvey = function(uid) {
             title : "",
             sections : sections
         });
-
+        
         return survey;
 
     }
-
 
     this.create = function(callback) {
         this.template("example_survey", {}, function(out) {
             page.$el.html(out);
 
             // Create model
-            var surveyModel = new SurveyModel();
+            page.surveyModel = new SurveyModel();
 
+            // Save regularly
+            page.surveyModel.on("change", function() {
+                localStorage.setItem("examplesurvey", JSON.stringify(page.surveyModel.toJSON()));    
+            });
+            
             // Create survey
-            var survey = createSurvey(surveyModel);
-
-            page.$(".page").append(survey.$el);
+            page.survey = createSurvey(page.surveyModel);
+            page.$(".page").append(page.survey.$el);
 
             callback();
         });
 
+    };
+    
+    this.activate = function() {
+        // Load model
+        if (localStorage.getItem("examplesurvey")) {
+            page.surveyModel.set(JSON.parse(localStorage.getItem("examplesurvey")))
+        }
+    };
+    
+    this.deactivate = function() {
+        localStorage.setItem("examplesurvey", JSON.stringify(page.surveyModel.toJSON()));
     };
 }; 
