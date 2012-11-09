@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, target-densitydpi=medium-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <!-- Load standard libraries -->
+        <script src="js/libs/cordova-2.1.0.js"></script>
+        <script src="js/libs/underscore-min.js"></script>
+        <script src="js/libs/jquery-1.8.2.min.js"></script>
+        <script src="js/libs/dust-full-0.3.0.js"></script>
+        <script src="js/libs/backbone-min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="mobiscroll-2.1/css/mobiscroll-2.1.custom.min.css" />
+        <script src="mobiscroll-2.1/js/mobiscroll-2.1.custom.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="css/HtmlActionbar.css" />
+        <script src="js/HtmlActionbar.js"></script>
+
+        <!-- Load plugins -->
+        <script src="js/libs/webintent.js"></script>
+        <script src="js/libs/actionbar.js"></script>
+        <script src="js/libs/camera.js"></script>
+
+        <!-- Load custom libraries -->
+        <script src="js/libs/zeptotouch.js"></script>
+
+        <!-- Load application files -->
+        <link rel="stylesheet" type="text/css" href="css/mwater.css" />
+
+        <script src="js/i18n.js"></script>
+        <script src="js/utils.js"></script>
+
+        <script src="js/Pager.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/Pager.css" />
+
+        <script src="js/dragscroll.js"></script>
+        <script src="js/geoslicing.js"></script>
+        <script src="js/GeoLoadTracker.js"></script>
+        <script src="js/MapMarkerManager.js"></script>
+        <script src="js/MWaterApiModel.js"></script>
+        <script src="js/MWaterSqlModel.js"></script>
+        <script src="js/sampleanalysis.js"></script>
+        <script src="js/Application.js"></script>
+        <script src="js/SyncDb.js"></script>
+        <script src="js/SyncServer.js"></script>
+        <script src="js/SyncClient.js"></script>
+        <script src="js/SourceCodeManager.js"></script>
+        <script src="js/ImageManager.js"></script>
+        <script src="js/PhotoDisplayer.js"></script>
+        <script src="js/ProblemReporter.js"></script>
+        <script src="js/SourceMap.js"></script>
+        <script src="js/surveys.js"></script>
+
+        <!-- Load pages -->
+        <script src="pages/Login.js"></script>
+        <script src="pages/Main.js"></script>
+        <script src="pages/Settings.js"></script>
+        <script src="pages/Sources.js"></script>
+        <script src="pages/Source.js"></script>
+        <script src="pages/Map.js"></script>
+        <script src="pages/NewSource.js"></script>
+        <script src="pages/Tests.js"></script>
+        <script src="pages/NewTest.js"></script>
+        <script src="pages/Photo.js"></script>
+        <script src="pages/Test.js"></script>
+        <script src="pages/Test_0.js"></script>
+        <script src="pages/Test_1.js"></script>
+        <script src="pages/Test_2.js"></script>
+        <script src="pages/Test_4.js"></script>
+        <script src="pages/Test_5.js"></script>
+        <script src="pages/SourceNote.js"></script>
+        <script src="pages/ExampleSurvey.js"></script>
+
+        <script>
+			isCordova = utils.parseQuery().cordova;
+			isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
+
+			function onDeviceReady() {
+				$(function() {
+					configureDevice();
+
+					var opts = {
+						actionbar : window.actionbar, 
+						requireLogin: false,
+						initialPage: "ExampleSurvey"
+					};
+					if (!isCordova) {
+						opts.serverUrl = "/mwater/apiv2/";
+						opts.cacheImages = false;
+
+						// Offline db only on iphone
+						if (isIPhone)
+							opts.localDb = true;
+						else
+							opts.localDb = false;
+					}
+					application = new Application(opts);
+				});
+			}
+
+			function configureDevice() {
+				// Handle special cases for not in Cordova
+				if (!window.device || window.device.platform != "Android") {
+					actionbar = new HtmlActionbar($("body"), {
+						defaultTitle : "mWater"
+					});
+				}
+			}
+
+			if (isCordova) {
+				document.addEventListener("deviceready", onDeviceReady, false);
+			} else {
+				onDeviceReady();
+				//this is the browser
+			}
+        </script>
+    </head>
+    <body>
+        <div id="page_container"></div>
+    </body>
+</html>

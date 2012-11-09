@@ -199,4 +199,6 @@ pages.ExampleSurvey = function(uid) {
     this.deactivate = function() {
         localStorage.setItem("examplesurvey", JSON.stringify(page.surveyModel.toJSON()));
     };
+    
+    this.actionbarTitle = "M&E Grading Survey";
 }; 
