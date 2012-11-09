@@ -26,15 +26,15 @@ Pager = function(container, context, actionbar) {
     // Make checkboxes tappable
     container.on("tap", ".checkbox", function(e) {
         $(this).toggleClass("checked");
-        $(this).triggerHandler("checked");
+        $(this).trigger("checked");
     });
 
     // Make radio buttons tappable
-    $("body").on("tap", ".radio-button", function(e) {
+    container.on("tap", ".radio-button", function(e) {
         // Find parent radiogroup
         $(this).parents(".radio-group").find(".radio-button").removeClass("checked");
         $(this).addClass("checked");
-        $(this).triggerHandler("checked");
+        $(this).trigger("checked");
     });
 
     // Prevent links from launching

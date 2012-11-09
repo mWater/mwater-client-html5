@@ -13,6 +13,9 @@
         <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
         <script src="bootstrap/js/bootstrap.min.js"></script>
 
+        <link rel="stylesheet" type="text/css" href="mobiscroll-2.1/css/mobiscroll-2.1.custom.min.css" />
+        <script src="mobiscroll-2.1/js/mobiscroll-2.1.custom.min.js"></script>
+
         <link rel="stylesheet" type="text/css" href="css/HtmlActionbar.css" />
         <script src="js/HtmlActionbar.js"></script>
 
@@ -36,7 +39,7 @@
         <script src="js/surveys.js"></script>
 
         <style>
-			.question {
+			.prompt {
 				font-weight: bold;
 				margin-bottom: 10px;
 			}
@@ -48,9 +51,17 @@
 				font-size: 125%;
 				margin-bottom: 15px;
 			}
-			.entry {
+			.question {
+			    padding: 5px 5px 5px 5px;
 				margin-bottom: 20px;
 			}
+            .question.invalid {
+                border: #C43B1D 2px solid;
+                background-color: #FFE6CC;
+            }
+            .required {
+                color: Red;
+            }
 
         </style>
 
@@ -72,7 +83,7 @@
 
                 var el = $("body");
 
-                var survey = new Survey();
+                var survey = new SurveyModel();
 
                 var sections = [];
                 var questions = [];
@@ -105,7 +116,7 @@
 
                 }));
                 
-                questions.push(new NumberQuestion({
+                questions.push(new DateQuestion({
                     id : "q4",
                     model : survey,
                     prompt : "Enter exact value:",
@@ -133,12 +144,18 @@
                     }
                 }));
 
+                questions.push(new PhotoQuestion({
+                    id : "q7",
+                    model : survey,
+                    prompt : "Take a photo:",
+                }));
+
                 sections.push( section = new Section({
                     title : "Site",
                     contents : questions
                 }));
 
-                var surveyView = new SurveyView({
+                var surveyView = new Survey({
                     title : "",
                     sections : sections
                 });

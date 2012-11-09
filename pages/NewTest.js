@@ -70,4 +70,4 @@ pages.NewTest = function(sourceUid) {
 			callback();
 		});
 	};
-}
+};
