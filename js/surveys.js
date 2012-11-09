@@ -4,7 +4,10 @@ SurveyModel = Backbone.Model.extend({
 
 Survey = Backbone.View.extend({
     className : "survey",
-    template : _.template('<h2><%=title%></h2><ul class="breadcrumb"></ul><div class="sections"></div>' + '<button type="button" class="btn prev">Back <i class="icon-backward"></i></button>&nbsp;' + '<button type="button" class="btn btn-primary next">Next <i class="icon-forward icon-white"></i></button>'),
+    template : _.template('<h2><%=title%></h2><ul class="breadcrumb"></ul><div class="sections"></div>' 
+        + '<button type="button" class="btn prev">Back <i class="icon-backward"></i></button>&nbsp;' 
+        + '<button type="button" class="btn btn-primary next">Next <i class="icon-forward icon-white"></i></button>'
+        + '<button type="button" class="btn btn-primary finish">Finish</button>'),
 
     initialize : function() {
         this.title = this.options.title;
@@ -18,7 +21,17 @@ Survey = Backbone.View.extend({
     events : {
         "tap .next" : "nextSection",
         "tap .prev" : "prevSection",
+        "tap .finish" : "finish",
         "click a.section-crumb" : "crumbSection"
+    },
+    
+    finish : function () {
+        // Validate current section
+        var section = this.sections[this.section];
+        if (section.validate()) {
+            if (this.options.onFinish)
+                this.options.onFinish();
+        }
     },
 
     crumbSection : function(e) {
@@ -57,6 +70,7 @@ Survey = Backbone.View.extend({
         // Setup next/prev buttons
         this.$(".prev").toggle(index > 0);
         this.$(".next").toggle(index < this.sections.length - 1);
+        this.$(".finish").toggle(index == this.sections.length - 1);
     },
 
     render : function() {

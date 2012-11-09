@@ -157,7 +157,11 @@ pages.ExampleSurvey = function(uid) {
 
         var survey = new Survey({
             title : "",
-            sections : sections
+            sections : sections, 
+            onFinish : function() {
+                alert("Results recorded");
+                page.pager.closePage();
+            }
         });
         
         return survey;
