@@ -2,6 +2,15 @@ function ProblemReporter(baseUrl, version, getClientUid) {
     var history = [];
     var that = this;
 
+    // IE9 hack
+    if (Function.prototype.bind && console && typeof console.log == "object") {
+        [
+          "log","info","warn","error","assert","dir","clear","profile","profileEnd"
+        ].forEach(function (method) {
+            console[method] = this.bind(console[method], console);
+        }, Function.prototype.call);
+    }
+
     function capture(func) {
         var old = console[func];
         console[func] = function(arg) {

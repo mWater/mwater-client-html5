@@ -4,7 +4,8 @@ var utils = utils || {};
 	// Creates a 128-bit uid in hex
 	utils.createUid = function() {
 		s = "";
-		for (var i = 0; i < 8; i++)
+		var i;
+		for (i = 0; i < 8; i++)
 			s = s + Math.floor(Math.random() * 0x10000 /* 65536 */).toString(16);
 		return s;
 	};
@@ -18,7 +19,7 @@ var utils = utils || {};
 			nvpair[pair[0]] = pair[1];
 		});
 		return nvpair;
-	}
+	};
 
 	/* Simple rectangle */
 	utils.Rect = function(x1, y1, x2, y2) {
@@ -75,11 +76,11 @@ var utils = utils || {};
 			return (dist / 1000).toFixed(1) + "km " + compassStrs[compassDir];
 		else
 			return (dist).toFixed(0) + "m " + compassStrs[compassDir];
-	}
+	};
 
 	// Checks if a date is today
 	utils.isToday = function(msSinceEpoch) {
 		return new Date(msSinceEpoch).toLocaleDateString() == new Date().toLocaleDateString();
-	}
+	};
 
 })()

@@ -1,0 +1,2 @@
+java -jar compiler.jar --js js/libs/underscore-min.js js/libs/jquery-1.8.2.min.js js/libs/dust-full-0.3.0.min.js js/libs/backbone-min.js js/libs/mobiscroll-2.1.custom.min.js bootstrap/js/*.js --js_output_file compiled_libs.js --language_in ECMASCRIPT5 --compilation_level SIMPLE_OPTIMIZATIONS
+java -jar compiler.jar --js js/*.js pages/*.js --js_output_file compiled_app.js --language_in ECMASCRIPT5 --compilation_level SIMPLE_OPTIMIZATIONS
