@@ -4,10 +4,7 @@ SurveyModel = Backbone.Model.extend({
 
 Survey = Backbone.View.extend({
     className : "survey",
-    template : _.template('<h2><%=title%></h2><ul class="breadcrumb"></ul><div class="sections"></div>' 
-        + '<button type="button" class="btn prev"><i class="icon-backward"></i> Back</button>&nbsp;' 
-        + '<button type="button" class="btn btn-primary next">Next <i class="icon-forward icon-white"></i></button>'
-        + '<button type="button" class="btn btn-primary finish">Finish</button>'),
+    template : _.template('<h2><%=title%></h2><ul class="breadcrumb"></ul><div class="sections"></div>' + '<button type="button" class="btn prev"><i class="icon-backward"></i> Back</button>&nbsp;' + '<button type="button" class="btn btn-primary next">Next <i class="icon-forward icon-white"></i></button>' + '<button type="button" class="btn btn-primary finish">Finish</button>'),
 
     initialize : function() {
         this.title = this.options.title;
@@ -24,8 +21,8 @@ Survey = Backbone.View.extend({
         "tap .finish" : "finish",
         "click a.section-crumb" : "crumbSection"
     },
-    
-    finish : function () {
+
+    finish : function() {
         // Validate current section
         var section = this.sections[this.section];
         if (section.validate()) {
@@ -140,8 +137,7 @@ Question = Backbone.View.extend({
 
         // Check required
         if (this.required) {
-            if (this.model.get(this.id) === undefined || this.model.get(this.id) === null ||
-                this.model.get(this.id) === "")
+            if (this.model.get(this.id) === undefined || this.model.get(this.id) === null || this.model.get(this.id) === "")
                 val = "Required";
         }
 
@@ -178,7 +174,7 @@ Question = Backbone.View.extend({
     initialize : function() {
         // Adjust visibility based on model
         this.model.on("change", this.updateVisibility, this);
-        
+
         // Re-render based on model changes
         this.model.on("change:" + this.id, this.render, this);
 
@@ -221,9 +217,49 @@ RadioQuestion = Question.extend({
         for ( i = 0; i < this.options.options.length; i++)
             html += _.template('<div class="radio-button <%=checked%>" data-value="<%=position%>"><%=text%></div>', {
                 position : i,
-                text : this.options.options[i][1], 
+                text : this.options.options[i][1],
                 checked : this.model.get(this.id) === this.options.options[i][0] ? "checked" : ""
             });
+
+        return html;
+    }
+
+});
+
+DropdownQuestion = Question.extend({
+    events : {
+        "change" : "changed",
+    },
+
+    changed : function(e) {
+        var val = $(e.target).val();
+        if (val == "") {
+            this.model.set(this.id, null);
+        } else {
+            var index = parseInt(val);
+            var value = this.options.options[index][0];
+            this.model.set(this.id, value);
+        }
+    },
+
+    renderAnswer : function(answerEl) {
+        answerEl.html(_.template('<select id="source_type"><%=renderDropdownOptions()%></select>', this));
+    },
+
+    renderDropdownOptions : function() {
+        html = "";
+
+        // Add empty option
+        html += '<option value=""></option>';
+        
+        var i;
+        for ( i = 0; i < this.options.options.length; i++) {
+            html += _.template('<option value="<%=position%>" <%=selected%>><%-text%></option>', {
+                position : i,
+                text : this.options.options[i][1],
+                selected : this.model.get(this.id) === this.options.options[i][0] ? 'selected="selected"' : ""
+            });
+        }
 
         return html;
     }
@@ -260,8 +296,13 @@ MulticheckQuestion = Question.extend({
 
 TextQuestion = Question.extend({
     renderAnswer : function(answerEl) {
-        answerEl.html(_.template('<input type="text"/>', this));
-        answerEl.find("input").val(this.model.get(this.id));
+        if (this.options.multiline) {
+            answerEl.html(_.template('<textarea/>', this));
+            answerEl.find("textarea").val(this.model.get(this.id));
+        } else {
+            answerEl.html(_.template('<input type="text"/>', this));
+            answerEl.find("input").val(this.model.get(this.id));
+        }
     },
 
     events : {
@@ -307,15 +348,15 @@ DateQuestion = Question.extend({
     events : {
         "change" : "changed"
     },
-    
-    changed: function() {
+
+    changed : function() {
         this.model.set(this.id, this.$el.find('input[name="date"]').val());
     },
     renderAnswer : function(answerEl) {
         answerEl.html(_.template('<input name="date" />', this));
-        
+
         answerEl.find('input').val(this.model.get(this.id));
-        
+
         answerEl.find('input').scroller({
             preset : 'date',
             theme : 'ios',

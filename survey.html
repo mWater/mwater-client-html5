@@ -94,195 +94,40 @@
                     $(this).trigger("checked");
                 });
 
-                var el = $("body");
-
-                var survey = new SurveyModel();
-
-                var sections = [];
-                var questions = [];
-                questions.push(new RadioQuestion({
-                    id : "q1",
-                    model : survey,
-                    prompt : "Answer this:",
-                    options : [[true, "Yes"], [false, "No"]],
-                }));
-                
-                questions.push(new RadioQuestion({
-                    id : "q2",
-                    model : survey,
-                    prompt : "Second question:",
-                    options : [[true, "Yes"], [false, "No"]],
-                    conditional : function(m) {
-                        return m.get("q1") === true;
+                var el = $("#survey");
+                                
+                $("#try_it").click(function() {
+                    try {
+                    survey=eval($("#code").val());
+                    } catch (ex) {
+                        alert(ex);
                     }
-
-                }));
-                
-                questions.push(new MulticheckQuestion({
-                    id : "q3",
-                    model : survey,
-                    prompt : "Third question:",
-                    options : [[true, "Yes"], [false, "No"]],
-                    conditional : function(m) {
-                        return m.get("q2") == false;
-                    }
-
-                }));
-                
-                questions.push(new DateQuestion({
-                    id : "q4",
-                    model : survey,
-                    prompt : "Enter exact value:",
-                }));
-
-                sections.push( section = new Section({
-                    title : "Water Quality",
-                    contents : questions
-                }));
-
-                questions=[]
-                questions.push(new RadioQuestion({
-                    id : "q5",
-                    model : survey,
-                    prompt : "Answer this:",
-                    options : [[true, "Yes"], [false, "No"]],
-                }));
-                questions.push(new RadioQuestion({
-                    id : "q6",
-                    model : survey,
-                    prompt : "Second question:",
-                    options : [[true, "Yes"], [false, "No"]],
-                    conditional : function(m) {
-                        return m.get("q1") === true;
-                    }
-                }));
-
-                questions.push(new PhotoQuestion({
-                    id : "q7",
-                    model : survey,
-                    prompt : "Take a photo:",
-                }));
-
-                sections.push( section = new Section({
-                    title : "Site",
-                    contents : questions
-                }));
-
-                var surveyView = new Survey({
-                    title : "",
-                    sections : sections
+                    el.html('');
+                    el.append(survey.view.el);
                 });
-
-                el.append(surveyView.el);
-
-                survey.on("change", function(model, options) {
-                    $("#json").text(JSON.stringify(model.toJSON()));
-                    //alert("changed!");
-                });
-
-                /*var model = {
-                 responses : {}
-                 };
-
-                 function updateDisplay() {
-                 if (model.responses.r1 == "true")
-                 $("#e2,#e3").slideDown();
-                 else
-                 $("#e2,#e3").slideUp();
-
-                 if (model.responses.r3 == "true")
-                 $("#e4").slideDown();
-                 else
-                 $("#e4").slideUp();
-                 }
-
-                 el.on("checked", ".radio-group.response", function(e) {
-                 model.responses[this.id] = $(this).find(".radio-button.checked").attr("data-value");
-                 updateDisplay();
-                 });*/
+                
+                var header = "(function() {\nvar model = new SurveyModel();\nvar sections = [], questions = [];\n// START HERE\n\n";
+                var footer = "\n\n// END HERE\nvar view = new Survey({title : '', sections : sections});\nreturn { model: model, view: view };\n})()";
+                
+                var sample = 'questions.push(new RadioQuestion({\n    id : "q1",\n    model : model,\n    prompt : "Sample Question",\n    options : [[true, "Yes"], [false, "No"]]\n}));';
+                sample+='\n\nsections.push( section = new Section({\n    title : "Sample Section",\n    contents : questions\n}));';
+                
+                $("#code").val(header + sample + footer);
+                
             });
 
         </script>
     </head>
     <body class="page">
-        <div id="json"></div>
-
-        <!--        <ul class="breadcrumb">
-        <li>
-        <a href="#">Water Quality</a><span class="divider">/</span>
-        </li>
-        <li class="active">
-        Water System<span class="divider">
-        </li>
-        </ul>
-        <form class="form">
-        <div class="section">
-        Water Quality
-        </div>
-        <div class="entry" id="e1">
-        <div class="question">
-        Has post-installation water analysis EVER been completed for the site?
-        </div>
-        <div class="answer">
-        <div class="radio-group response" id="r1">
-        <div class="radio-button" data-value="true">
-        Yes
-        </div>
-        <div class="radio-button" data-value="false">
-        No
-        </div>
-        </div>
-        </div>
-        </div>
-        <div class="entry" id="e2" style="display: none">
-        <div class="question">
-        When was the last water analysis completed?
-        </div>
-        <div class="answer">
-        <input type="date" id="r2"/>
-        </div>
-        </div>
-        <div class="entry" id="e3" style="display: none">
-        <div class="question">
-        Are all of the water quality parameters below the threshold limits?
-        </div>
-        <div class="answer">
-        <div class="radio-group response" id="r3">
-        <div class="radio-button" data-value="true">
-        Yes
-        </div>
-        <div class="radio-button" data-value="false">
-        No
-        </div>
-        </div>
-        </div>
+        <div class="row-fluid" style="height:100%">
+            <div class="span6" style="height:100%">
+                <textarea id="code" spellcheck="false" cols="160" rows="20" style="width: 100%; height:100%"></textarea>
+                
+                <div><button type="buttton" id="try_it" class="btn btn-primary">Try It</button></div>
+            </div>
+            <div class="span6" id="survey">
+            </div>
         </div>
 
-        <div class="entry" id="e4" style="display: none">
-        <div class="question">
-        If no, which parameters exceed the limits?
-        </div>
-        <div class="answer">
-        <div class="checkbox">
-        Total Coliforms
-        </div>
-        <div class="checkbox">
-        E. Coli
-        </div>
-        <div class="checkbox">
-        Turbidity
-        </div>
-        <div class="checkbox">
-        pH
-        </div>
-        <div class="checkbox">
-        Iron
-        </div>
-        <div class="checkbox">
-        Other
-        </div>
-        </div>
-        </div>
-        </form>-->
     </body>
 </html>
