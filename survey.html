@@ -110,7 +110,7 @@
                 var footer = "\n\n// END HERE\nvar view = new Survey({title : '', sections : sections});\nreturn { model: model, view: view };\n})()";
                 
                 var sample = 'questions.push(new RadioQuestion({\n    id : "q1",\n    model : model,\n    prompt : "Sample Question",\n    options : [[true, "Yes"], [false, "No"]]\n}));';
-                sample+='\n\nsections.push( section = new Section({\n    title : "Sample Section",\n    contents : questions\n}));';
+                sample+='\n\nsections.push(new Section({\n    title : "Sample Section",\n    contents : questions\n}));\nquestions=[];\n';
                 
                 $("#code").val(header + sample + footer);
                 

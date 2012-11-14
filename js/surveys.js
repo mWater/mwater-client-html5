@@ -37,16 +37,34 @@ Survey = Backbone.View.extend({
         this.showSection(index);
     },
 
+    getNextSectionIndex : function() {
+        var i = this.section + 1;
+        while (i < this.sections.length) {
+            if (this.sections[i].shouldBeVisible())
+                return i;
+            i++;
+        }
+    },
+
+    getPrevSectionIndex : function() {
+        var i = this.section - 1;
+        while (i >= 0) {
+            if (this.sections[i].shouldBeVisible())
+                return i;
+            i--;
+        }
+    },
+
     nextSection : function() {
         // Validate current section
         var section = this.sections[this.section];
         if (section.validate()) {
-            this.showSection(this.section + 1);
+            this.showSection(this.getNextSectionIndex());
         }
     },
 
     prevSection : function() {
-        this.showSection(this.section - 1);
+        this.showSection(this.getPrevSectionIndex());
     },
 
     showSection : function(index) {
@@ -59,15 +77,17 @@ Survey = Backbone.View.extend({
 
         // Setup breadcrumbs
         var tmpl = '<% _.each(sections, function(s, i) { %> <li><a href="#" class="section-crumb" data-value="<%=i%>"><%=s.title%></a> <span class="divider">/</span></li> <% }); %>';
-        var visibleSections = _.first(this.sections, index + 1);
+        var visibleSections = _.filter(_.first(this.sections, index + 1), function(s) {
+            return s.shouldBeVisible()
+        });
         this.$(".breadcrumb").html(_.template(tmpl, {
             sections : _.initial(visibleSections)
         }) + _.template('<li class="active"><%=title%></li>', _.last(visibleSections)));
 
         // Setup next/prev buttons
-        this.$(".prev").toggle(index > 0);
-        this.$(".next").toggle(index < this.sections.length - 1);
-        this.$(".finish").toggle(index == this.sections.length - 1);
+        this.$(".prev").toggle(this.getPrevSectionIndex() !== undefined);
+        this.$(".next").toggle(this.getNextSectionIndex() !== undefined);
+        this.$(".finish").toggle(this.getNextSectionIndex() === undefined);
     },
 
     render : function() {
@@ -95,6 +115,12 @@ Section = Backbone.View.extend({
         // Always invisible initially
         this.$el.hide();
         this.render();
+    },
+
+    shouldBeVisible : function() {
+        if (!this.options.conditional)
+            return true;
+        return this.options.conditional(this.model);
     },
 
     validate : function() {
@@ -251,7 +277,7 @@ DropdownQuestion = Question.extend({
 
         // Add empty option
         html += '<option value=""></option>';
-        
+
         var i;
         for ( i = 0; i < this.options.options.length; i++) {
             html += _.template('<option value="<%=position%>" <%=selected%>><%-text%></option>', {
