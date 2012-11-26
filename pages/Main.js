@@ -57,15 +57,14 @@ pages.Main = function() {
         page.$("#sync_success").show().delay(2000).slideUp();
     }
 
-    function syncError(error) {
+    function syncError(msg, error) {
         syncInProgress = false;
 
-        var text = (error.message || error.responseText || "Error connecting");
-        console.warn("SyncError:" + JSON.stringify(error));
+        console.warn("SyncError:" + JSON.stringify(error || 'Unknown') + ":" + msg);
 
         page.$("#sync_progress").hide();
         page.$("#sync_success").hide();
-        page.$("#sync_error").text("Unable to synchronize: " + text).show().delay(5000).slideUp();
+        page.$("#sync_error").text("Unable to synchronize: " + msg).show().delay(5000).slideUp();
     }
 
     function uploadImages() {
@@ -89,7 +88,7 @@ pages.Main = function() {
             else
                 syncSuccess();
         }, function(error) {
-            syncError(error.http_status);
+            syncError("Error connecting to server", error.http_status);
         });
     }
 
@@ -101,7 +100,7 @@ pages.Main = function() {
         slices.push("source.created_by:" + page.syncServer.getUsername());
 
         page.syncClient.sync(slices, uploadImages, function(error) {
-            syncError(error);
+            syncError("Error connecting to server", error);
         });
     }
 
@@ -124,9 +123,11 @@ pages.Main = function() {
         page.sourceCodeManager.replenishCodes(5, function() {
             // Sync based on location
             navigator.geolocation.getCurrentPosition(syncLocationSuccess, function(error) {
-                syncError("Unable to get location");
+                syncError("Unable to get location", error);
             });
-        }, syncError);
+        }, function(error) {
+            syncError("Error connecting to server", error);
+        });
     }
 
 

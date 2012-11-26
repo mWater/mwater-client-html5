@@ -1,9 +1,12 @@
 {#rows}
 <tr id="{uid}">
-    <td>
-        <strong>{name}</strong>
-        <br/><span class="muted">{desc}&nbsp;</span>
-    </td>
+    <td><strong>{name}</strong>
+    <br/>
+    <span class="muted">{desc}&nbsp;</span></td>
     <td><strong>{code}</strong></td>
+</tr>
+{:else}
+<tr>
+    <td> No nearby sources found. See the map for a global view. </td>
 </tr>
 {/rows}
