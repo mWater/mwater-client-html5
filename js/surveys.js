@@ -1,8 +1,10 @@
-SurveyModel = Backbone.Model.extend({
+var surveys = surveys || {} 
+
+surveys.SurveyModel = Backbone.Model.extend({
 
 });
 
-Survey = Backbone.View.extend({
+surveys.SurveyView = Backbone.View.extend({
     className : "survey",
     template : _.template('<h2><%=title%></h2><ul class="breadcrumb"></ul><div class="sections"></div>' + '<button type="button" class="btn prev"><i class="icon-backward"></i> Back</button>&nbsp;' + '<button type="button" class="btn btn-primary next">Next <i class="icon-forward icon-white"></i></button>' + '<button type="button" class="btn btn-primary finish">Finish</button>'),
 
@@ -10,6 +12,9 @@ Survey = Backbone.View.extend({
         this.title = this.options.title;
         this.sections = this.options.sections;
         this.render();
+
+        // Adjust next/prev based on model
+        this.model.on("change", this.renderNextPrev, this);
 
         // Go to appropriate section TODO
         this.showSection(0);
@@ -83,7 +88,11 @@ Survey = Backbone.View.extend({
         this.$(".breadcrumb").html(_.template(tmpl, {
             sections : _.initial(visibleSections)
         }) + _.template('<li class="active"><%=title%></li>', _.last(visibleSections)));
-
+        
+        this.renderNextPrev();
+    },
+    
+    renderNextPrev : function() {
         // Setup next/prev buttons
         this.$(".prev").toggle(this.getPrevSectionIndex() !== undefined);
         this.$(".next").toggle(this.getNextSectionIndex() !== undefined);
@@ -104,7 +113,7 @@ Survey = Backbone.View.extend({
 
 });
 
-Section = Backbone.View.extend({
+surveys.Section = Backbone.View.extend({
     className : "section",
     template : _.template('<h3><%=title%></h3><div class="contents"></div>'),
 
@@ -147,7 +156,7 @@ Section = Backbone.View.extend({
 
 });
 
-Question = Backbone.View.extend({
+surveys.Question = Backbone.View.extend({
     className : "question",
 
     template : _.template('<div class="prompt"><%=options.prompt%><%=renderRequired()%></div><div class="answer"></div>'),
@@ -222,7 +231,7 @@ Question = Backbone.View.extend({
 
 });
 
-RadioQuestion = Question.extend({
+surveys.RadioQuestion = surveys.Question.extend({
     events : {
         "checked" : "checked",
     },
@@ -252,7 +261,7 @@ RadioQuestion = Question.extend({
 
 });
 
-DropdownQuestion = Question.extend({
+surveys.DropdownQuestion = surveys.Question.extend({
     events : {
         "change" : "changed",
     },
@@ -292,7 +301,7 @@ DropdownQuestion = Question.extend({
 
 });
 
-MulticheckQuestion = Question.extend({
+surveys.MulticheckQuestion = surveys.Question.extend({
     events : {
         "checked" : "checked",
     },
@@ -320,7 +329,7 @@ MulticheckQuestion = Question.extend({
 
 });
 
-TextQuestion = Question.extend({
+surveys.TextQuestion = surveys.Question.extend({
     renderAnswer : function(answerEl) {
         if (this.options.multiline) {
             answerEl.html(_.template('<textarea/>', this));
@@ -340,7 +349,7 @@ TextQuestion = Question.extend({
 
 });
 
-NumberQuestion = Question.extend({
+surveys.NumberQuestion = surveys.Question.extend({
     renderAnswer : function(answerEl) {
         answerEl.html(_.template('<input type="number"/>', this));
         answerEl.find("input").val(this.model.get(this.id));
@@ -355,7 +364,7 @@ NumberQuestion = Question.extend({
 
 });
 
-PhotoQuestion = Question.extend({
+surveys.PhotoQuestion = surveys.Question.extend({
     renderAnswer : function(answerEl) {
         answerEl.html(_.template('<img style="max-width: 100px;" src="images/camera-icon.jpg"/>', this));
     },
@@ -370,7 +379,7 @@ PhotoQuestion = Question.extend({
 
 });
 
-DateQuestion = Question.extend({
+surveys.DateQuestion = surveys.Question.extend({
     events : {
         "change" : "changed"
     },

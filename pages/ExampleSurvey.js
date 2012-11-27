@@ -6,13 +6,13 @@ pages.ExampleSurvey = function(uid) {
 
     function createSurvey(model) {
         var survey = (function() {
-            var model = new SurveyModel();
+            var model = new surveys.SurveyModel();
             var sections = [], questions = [];
             // START HERE
 
             /* Facility Type */
 
-            questions.push(new DropdownQuestion({
+            questions.push(new surveys.DropdownQuestion({
                 id : "q1",
                 model : model,
                 required : true,
@@ -21,7 +21,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [["PipedWater", "Piped Water"], ["PipedWaterRes", "Piped Water with Service Reservoir"], ["GravityFedPiped", "Gravity-fed Piped Water"], ["BoreholeMech", "Deep Borehole with Mechanized Pumping"], ["BoreholeHand", "Deep Borehole with Handpump"], ["ProtectedSpring", "Protected Spring"], ["DugWellPump", "Dug Well with Handpump/windlass"], ["TreatmentPlant", "Water Treatment Plant"]],
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Choose your survey",
                 contents : questions
@@ -30,50 +30,50 @@ pages.ExampleSurvey = function(uid) {
 
             /* General Information */
 
-            questions.push(new TextQuestion({
+            questions.push(new surveys.TextQuestion({
                 id : "q2",
                 model : model,
                 prompt : "Cluster number?",
             }));
 
-            questions.push(new TextQuestion({
+            questions.push(new surveys.TextQuestion({
                 id : "q3",
                 model : model,
                 prompt : "Cluster name?",
             }));
 
-            questions.push(new TextQuestion({
+            questions.push(new surveys.TextQuestion({
                 id : "q4",
                 model : model,
                 prompt : "What is the name of the community?",
             }));
 
-            questions.push(new DateQuestion({
+            questions.push(new surveys.DateQuestion({
                 id : "q5",
                 model : model,
                 prompt : "Date of visit?",
             }));
 
-            questions.push(new NumberQuestion({
+            questions.push(new surveys.NumberQuestion({
                 id : "q6",
                 model : model,
                 prompt : "How many water samples were taken?",
 
             }));
-            questions.push(new NumberQuestion({
+            questions.push(new surveys.NumberQuestion({
                 id : "q7",
                 model : model,
                 prompt : "Water sample numbers?",
 
             }));
-            questions.push(new NumberQuestion({
+            questions.push(new surveys.NumberQuestion({
                 id : "q8",
                 model : model,
                 prompt : "FC/100ml?",
 
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "General Information",
                 contents : questions
@@ -81,9 +81,9 @@ pages.ExampleSurvey = function(uid) {
 
             questions = [];
 
-            /* PipedWater Survey Section */
+            /* PipedWater Survey surveys.Section */
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q9",
                 model : model,
@@ -93,7 +93,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q10",
                 model : model,
@@ -103,7 +103,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q11",
                 model : model,
@@ -113,7 +113,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q12",
                 model : model,
@@ -123,7 +123,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q13",
                 model : model,
@@ -133,7 +133,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q14",
                 model : model,
@@ -143,7 +143,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q15",
                 model : model,
@@ -153,7 +153,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q16",
                 model : model,
@@ -163,7 +163,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q17",
                 model : model,
@@ -173,7 +173,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q18",
                 model : model,
@@ -183,7 +183,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Piped Water Survey",
                 contents : questions,
@@ -194,9 +194,9 @@ pages.ExampleSurvey = function(uid) {
             }));
             questions = [];
 
-            /* PipedWaterRes Survey Section */
+            /* PipedWaterRes Survey surveys.Section */
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q19",
                 model : model,
@@ -206,7 +206,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q20",
                 model : model,
@@ -216,7 +216,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q21",
                 model : model,
@@ -226,7 +226,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q22",
                 model : model,
@@ -236,7 +236,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q23",
                 model : model,
@@ -246,7 +246,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q24",
                 model : model,
@@ -256,7 +256,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q25",
                 model : model,
@@ -266,7 +266,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q26",
                 model : model,
@@ -276,7 +276,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q27",
                 model : model,
@@ -286,7 +286,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q28",
                 model : model,
@@ -296,7 +296,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q29",
                 model : model,
@@ -306,7 +306,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q30",
                 model : model,
@@ -316,7 +316,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q31",
                 model : model,
@@ -327,7 +327,7 @@ pages.ExampleSurvey = function(uid) {
             }));
 
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Piped Water with Service Reservoir Survey",
                 contents : questions,
@@ -338,9 +338,9 @@ pages.ExampleSurvey = function(uid) {
             }));
             questions = [];
 
-            /* GravityFedPiped Survey Section */
+            /* GravityFedPiped Survey surveys.Section */
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q32",
                 model : model,
@@ -350,7 +350,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q33",
                 model : model,
@@ -360,7 +360,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q34",
                 model : model,
@@ -370,7 +370,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q35",
                 model : model,
@@ -380,7 +380,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q36",
                 model : model,
@@ -390,7 +390,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q37",
                 model : model,
@@ -400,7 +400,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q38",
                 model : model,
@@ -410,7 +410,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q39",
                 model : model,
@@ -420,7 +420,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q40",
                 model : model,
@@ -430,7 +430,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q41",
                 model : model,
@@ -440,7 +440,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q42",
                 model : model,
@@ -450,7 +450,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q43",
                 model : model,
@@ -460,7 +460,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Gravity-fed Piped Water Survey",
                 contents : questions,
@@ -471,9 +471,9 @@ pages.ExampleSurvey = function(uid) {
             }));
             questions = [];
 
-            /* BoreholeMech Survey Section */
+            /* BoreholeMech Survey surveys.Section */
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q44",
                 model : model,
@@ -483,7 +483,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q45",
                 model : model,
@@ -493,7 +493,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q46",
                 model : model,
@@ -503,7 +503,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q47",
                 model : model,
@@ -513,7 +513,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q48",
                 model : model,
@@ -523,7 +523,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q49",
                 model : model,
@@ -533,7 +533,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q50",
                 model : model,
@@ -543,7 +543,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q51",
                 model : model,
@@ -553,7 +553,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q52",
                 model : model,
@@ -563,7 +563,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Deep Borehole with Mechanized Pumping Survey",
                 contents : questions,
@@ -575,9 +575,9 @@ pages.ExampleSurvey = function(uid) {
             questions = [];
 
 
-            /* BoreholeHand Survey Section */
+            /* BoreholeHand Survey surveys.Section */
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q53",
                 model : model,
@@ -587,7 +587,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q54",
                 model : model,
@@ -597,7 +597,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q55",
                 model : model,
@@ -607,7 +607,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q56",
                 model : model,
@@ -617,7 +617,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q57",
                 model : model,
@@ -627,7 +627,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q58",
                 model : model,
@@ -637,7 +637,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q59",
                 model : model,
@@ -647,7 +647,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q60",
                 model : model,
@@ -657,7 +657,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q61",
                 model : model,
@@ -667,7 +667,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q62",
                 model : model,
@@ -677,7 +677,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Deep Borehole with Handpump Survey",
                 contents : questions,
@@ -689,9 +689,9 @@ pages.ExampleSurvey = function(uid) {
             questions = [];
 
 
-            /* ProtectedSpring Survey Section */
+            /* ProtectedSpring Survey surveys.Section */
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q63",
                 model : model,
@@ -701,7 +701,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q64",
                 model : model,
@@ -711,7 +711,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q65",
                 model : model,
@@ -721,7 +721,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q66",
                 model : model,
@@ -731,7 +731,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q67",
                 model : model,
@@ -741,7 +741,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q68",
                 model : model,
@@ -751,7 +751,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q69",
                 model : model,
@@ -761,7 +761,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q70",
                 model : model,
@@ -771,7 +771,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q71",
                 model : model,
@@ -781,7 +781,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q72",
                 model : model,
@@ -791,7 +791,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Protected Spring Survey",
                 contents : questions,
@@ -803,9 +803,9 @@ pages.ExampleSurvey = function(uid) {
             questions = [];
 
 
-            /* DugWellPump Survey Section */
+            /* DugWellPump Survey surveys.Section */
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q73",
                 model : model,
@@ -815,7 +815,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q74",
                 model : model,
@@ -825,7 +825,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q75",
                 model : model,
@@ -835,7 +835,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q76",
                 model : model,
@@ -845,7 +845,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q77",
                 model : model,
@@ -855,7 +855,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q78",
                 model : model,
@@ -865,7 +865,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q79",
                 model : model,
@@ -875,7 +875,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q80",
                 model : model,
@@ -885,7 +885,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q81",
                 model : model,
@@ -895,7 +895,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q82",
                 model : model,
@@ -905,7 +905,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            questions.push(new RadioQuestion({
+            questions.push(new surveys.RadioQuestion({
 
                 id : "q83",
                 model : model,
@@ -915,7 +915,7 @@ pages.ExampleSurvey = function(uid) {
                 options : [[true, "Yes"], [false, "No"]],
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Dug Well with Handpump/windlass Survey",
                 contents : questions,
@@ -927,21 +927,21 @@ pages.ExampleSurvey = function(uid) {
             questions = [];
 
 
-            /* Comments Section */
+            /* Comments surveys.Section */
 
-            questions.push(new TextQuestion({
+            questions.push(new surveys.TextQuestion({
                 id : "q100",
                 model : model,
                 prompt : "Additional comments"
             }));
 
-            questions.push(new TextQuestion({
+            questions.push(new surveys.TextQuestion({
                 id : "q101",
                 model : model,
                 prompt : "Inspector name",
             }));
 
-            sections.push(new Section({
+            sections.push(new surveys.Section({
                 model : model,
                 title : "Additional comments",
                 contents : questions
@@ -950,9 +950,10 @@ pages.ExampleSurvey = function(uid) {
 
 
             // END HERE
-            var view = new Survey({
+            var view = new surveys.SurveyView({
                 title : 'WHO UNICEF Sanitary Inspection and Pollution Risk Assessment',
-                sections : sections
+                sections : sections,
+                model : model
             });
             return {
                 model : model,
