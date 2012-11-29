@@ -344,7 +344,7 @@ surveys.TextQuestion = surveys.Question.extend({
         "change" : "changed"
     },
     changed : function() {
-        this.model.set(this.id, this.$("input").val());
+        this.model.set(this.id, this.$(this.options.multiline ? "textarea" : "input").val());
     }
 
 });
