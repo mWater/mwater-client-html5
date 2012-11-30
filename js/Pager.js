@@ -2,7 +2,26 @@
  * Maintains a stack of "pages" which are similar to activities in Android. All
  * pages reside in a container when active, and are detached when not visible.
  * context: Object whose members will be inserted into each page before create is called
- * container: DOM element wrapped in jQuery where to display pages */
+ * container: DOM element wrapped in jQuery where to display pages.
+ * 
+ * Pages can have the following members, all optional:
+ * 
+ * create(callback): Called when the page is created. Should put elements inside page.$el jQuery element. Must call callback when completed.
+ * 
+ * activate(): Called on the page comes to the forefront, either immediately after being created or when a child page is closed.
+ * 
+ * deactivate(): Called when the page is no longer in the front, either from being closed or from a child page opening
+ * 
+ * destroy(): Called when the page is closed
+ * 
+ * actionbarMenu: List if actionbar items. Each item must contain id (string) and title (string).
+ * Optional items include icon (url) and ifRoom (boolean: determines if shown in actionbar if room)
+ * 
+ * actionbarTitle: string of title of page
+ * 
+ * actionbarMenuClick(id): Called when item is clicked.
+ * 
+ */
 Pager = function(container, context, actionbar) {
     this.container = container;
     this.context = context;
@@ -193,6 +212,7 @@ Pager = function(container, context, actionbar) {
     };
 };
 
+// Makes rows of a table tappable
 Pager.makeTappable = function(table, ontap) {
     table.on("tap", "tr", function(e) {
         ontap(this)
@@ -216,6 +236,7 @@ Pager.makeTappable = function(table, ontap) {
     });
 };
 
+// Makes a table searchable with a searchbar
 Pager.makeSearchable = function(table, searchbar) {
     searchbar.on("input change", function(ev) {
         var q = this.value;
