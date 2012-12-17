@@ -154,8 +154,9 @@ Pager = function(container, context, actionbar) {
                     if (callback)
                         callback(page);
                 });
-            else if (!onlyCreate) {
-                activatePage();
+            else {
+                if (!onlyCreate)
+                    activatePage();
                 if (callback)
                     callback(page);
             }
