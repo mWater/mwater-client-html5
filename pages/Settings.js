@@ -7,7 +7,8 @@ pages.Settings = function() {
     function refresh(callback) {
         var view = {
             offlineSourceCodes : page.sourceCodeManager.getNumberAvailableCodes(),
-            username: page.syncServer.getUsername()
+            username: page.syncServer.getUsername(),
+            appVersion : page.appVersion
         }
 
         page.template("settings", view, function(out) {

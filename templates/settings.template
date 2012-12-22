@@ -17,6 +17,9 @@
     </div>
     <br/>
     <div>
+        App Version: <b>{appVersion}</b>
+    </div>
+    <div>
         Logged in as: <b>{username}</b>
     </div>
 </div>

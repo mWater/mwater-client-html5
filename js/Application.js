@@ -95,7 +95,8 @@ function Application(opts) {
                 imageManager : imageManager,
                 sourceCodeManager : sourceCodeManager,
                 error : error,
-                auth : auth
+                auth : auth,
+                appVersion : version
             }, opts.actionbar);
 
             that.pager.onLoad = pagerOnLoad;
