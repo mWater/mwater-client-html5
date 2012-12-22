@@ -1,23 +1,22 @@
 <project name="mWater" default="release" basedir=".">
     <property name="build" location="build"/>
     <property name="releases" location="releases"/>
-    <property name="version" value="test"/>
     
     <target name="clean">
         <delete dir="${build}"/>
     </target>
     
-	<target name="release" depends="wro4j,copyfiles,buildzip">
-	</target>
-	
-	<target name="buildzip">
-	    <copy todir="${releases}/${version}">
+    <target name="release" depends="incrementversion,build">
+	    <copy todir="${releases}/${build.version}">
 	        <fileset dir="${build}"/>
 	    </copy>
-	    <zip basedir="${releases}" destfile="${releases}/${version}.zip" includes="${version}/**"/>
-	    <copy file="${releases}/${version}.zip" tofile="${releases}/app.zip"/>
-	</target>
-	
+	    <zip basedir="${releases}" destfile="${releases}/${build.version}.zip" includes="${build.version}/**"/>
+	    <copy file="${releases}/${build.version}.zip" tofile="${releases}/app.zip"/>
+    </target>
+
+    <target name="build" depends="wro4j,copyfiles,setversion">
+    </target> 
+    	
 	<target name="copyfiles">
 	    <copy file="index_release.html" tofile="${build}/index.html"/>
 	    <copy file="cordova-2.1.0.js" todir="${build}"/>
@@ -27,7 +26,6 @@
 	    <copy todir="${build}/img">
 	    	<fileset dir="bootstrap/img"/>
 	    </copy>
-	    <replace file="${build}/files/app.js" token="MWATERVERSION" value="${version}"/>
     </target>
 	
 	<target name="wro4j">
@@ -37,5 +35,20 @@
 	        <arg value="--destinationFolder"/>
 	        <arg value="${build}/files"/>
 	    </java>
+	</target>
+	
+	<target name="incrementversion">
+		<propertyfile file="build.properties">
+			<entry key="build.version" type="int" operation="+" default="0"/>
+		</propertyfile>
+		<property file="build.properties"/>
+	</target>
+
+	<target name="setversion">
+		<propertyfile file="build.properties">
+			<entry key="build.version" type="int" default="0"/>
+		</propertyfile>
+		<property file="build.properties"/>
+	    <replace file="${build}/files/app.js" token="MWATERVERSION" value="${build.version}"/>
 	</target>
 </project>
