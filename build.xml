@@ -1,0 +1,41 @@
+<project name="mWater" default="release" basedir=".">
+    <property name="build" location="build"/>
+    <property name="releases" location="releases"/>
+    <property name="version" value="test"/>
+    
+    <target name="clean">
+        <delete dir="${build}"/>
+    </target>
+    
+	<target name="release" depends="wro4j,copyfiles,buildzip">
+	</target>
+	
+	<target name="buildzip">
+	    <copy todir="${releases}/${version}">
+	        <fileset dir="${build}"/>
+	    </copy>
+	    <zip basedir="${releases}" destfile="${releases}/${version}.zip" includes="${version}/**"/>
+	    <copy file="${releases}/${version}.zip" tofile="${releases}/app.zip"/>
+	</target>
+	
+	<target name="copyfiles">
+	    <copy file="index_release.html" tofile="${build}/index.html"/>
+	    <copy file="cordova-2.1.0.js" todir="${build}"/>
+	    <copy todir="${build}/images">
+	    	<fileset dir="images"/>
+	    </copy>
+	    <copy todir="${build}/img">
+	    	<fileset dir="bootstrap/img"/>
+	    </copy>
+	    <replace file="${build}/files/app.js" token="MWATERVERSION" value="${version}"/>
+    </target>
+	
+	<target name="wro4j">
+	    <java jar="wro4j-runner-1.6.1-jar-with-dependencies.jar" fork="true">
+	        <arg value="--preProcessors"/>
+	        <arg value="dustJs.template"/>
+	        <arg value="--destinationFolder"/>
+	        <arg value="${build}/files"/>
+	    </java>
+	</target>
+</project>

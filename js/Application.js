@@ -1,6 +1,6 @@
 function Application(opts) {
     var that = this;
-    var version = "1";
+    var version = "MWATERVERSION";
 
     // Setup options
     opts = _.extend({
@@ -151,7 +151,7 @@ Application.prototype.createTemplate = function() {
     // Create template engine
     dust.onLoad = function(name, callback) {
         // Load from template
-        $.get('templates/' + name + '.html', null, function(data) {
+        $.get('templates/' + name + '.template', null, function(data) {
             callback(null, data);
         }, "text").error(function(error) {
             callback(error);

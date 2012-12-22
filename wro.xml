@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<groups xmlns="http://www.isdc.ro/wro">
+  <group name='libs'>
+    <js>/js/libs/underscore-min.js</js>
+    <js>/js/libs/jquery-1.8.2.min.js</js>
+    <js>/js/libs/dust-core-0.3.0.min.js</js>
+    <js>/js/libs/backbone-min.js</js>
+    <js>/js/libs/mobiscroll-2.1.custom.min.js</js>
+    <js>/js/libs/webintent.js</js>
+    <js>/js/libs/actionbar.js</js>
+    <js>/js/libs/camera.js</js>
+    <js>/bootstrap/js/bootstrap.min.js</js>
+    <css>/bootstrap/css/bootstrap.min.css</css>
+  </group>
+  <group name='app'>
+    <css>/css/*.css</css>
+    <js>/js/*.js</js>
+    <js>/pages/*.js</js>
+   </group>
+   <group name='templates'>
+     <js>/templates/*.template</js>
+   </group>
+</groups>

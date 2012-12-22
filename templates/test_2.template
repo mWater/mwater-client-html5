@@ -1,0 +1,14 @@
+{>test/}
+
+{<display_results}
+	<div class="result">
+		E.Coli:
+		{?resultsData.ecoli}<span class="text-error">Positive</span>
+		{:else} <span class="text-success">Negative</span>
+		{/resultsData.ecoli}
+	</div>
+{/display_results}
+
+{<edit_results}
+    <div id="bluegreen_color" class="checkbox">Blue-green color</div>
+{/edit_results}

@@ -1,0 +1,37 @@
+{>test/}
+
+{<display_results}
+	<div class="result">
+		E.Coli:
+		{?resultsData.ecoli}<span class="text-error"> {resultsData.ecoli} CFU</span>
+		{:else} <span class="text-success">Negative</span>
+		{/resultsData.ecoli}
+	</div>
+	
+	<div class="result">
+		Total Coliform:
+		{?resultsData.tc}<span> {resultsData.tc} CFU</span>
+		{:else} <span>Negative</span>
+		{/resultsData.tc}
+	</div>
+
+    <div class="result">
+        Other:
+        {?resultsData.other}<span> {resultsData.other} CFU</span>
+        {:else} <span>Negative</span>
+        {/resultsData.other}
+    </div>
+ {/display_results}
+
+{<edit_results}
+    <form>
+        <label class="edit-label">E.Coli (blue colonies)</label>
+        <input name="ecoli" type="number" />
+
+        <label class="edit-label">TC (red colonies with gas)</label>
+        <input name="tc" type="number" />
+
+        <label class="edit-label">Other (red colonies w/o gas)</label>
+        <input name="other" type="number" />
+    </form>
+{/edit_results}

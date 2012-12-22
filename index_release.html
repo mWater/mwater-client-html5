@@ -2,63 +2,58 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, target-densitydpi=medium-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>mWater</title>
 
         <!-- Cordova is special load -->
         <script src="cordova-2.1.0.js"></script>
 
-        <!-- Load standard libraries -->
-        <script src="compiled_libs.js"></script>
-
-        <!-- Standard stylesheets -->
-        <link rel="stylesheet" type="text/css" href="css/mobiscroll-2.1.custom.min.css" />
-        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
-
-        <!-- Load application files -->
-        <link rel="stylesheet" type="text/css" href="css/HtmlActionbar.css" />
-        <link rel="stylesheet" type="text/css" href="css/Pager.css" />
-
-        <script src="compiled_app.js"></script>
+        <link rel="stylesheet" type="text/css" href="files/libs.css" />
+        <link rel="stylesheet" type="text/css" href="files/app.css" />
+        
+        <script src="files/libs.js"></script>
+        <script src="files/app.js"></script>
+        <script src="files/templates.js"></script>
 
         <script>
-            isCordova = utils.parseQuery().cordova;
-            isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
+			isCordova = utils.parseQuery().cordova;
+			isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
 
-            function onDeviceReady() {
-                $(function() {
-                    configureDevice();
+			function onDeviceReady() {
+				$(function() {
+					configureDevice();
 
-                    var opts = {
-                        actionbar : window.actionbar
-                    };
-                    if (!isCordova) {
-                        opts.serverUrl = "/mwater/apiv2/";
-                        opts.cacheImages = false;
+					var opts = {
+						actionbar : window.actionbar
+					};
+					if (!isCordova) {
+						opts.serverUrl = "http://data.mwater.co/mwater/apiv2/";
+						opts.cacheImages = false;
 
-                        // Offline db only on iphone
-                        if (isIPhone)
-                            opts.localDb = true;
-                        else
-                            opts.localDb = false;
-                    }
-                    application = new Application(opts);
-                });
-            }
+						// Offline db only on iphone
+						if (isIPhone)
+							opts.localDb = true;
+						else
+							opts.localDb = false;
+					}
+					application = new Application(opts);
+				});
+			}
 
-            function configureDevice() {
-                // Handle special cases for not in Cordova
-                if (!window.device || window.device.platform != "Android") {
-                    actionbar = new HtmlActionbar($("body"), {
-                        defaultTitle : "mWater"
-                    });
-                }
-            }
+			function configureDevice() {
+				// Handle special cases for not in Cordova
+				if (!window.device || window.device.platform != "Android") {
+					actionbar = new HtmlActionbar($("body"), {
+						defaultTitle : "mWater"
+					});
+				}
+			}
 
-            if (isCordova) {
-                document.addEventListener("deviceready", onDeviceReady, false);
-            } else {
-                onDeviceReady();
-                //this is the browser
-            }
+			if (isCordova) {
+				document.addEventListener("deviceready", onDeviceReady, false);
+			} else {
+				onDeviceReady();
+				//this is the browser
+			}
         </script>
     </head>
     <body>

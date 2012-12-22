@@ -1,0 +1,26 @@
+{>test/}
+
+{! TODO handle dilution !}
+{<display_results}
+	<div class="result">
+		Chlorine: &nbsp;
+		{?resultsData.present}
+		{?resultsData.mgPerL}
+		<span class="text-success">{resultsData.mgPerL} mg/L</span>
+		{:else}
+		<span class="text-success">Positive</span>
+		{/resultsData.mgPerL}
+		{:else} <span class="text-warning">Negative</span>
+		{/resultsData.present}
+	</div>
+{/display_results}
+
+{<edit_results}
+    <form>
+        <div id="present" class="checkbox">Chlorine Present</div>
+        <div id="chlorine_value">
+            <label class="edit-label">Concentration (mg/L)</label>
+            <input id="mgPerL" type="number" />
+        </div>
+    </form>
+{/edit_results}

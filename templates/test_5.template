@@ -1,0 +1,22 @@
+{>test/}
+
+{<display_results}
+	<div class="result">
+		{#loc field="tests.test_type.5.type" value=resultsData.type/}:&nbsp;
+		{resultsData.value}/100mL</span>
+	</div>
+ {/display_results}
+
+{<edit_results}
+    <form>
+        <label class="edit-label">Test Type</label>
+        <select id="type">
+            {#types}
+            <option value="{.}">{#loc field="tests.test_type.5.type" value=./}</option>
+            {/types}
+        </select>
+
+        <label class="edit-label">Concentration per 100 mL</label>
+        <input id="value" type="number" />
+    </form>
+{/edit_results}

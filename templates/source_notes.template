@@ -1,0 +1,7 @@
+{#notes}
+    <tr class="note-row" id="{uid}">
+        <td class="date">{#date value=created_on/}</td>
+        <td class="status">{#loc field="source_notes.operational" value=operational/}</td>
+        <td><span class="muted">{note}</span></td>
+    </tr>
+{/notes}

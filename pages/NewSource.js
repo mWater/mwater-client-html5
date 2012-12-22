@@ -63,4 +63,4 @@ pages.NewSource = function(location, result) {
 			callback();
 		});
 	};
-}
+};
