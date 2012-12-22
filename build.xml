@@ -1,4 +1,4 @@
-<project name="mWater" default="release" basedir=".">
+<project name="mWater" default="build" basedir=".">
     <property name="build" location="build"/>
     <property name="releases" location="releases"/>
     
