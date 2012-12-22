@@ -19,7 +19,6 @@
     	
 	<target name="copyfiles">
 	    <copy file="index_release.html" tofile="${build}/index.html"/>
-	    <copy file="cordova-2.1.0.js" todir="${build}"/>
 	    <copy todir="${build}/images">
 	    	<fileset dir="images"/>
 	    </copy>
@@ -31,9 +30,10 @@
 	<target name="wro4j">
 	    <java jar="wro4j-runner-1.6.1-jar-with-dependencies.jar" fork="true">
 	        <arg value="--preProcessors"/>
-	        <arg value="dustJs.template"/>
+	        <arg value="dustJs.template,googleClosureSimple"/>
 	        <arg value="--destinationFolder"/>
 	        <arg value="${build}/files"/>
+	        <arg value="-m"/>
 	    </java>
 	</target>
 	
@@ -45,9 +45,6 @@
 	</target>
 
 	<target name="setversion">
-		<propertyfile file="build.properties">
-			<entry key="build.version" type="int" default="0"/>
-		</propertyfile>
 		<property file="build.properties"/>
 	    <replace file="${build}/files/app.js" token="MWATERVERSION" value="${build.version}"/>
 	</target>

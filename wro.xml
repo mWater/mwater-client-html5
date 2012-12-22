@@ -2,6 +2,7 @@
 
 <groups xmlns="http://www.isdc.ro/wro">
   <group name='libs'>
+    <js>/cordova-2.1.0.js</js>
     <js>/js/libs/underscore-min.js</js>
     <js>/js/libs/jquery-1.8.2.min.js</js>
     <js>/js/libs/dust-core-0.3.0.min.js</js>
@@ -13,12 +14,14 @@
     <js>/bootstrap/js/bootstrap.min.js</js>
     <css>/bootstrap/css/bootstrap.min.css</css>
   </group>
+
   <group name='app'>
-    <css>/css/*.css</css>
-    <js>/js/*.js</js>
-    <js>/pages/*.js</js>
+    <css minimize="false">/css/*.css</css>
+    <js minimize="false">/js/*.js</js>
+    <js minimize="false">/pages/*.js</js>
    </group>
-   <group name='templates'>
+  
+  <group name='templates'>
      <js>/templates/*.template</js>
    </group>
 </groups>
