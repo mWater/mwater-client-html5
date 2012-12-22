@@ -1,26 +1,40 @@
+<style>
+	.bigtab { font-weight: bold; }
+</style>
+
 <div class="page">
-    <h2>New User</h2>
-    <div>
-        <span class="help-block">Note: Your email address will never be shared</span>
-        <input id="signup_email" type="email" class="input-xlarge" placeholder="Email">
-    </div>
-    <div>
-        <input id="signup_username" type="text" autocapitalize="off" autocorrect="off" placeholder="Username" />
-    </div>
-    <div>
-        <input id="signup_password" type="password" placeholder="Password" />
-    </div>
-    <div>
-        <button id="signup_button" class="btn btn-primary btn-large">Signup</button>
-    </div>
-    <h2>Existing User</h2>
-    <div>
-        <input id="login_username" type="text" autocapitalize="off" autocorrect="off" placeholder="Username" />
-    </div>
-    <div>
-        <input id="login_password" type="password" placeholder="Password" />
-    </div>
-    <div>
-        <button id="login_button" class="btn btn-primary btn-large">Login</button>
-    </div>
+	<div class="tabbable">
+	  <ul class="nav nav-tabs">
+	    <li class="active bigtab"><a href="#tab1" data-toggle="tab">New User</a></li>
+	    <li class="bigtab"><a href="#tab2" data-toggle="tab">Existing User</a></li>
+	  </ul>
+	  <div class="tab-content">
+	    <div class="tab-pane active" id="tab1">
+		    <div>
+		        <span class="help-block">Note: Your email address will never be shared</span>
+		        <input id="signup_email" type="email" class="input-xlarge" placeholder="Email">
+		    </div>
+		    <div>
+		        <input id="signup_username" type="text" autocapitalize="off" autocorrect="off" placeholder="Username" />
+		    </div>
+		    <div>
+		        <input id="signup_password" type="password" placeholder="Password" />
+		    </div>
+		    <div>
+		        <button id="signup_button" class="btn btn-primary btn-large">Signup</button>
+		    </div>
+	    </div>
+	    <div class="tab-pane" id="tab2">
+		    <div>
+		        <input id="login_username" type="text" autocapitalize="off" autocorrect="off" placeholder="Username" />
+		    </div>
+		    <div>
+		        <input id="login_password" type="password" placeholder="Password" />
+		    </div>
+		    <div>
+		        <button id="login_button" class="btn btn-primary btn-large">Login</button>
+		    </div>
+	    </div>
+	  </div>
+	</div>
 </div>

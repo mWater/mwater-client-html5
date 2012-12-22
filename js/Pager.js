@@ -56,8 +56,11 @@ Pager = function(container, context, actionbar) {
         $(this).trigger("checked");
     });
 
-    // Prevent links from launching
+    // Prevent links from launching new pages
     container.on("click", "a", function(e) {
+        // Allow tabs
+        if ($(e.srcElement).attr('data-toggle')=='tab')
+            return true;
         return false;
     })
 
