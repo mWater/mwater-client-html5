@@ -41,15 +41,6 @@ pages.Login = function (success) {
 		this.template("login", null, function(out) {
 			page.$el.html(out);
 			
-			page.$("#login_button").on("tap", function() {
-			    login();
-				return false;
-			});
-			page.$("#signup_button").on("tap", function() {
-			    signup();
-				return false;
-			});
-			
             page.$("#form_login").on("submit", function() {
                 login();
                 return false;
