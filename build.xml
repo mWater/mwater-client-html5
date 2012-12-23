@@ -11,7 +11,6 @@
 	        <fileset dir="${build}"/>
 	    </copy>
 	    <zip basedir="${releases}" destfile="${releases}/${build.version}.zip" includes="${build.version}/**"/>
-	    <copy file="${releases}/${build.version}.zip" tofile="${releases}/app.zip"/>
     </target>
 
     <target name="build" depends="wro4j,copyfiles,setversion">
