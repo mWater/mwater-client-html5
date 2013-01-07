@@ -62,7 +62,7 @@ pages.NewTest = function(sourceUid) {
 		this.template("new_test", {}, function(out) {
 			page.$el.html(out);
 
-			page.$("a").click(function() {
+			page.$("a").on("tap", function() {
 				createTest(parseInt(this.id.substr(5)));
 				return false;
 			});
