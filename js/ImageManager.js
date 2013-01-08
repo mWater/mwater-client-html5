@@ -28,7 +28,15 @@ function CachedImageManager(syncServer, cachePath) {
 	function downloadImage(imageUid, url, dirEntry, success, error) {
 		fileTransfer.download(encodeURI(url), dirEntry.fullPath + "/" + imageUid + ".jpg", function(entry) {
 			success(entry.toURL());
-		}, error);
+		}, function(err) {
+		    // Delete file on disk if present
+		    dirEntry.getFile(imageUid + ".jpg", {}, function(imageFile) {
+		        imageFile.remove(function() {}, function() {});
+		    }, function() {});
+		 
+            // Call error function
+		    error(err);
+		});
 	}
 
 	function findImageFile(dir, imageUid, found, notfound, error) {

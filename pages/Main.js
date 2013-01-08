@@ -121,7 +121,7 @@ pages.Main = function() {
         syncCancel = false;
 
         page.$("#sync_cancel").attr("disabled", false);
-        page.$("#sync_progress").show();
+        page.$("#sync_progress").text("Synchronizing...").show();
         page.$("#sync_error").hide();
         page.$("#sync_success").hide();
 

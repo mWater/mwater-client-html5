@@ -50,6 +50,7 @@ function PhotoDisplayer(page, element, row, error) {
 		if (row.photo) {
 			page.imageManager.getImageThumbnailUrl(row.photo, function(url) {
 				element.attr("src", url);
+				photoOk = true;
 			}, function() {
 				element.attr("src", "images/no-image-icon.jpg");
 				photoOk = false;
