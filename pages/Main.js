@@ -111,6 +111,12 @@ pages.Main = function() {
         if (syncInProgress)
             return;
 
+        if (navigator && navigator.connection && navigator.connection.type) {
+              console.log("Connection type: " + navigator.connection.type);
+              if (navigator.connection.type == Connection.NONE)
+                  return;
+        }
+
         syncInProgress = true;
         syncCancel = false;
 

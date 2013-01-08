@@ -43,6 +43,8 @@ function PhotoDisplayer(page, element, row, error) {
 		});
 	}
 
+    var photoOk = true; // Set to false if photo failed to load
+
 	function displayPhoto() {
 		// Load image
 		if (row.photo) {
@@ -50,6 +52,7 @@ function PhotoDisplayer(page, element, row, error) {
 				element.attr("src", url);
 			}, function() {
 				element.attr("src", "images/no-image-icon.jpg");
+				photoOk = false;
 			});
 		}
 		else {
@@ -62,7 +65,7 @@ function PhotoDisplayer(page, element, row, error) {
 
 	// Listen for clicks to take photo
 	element.on("tap", function() {
-		if (row.photo)
+		if (row.photo && photoOk)
 			page.pager.loadPage("Photo", [row.photo]);
 		else
 			takePicture();

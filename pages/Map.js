@@ -69,10 +69,23 @@ pages.Map = function(center) {
         page.syncClient.upload(success, page.error);
     }
 
+    var mapUnavailable = false;
 
     this.create = function(callback) {
         this.template("map", null, function(out) {
             page.$el.html(out);
+            
+            // Check if connection available
+            console.log("Checking connection...")
+            if (navigator && navigator.connection && navigator.connection.type) {
+                console.log("Connection type: " + navigator.connection.type);
+                if (navigator.connection.type == Connection.NONE) {
+                    alert("Map is only available with netword connection");
+                    mapUnavailable = true;
+                    callback();
+                    return;
+                }
+            }
 
             $.getScript("https://www.google.com/jsapi").done(function() {
                 google.load("maps", 3, {
@@ -111,6 +124,11 @@ pages.Map = function(center) {
     };
 
     this.activate = function() {
+        if (mapUnavailable) {
+            page.pager.closePage();
+            return;
+        }
+            
         if (!firstActivate) {
             addMyLocation();
 
