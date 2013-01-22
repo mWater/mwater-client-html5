@@ -121,7 +121,7 @@ function Application(opts) {
                     that.pager.closePage(opts.initialPage, opts.initialPageArgs);
                 }]);
             else if (opts.anchorState && window.location.hash)// Restore state if possible
-                that.pager.setState(JSON.parse(window.location.hash.substr(1)));
+                that.pager.setState(JSON.parse(decodeURIComponent(window.location.hash.substr(1))));
             else
                 that.pager.loadPage(opts.initialPage, opts.initialPageArgs);
 

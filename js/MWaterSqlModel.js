@@ -118,8 +118,9 @@ function MWaterSqlModel(db, syncDb) {
         console.log("query: " + sql + "error: " + typeof error);
         db.transaction(function(tx) {
             tx.executeSql(sql, params, function(tx, results) {
-                var rows=[]
-                for (var i=0;i<results.rows.length;i++) {
+                var rows=[];
+                var i;
+                for (i=0;i<results.rows.length;i++) {
                     var row = Object.create(rowType);
                     _.extend(row, results.rows.item(i));
                     rows.push(row);
@@ -127,7 +128,7 @@ function MWaterSqlModel(db, syncDb) {
                 success(rows);
             });    
         }, error);
-    }
+    };
     
     var queryRowByField = function(table, field, value, rowType, success, error) {
         query("SELECT * FROM " + table + " WHERE " + field + "=?", [value], rowType, function(rows) {
@@ -137,7 +138,7 @@ function MWaterSqlModel(db, syncDb) {
             else
                 success(null);
         }, error);
-    }
+    };
 
     this.queryNearbySources = function(latitude, longitude, search, success, error) {
     	var where = " WHERE latitude IS NOT NULL AND longitude IS NOT NULL";
@@ -194,7 +195,8 @@ function MWaterSqlModel(db, syncDb) {
         db.transaction(function(tx) {
             tx.executeSql(sql, params, function(tx, results) {
                 var rows=[]
-                for (var i=0;i<results.rows.length;i++) {
+                var i;
+                for (i=0;i<results.rows.length;i++) {
                 	var r = results.rows.item(i);
                     var row = Object.create(new Row("tests"));
 
@@ -223,15 +225,15 @@ function MWaterSqlModel(db, syncDb) {
         query("SELECT * FROM source_notes WHERE source=?", [sourceUid], new Row("source_notes"), function(notes) {
         	success(notes);
         }, error);
-    }
+    };
     
     this.querySourceNoteByUid = function(uid, success, error) {
         queryRowByField("source_notes", "uid", uid, new Row("source_notes"), success, error);
-    }
+    };
         
     this.queryTests = function(createdBy, success, error) {
     	queryTestsGeneric("tests.created_by = ?", [createdBy], success, error);
-    }
+    };
 
     this.queryTestByUid = function(uid, success, error) {
     	queryTestsGeneric("tests.uid = ?", [uid], function(rows) {
@@ -240,7 +242,7 @@ function MWaterSqlModel(db, syncDb) {
     		else
     			success(null);
     	}, error);
-    }
+    };
 
     // List of source type ids
     this.sourceTypes = _.range(16); 
