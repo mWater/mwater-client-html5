@@ -83,6 +83,48 @@ function Application(opts) {
     } else {
         var imageManager = new SimpleImageManager(syncServer);
     }
+    
+    this.createTemplate = function() {
+        // Create template engine
+        dust.onLoad = function(name, callback) {
+            // Load from template
+            $.get('templates/' + name + '.template', null, function(data) {
+                callback(null, data);
+            }, "text").error(function(error) {
+                callback(error);
+            });
+        };
+    
+        var base = dust.makeBase({
+            date : function(chunk, context, bodies, params) {
+                function pad2(number) {
+                    return (number < 10 ? '0' : '') + number
+                }
+    
+                var d = new Date(params.value * 1000);
+                return chunk.write(d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()));
+            },
+            loc : function(chunk, context, bodies, params) {
+                if (params.field)
+                    return chunk.write(i18n.localizeField(params.field, params.value));
+                return chunk;
+            }
+    
+        });
+    
+        return function(name, view, callback) {
+            dust.render(name, base.push(view), function(err, out) {
+                if (err)
+                    error(err);
+                else {
+                    if ( typeof callback == "function")
+                        callback(out);
+                    else
+                        callback.html(out);
+                }
+            });
+        }
+    };
 
     imageManager.init(function() {
         that.model.init(function() {
@@ -146,47 +188,4 @@ function Application(opts) {
             }
         }, error);
     }, error);
-}
-
-Application.prototype.createTemplate = function() {
-    // Create template engine
-    dust.onLoad = function(name, callback) {
-        // Load from template
-        $.get('templates/' + name + '.template', null, function(data) {
-            callback(null, data);
-        }, "text").error(function(error) {
-            callback(error);
-        });
-    };
-
-    var base = dust.makeBase({
-        date : function(chunk, context, bodies, params) {
-            function pad2(number) {
-                return (number < 10 ? '0' : '') + number
-            }
-
-            var d = new Date(params.value * 1000);
-            return chunk.write(d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()));
-        },
-        loc : function(chunk, context, bodies, params) {
-            if (params.field)
-                return chunk.write(i18n.localizeField(params.field, params.value));
-            return chunk;
-        }
-
-    });
-
-    return function(name, view, callback) {
-        dust.render(name, base.push(view), function(err, out) {
-            if (err)
-                error(err);
-            else {
-                if ( typeof callback == "function")
-                    callback(out);
-                else
-                    callback.html(out);
-            }
-        });
-    }
-
 }

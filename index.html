@@ -75,24 +75,22 @@
         <script>
 			isCordova = utils.parseQuery().cordova;
 			isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
+			
+			// Offline db only on iphone or if explicit
+			offlineDb = utils.parseQuery().offline || isCordova || isIPhone;
 
 			function onDeviceReady() {
 				$(function() {
 					configureDevice();
 
 					var opts = {
-						actionbar : window.actionbar
+						actionbar : window.actionbar,
+						localDb : offlineDb,
+						cacheImages : isCordova
 					};
-					if (!isCordova) {
-						opts.serverUrl = "/mwater/apiv2/";
-						opts.cacheImages = false;
-
-						// Offline db only on iphone
-						if (isIPhone)
-							opts.localDb = true;
-						else
-							opts.localDb = false;
-					}
+					// Uncomment next line to use local server
+					// opts.serverUrl = "/mwater/apiv2/";
+						
 					application = new Application(opts);
 				});
 			}
@@ -106,11 +104,11 @@
 				}
 			}
 
+            // If Cordova, wait for deviceready
 			if (isCordova) {
 				document.addEventListener("deviceready", onDeviceReady, false);
 			} else {
 				onDeviceReady();
-				//this is the browser
 			}
         </script>
     </head>
