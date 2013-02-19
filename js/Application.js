@@ -209,8 +209,23 @@ Application.launch = function() {
             };
             // Uncomment next line to use local server
             // opts.serverUrl = "/mwater/apiv2/";
-                
-            application = new Application(opts);
+            
+            /* BEGIN DEMO CODE */
+            // For demo purposes, use alternate server
+            opts.serverUrl = "http://data.mwater.co/mwater_demo/apiv2/";
+            
+            // For demo purposes, always use online API only unless Cordoba
+            opts.localDb = isCordova || utils.parseQuery().offline;
+            
+            // For demo purposes, always be logged in as demo user
+            var syncServer = new SyncServer(opts.serverUrl);
+            syncServer.login("demo", "demo", function() {
+                application = new Application(opts);
+            }, function() {
+                alert("Error logging in to server!");
+            });
+            /* END DEMO CODE */
+            
         });
     }
 
@@ -218,7 +233,7 @@ Application.launch = function() {
         // Handle special cases for not in Cordova
         if (!window.device || window.device.platform != "Android") {
             actionbar = new HtmlActionbar($("body"), {
-                defaultTitle : "mWater"
+                defaultTitle : "mWater Demo"
             });
         }
     }

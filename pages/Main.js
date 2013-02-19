@@ -44,8 +44,6 @@ pages.Main = function() {
         title : "Logout"
     }];
 
-    this.actionbarTitle = "mWater";
-
     var syncInProgress = false;
     var syncCancel = false;
 
