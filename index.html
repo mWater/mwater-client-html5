@@ -73,43 +73,7 @@
         <script src="pages/ExampleSurvey.js"></script>
 
         <script>
-			isCordova = utils.parseQuery().cordova;
-			isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
-			
-			// Offline db only on iphone or if explicit
-			offlineDb = utils.parseQuery().offline || isCordova || isIPhone;
-
-			function onDeviceReady() {
-				$(function() {
-					configureDevice();
-
-					var opts = {
-						actionbar : window.actionbar,
-						localDb : offlineDb,
-						cacheImages : isCordova
-					};
-					// Uncomment next line to use local server
-					// opts.serverUrl = "/mwater/apiv2/";
-						
-					application = new Application(opts);
-				});
-			}
-
-			function configureDevice() {
-				// Handle special cases for not in Cordova
-				if (!window.device || window.device.platform != "Android") {
-					actionbar = new HtmlActionbar($("body"), {
-						defaultTitle : "mWater"
-					});
-				}
-			}
-
-            // If Cordova, wait for deviceready
-			if (isCordova) {
-				document.addEventListener("deviceready", onDeviceReady, false);
-			} else {
-				onDeviceReady();
-			}
+            Application.launch();
         </script>
     </head>
     <body>

@@ -12,45 +12,7 @@
         <script src="files/templates.js"></script>
 
         <script>
-			isCordova = utils.parseQuery().cordova;
-			isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
-
-			function onDeviceReady() {
-				$(function() {
-					configureDevice();
-
-					var opts = {
-						actionbar : window.actionbar
-					};
-					if (!isCordova) {
-						opts.serverUrl = "http://data.mwater.co/mwater/apiv2/";
-						opts.cacheImages = false;
-
-						// Offline db only on iphone
-						if (isIPhone)
-							opts.localDb = true;
-						else
-							opts.localDb = false;
-					}
-					application = new Application(opts);
-				});
-			}
-
-			function configureDevice() {
-				// Handle special cases for not in Cordova
-				if (!window.device || window.device.platform != "Android") {
-					actionbar = new HtmlActionbar($("body"), {
-						defaultTitle : "mWater"
-					});
-				}
-			}
-
-			if (isCordova) {
-				document.addEventListener("deviceready", onDeviceReady, false);
-			} else {
-				onDeviceReady();
-				//this is the browser
-			}
+            Application.launch();
         </script>
     </head>
     <body>
