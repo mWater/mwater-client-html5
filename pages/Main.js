@@ -92,9 +92,13 @@ pages.Main = function() {
         });
     }
 
-    function syncLocationSuccess(position) {
-        // Determine which slices to get based on location
-        slices = geoslicing.getSlices(1, position.coords.latitude, position.coords.longitude);
+    // Synchronize with a position. If position is undefined, degrade gracefully
+    function syncWithPosition(position) {
+        // Determine which slices to get based on position
+        if (position)
+            slices = geoslicing.getSlices(1, position.coords.latitude, position.coords.longitude);
+        else
+            slices = [];
 
         // Always get own sources
         slices.push("source.created_by:" + page.syncServer.getUsername());
@@ -127,9 +131,11 @@ pages.Main = function() {
 
         // Replenish source codes first
         page.sourceCodeManager.replenishCodes(5, function() {
-            // Sync based on location
-            navigator.geolocation.getCurrentPosition(syncLocationSuccess, function(error) {
-                syncError("Unable to get location", error);
+            // Sync based on position
+            navigator.geolocation.getCurrentPosition(syncWithPosition, function(error) {
+                // Notify that unable to get position
+                page.$("#sync_progress").text("Synchronizing without location...").show();
+                syncWithPosition();
             });
         }, function(error) {
             syncError("Error connecting to server", error);
