@@ -9,7 +9,8 @@ pages.Sources = function() {
             page.$el.html(out);
 
             Pager.makeTappable(page.$("#table"), function(row) {
-                page.pager.loadPage("Source", [row.id]);
+                if (row.id.length>0)
+                    page.pager.loadPage("Source", [row.id]);
             });
             callback();
         });
@@ -21,18 +22,31 @@ pages.Sources = function() {
 
     this.refresh = function(query) {
         function displaySources(sources) {
-            page.$("#message_bar").hide();
             page.template("sources_rows", {
                 "rows" : sources.length > 0 ? sources : null,
             }, page.$("#table"));
         }
 
         // Get location
-        function locationSuccess(position) {
+        function queryByLocation(position) {
+            // Handle case of no position
+            if (!position) {
+                // Display unlocated sources if logged in
+                if (page.syncServer.loggedIn()) {
+                    page.model.queryUnlocatedSources(page.syncServer.getUsername(), query, function(rows) {
+                        displaySources(rows);
+                    }, page.error);
+                }
+                return;
+            }
+
+            page.$("#message_bar").hide();
+            
             // If lower accuracy, discard
             if (page.location && page.location.coords.accuracy < position.coords.accuracy)
                 return;
 
+            // Save location
             page.location = position;
 
             // Query sources
@@ -48,8 +62,12 @@ pages.Sources = function() {
         }
 
         function locationError(position) {
-            alert("Unable to determine location. Location is needed to display list of nearby sources.");
-            page.pager.closePage();
+            page.$("#message_text").text("Unable to get location: only unlocated sources displayed.");
+            page.$("#message_bar").show();
+
+            if (!page.syncServer.loggedIn()) {
+                alert("Unable to determine position and not logged in, so no sources shown.");
+            }
         }
 
         if (!page.location) {
@@ -57,23 +75,26 @@ pages.Sources = function() {
             page.$("#message_text").text("Obtaining location...");
             page.$("#message_bar").show();
             
+            // Immediately query unlocated sources
+            queryByLocation();
+            
             // Both have to fail to trigger close
             var locationError2 = _.after(2, locationError);
             
             // Get both high and low accuracy, as low is sufficient for initial display
-            navigator.geolocation.getCurrentPosition(locationSuccess, locationError2, {
-                maximumAge : 3600,
+            navigator.geolocation.getCurrentPosition(queryByLocation, locationError2, {
+                maximumAge : 3600*24,
                 timeout : 10000,
                 enableHighAccuracy : false
             });
 
-            navigator.geolocation.getCurrentPosition(locationSuccess, locationError2, {
+            navigator.geolocation.getCurrentPosition(queryByLocation, locationError2, {
                 maximumAge : 3600,
                 timeout : 30000,
                 enableHighAccuracy : true
             });
         } else
-            locationSuccess(page.location);
+            queryByLocation(page.location);
     };
 
     this.actionbarMenu = [{

@@ -7,6 +7,6 @@
 </tr>
 {:else}
 <tr>
-    <td> No nearby sources found. See the map for a global view. </td>
+    <td> See the map for a global view if no sources are found. </td>
 </tr>
 {/rows}

@@ -1,7 +1,6 @@
 <div>
     <div id="message_bar" class="alert alert-info">
-        <img src="images/ajax-loader.gif"/>
-        &nbsp;<span id="message_text"></span>
+		<span id="message_text"></span>
     </div>
     <table class="table" id="table">
     </table>
