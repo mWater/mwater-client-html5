@@ -29,7 +29,7 @@
 	<target name="wro4j">
 	    <java jar="wro4j-runner-1.6.1-jar-with-dependencies.jar" fork="true">
 	        <arg value="--preProcessors"/>
-	        <arg value="dustJs.template,googleClosureSimple"/>
+	        <arg value="dustJs.dust,googleClosureSimple"/>
 	        <arg value="--destinationFolder"/>
 	        <arg value="${build}/files"/>
 	        <arg value="-m"/>

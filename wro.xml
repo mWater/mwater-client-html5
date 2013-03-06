@@ -22,6 +22,6 @@
    </group>
   
   <group name='templates'>
-     <js>/templates/*.template</js>
+     <js>/templates/*.dust</js>
    </group>
 </groups>

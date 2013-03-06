@@ -88,7 +88,7 @@ function Application(opts) {
         // Create template engine
         dust.onLoad = function(name, callback) {
             // Load from template
-            $.get('templates/' + name + '.js.dust', null, function(data) {
+            $.get('templates/' + name + '.dust', null, function(data) {
                 callback(null, data);
             }, "text").error(function(error) {
                 callback(error);
