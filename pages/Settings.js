@@ -37,6 +37,17 @@ pages.Settings = function() {
                     }, page.error);
             });
             
+            page.$("#test_opencv").on("tap", function() {
+               return cordova.exec(
+		function(args) {
+			alert("success: "+args);
+		},
+		function(args) {
+		        alert("fail: "+ args);
+		},
+		'OpenCVActivity', 'launch', ["demo", ["param"], "OpenCV Demo"]);
+            });
+
             if (callback)
                 callback();
         });

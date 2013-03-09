@@ -22,4 +22,6 @@
     <div>
         Logged in as: <b>{username}</b>
     </div>
+    <button id="test_opencv" class="btn" type="button">Test OpenCV</button>
+
 </div>
