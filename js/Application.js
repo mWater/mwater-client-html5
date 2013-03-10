@@ -3,7 +3,7 @@ function Application(opts) {
     var version = "MWATERVERSION";
 
     // Setup options
-    opts = _.extend({
+    _.defaults(opts, {
         localDb : true,
         serverUrl : "http://data.mwater.co/mwater/apiv2/",
         cacheImages : true,
@@ -13,7 +13,7 @@ function Application(opts) {
         requireLogin : true,
         pageContainer : $("#page_container"),
         actionbar : undefined
-    }, opts);
+    });
 
     // Create sync server
     var syncServer = new SyncServer(opts.serverUrl);
@@ -192,11 +192,13 @@ function Application(opts) {
 
 /* Static launch funciton */
 Application.launch = function() {
-    isCordova = utils.parseQuery().cordova;
+    isCordova = utils.parseQuery().cordova == 'true';
     isIPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
     
     // Offline db only on iphone or if explicit
-    offlineDb = utils.parseQuery().offline || isCordova || isIPhone;
+    var offlineDb = utils.parseQuery().offline || isCordova || isIPhone;
+    
+    var serverUrl = utils.parseQuery().serverUrl;
 
     function onDeviceReady() {
         $(function() {
@@ -205,10 +207,9 @@ Application.launch = function() {
             var opts = {
                 actionbar : window.actionbar,
                 localDb : offlineDb,
-                cacheImages : isCordova
+                cacheImages : isCordova,
+                serverUrl : serverUrl
             };
-            // Uncomment next line to use local server
-            // opts.serverUrl = "/mwater/apiv2/";
                 
             application = new Application(opts);
         });

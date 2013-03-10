@@ -13,8 +13,14 @@
 	    <zip basedir="${releases}" destfile="${releases}/${build.version}.zip" includes="${build.version}/**"/>
     </target>
 
-    <target name="build" depends="wro4j,copyfiles,setversion">
-    </target> 
+    <target name="build" depends="wro4j,copyfiles,setversion,copyexternal">
+    </target>
+    
+    <target name="copyexternal" if="externaldest">
+	    <copy todir="${externaldest}">
+	        <fileset dir="${build}"/>
+	    </copy>
+    </target>
     	
 	<target name="copyfiles">
 	    <copy file="index_release.html" tofile="${build}/index.html"/>
