@@ -87,6 +87,7 @@ function CachedImageManager(syncServer, cachePath) {
 	}
 
 
+	/* Adds an image locally. Success is called with new FileEntry */
 	this.addImage = function(uri, photoUid, success, error) {
 		// TODO is this a url passed in or a file?
 		fileSystem.root.getFile(uri, null, function(fileEntry) {

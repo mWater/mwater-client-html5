@@ -14,10 +14,12 @@ pages.Test_6 = function(uid) {
 
 
 	this.saveResults = function() {
-		var r = _.pick(page.test.resultsData || {}, "autoEcoli", "autoTC", "autoAlgo");
+		var r = _.pick(page.test.resultsData || {}, "autoEcoli", "autoTC", "autoAlgo", "autoEcoliTNTC", "autoTCTNTC");
 
 		r.manualEcoli = parseInt($("input[name='ecoli']").val()) || undefined;
+		r.manualEcoliTNTC = $("#ecoli_tntc").hasClass('checked');
 		r.manualTC = parseInt($("input[name='tc']").val()) || undefined;
+		r.manualTCTNTC = $("#tc_tntc").hasClass('checked');
 
 		return r;
 	}
@@ -31,6 +33,8 @@ pages.Test_6 = function(uid) {
 
 			r.ecoli = r.manualEcoli || r.autoEcoli;
 			r.tc = r.manualTC || r.autoTC;
+			r.ecoliTNTC = (r.manualEcoliTNTC === undefined || r.manualEcoliTNTC === null) ? r.autoEcoliTNTC : r.manualEcoliTNTC;   
+			r.tcTNTC = (r.manualTCTNTC === undefined || r.manualTCTNTC === null) ? r.autoTCTNTC : r.manualTCTNTC;   
 		}
 		return view;
 	}

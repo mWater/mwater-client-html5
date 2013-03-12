@@ -8,8 +8,9 @@ pages.Settings = function() {
         var view = {
             offlineSourceCodes : page.sourceCodeManager.getNumberAvailableCodes(),
             username: page.syncServer.getUsername(),
-            appVersion : page.appVersion
-        }
+            appVersion : page.appVersion,
+            cordova: cordova.exec !== undefined
+        };
 
         page.template("settings", view, function(out) {
             page.$el.html(out);
@@ -37,15 +38,21 @@ pages.Settings = function() {
                     }, page.error);
             });
             
-            page.$("#test_opencv").on("tap", function() {
-               return cordova.exec(
-		function(args) {
-			alert("success: "+args);
-		},
-		function(args) {
-		        alert("fail: "+ args);
-		},
-		'OpenCVActivity', 'launch', ["demo", ["param"], "OpenCV Demo"]);
+            page.$("#test_ecplates").on("tap", function() {
+            	// Get camera image
+            	navigator.camera.getPicture(function(imgPath) {
+                    cordova.exec(
+             		   function(args) {
+ 							alert(JSON.stringify(args));
+ 						}, function(args) {
+ 							alert("error: " + args);
+ 						}, 'OpenCVActivity', 'launch', [ "ec-plate", [ imgPath ],
+ 								"EC Compact Dry Plate Counter" ]);
+            	}, function(message) {
+            		alert("Error getting picture: " + message);
+            	}, {
+          		    destinationType: Camera.DestinationType.FILE_URI 
+            	});
             });
 
             if (callback)

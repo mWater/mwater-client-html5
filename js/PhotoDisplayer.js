@@ -3,8 +3,9 @@
  * imageManager: ImageManager
  * model: MWater model
  * row: row containing "photo" field
- * error: called when error has occurred */
-function PhotoDisplayer(page, element, row, error) {
+ * error: called when error has occurred
+ * updated: called when photo is updated. Called with uid photo */
+function PhotoDisplayer(page, element, row, error, updated) {
 	function takePicture() {
 		if (!navigator.camera) {
 			alert("Camera not available");
@@ -31,6 +32,8 @@ function PhotoDisplayer(page, element, row, error) {
 				}, error, function() {
 					row.photo = photoUid;
 					displayPhoto();
+					if (updated)
+						updated(photoUid);
 				});
 			}, error);
 		}

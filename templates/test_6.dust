@@ -18,10 +18,13 @@
 
 {<edit_results}
     <form>
-        <label class="edit-label">E.Coli (blue colonies)</label>
+        <label class="edit-label">E.Coli (blue colonies):</label>
         <input name="ecoli" type="number" />
+        <div id="ecoli_tntc" class="checkbox">Too Many to Count</div>
+        <br/>
 
-        <label class="edit-label">TC (red colonies)</label>
+        <label class="edit-label">Total Coliform (red colonies):</label>
         <input name="tc" type="number" />
+        <div id="tc_tntc" class="checkbox">Too Many to Count</div>
     </form>
 {/edit_results}
