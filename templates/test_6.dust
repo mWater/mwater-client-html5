@@ -2,15 +2,21 @@
 
 {<display_results}
 	<div class="result">
-		E.Coli:
-		{?resultsData.ecoli}<span class="text-error"> {resultsData.ecoli} CFU</span>
+		E.Coli: &nbsp;
+		{?resultsData.ecoli}
+			<span class="text-error">
+				{?resultsData.ecoliTNTC}TNTC{:else}{resultsData.ecoli} CFU{/resultsData.ecoliTNTC}
+			</span>
 		{:else} <span class="text-success">Negative</span>
 		{/resultsData.ecoli}
 	</div>
 	
 	<div class="result">
-		Total Coliform:
-		{?resultsData.tc}<span> {resultsData.tc} CFU</span>
+		Total Coliform: &nbsp;
+		{?resultsData.tc}
+		<span>
+			{?resultsData.tcTNTC}TNTC{:else}{resultsData.tc} CFU{/resultsData.tcTNTC}
+		</span>
 		{:else} <span>Negative</span>
 		{/resultsData.tc}
 	</div>
