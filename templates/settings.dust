@@ -22,7 +22,5 @@
     <div>
         Logged in as: <b>{username}</b>
     </div>
-    {?cordova}
     <button id="test_ecplates" class="btn" type="button">Test EC Compact Dry Plate Counter</button>
-    {/cordova}
 </div>

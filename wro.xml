@@ -11,6 +11,7 @@
     <js>/js/libs/webintent.js</js>
     <js>/js/libs/actionbar.js</js>
     <js>/js/libs/camera.js</js>
+    <js>/js/libs/OpenCVActivity.js</js>
     <js>/bootstrap/js/bootstrap.min.js</js>
     <css>/bootstrap/css/bootstrap.min.css</css>
   </group>

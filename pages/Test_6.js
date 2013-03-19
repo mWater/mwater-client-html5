@@ -41,32 +41,35 @@ pages.Test_6 = function(uid) {
 
 	this.photoUpdated = function(photoUid) {
 		console.log("photo updated:" + photoUid);
-		if (cordova && cordova.exec) {
-			if (confirm("Automatically analyze image?")) {
-				page.imageManager.getImagePath(photoUid, function(path) {
-					console.log("Analyzing image: " + path);
-					// Call auto-analysis
-					cordova.exec(function(results) {
-						console.log("Got results: " + JSON.stringify(results));
-						
-						// Display error message
-						if (results.error) {
-							alert(results.error);
-							return;
-						}
-						
-						// Record results, deleting manual counts
-						page.updateResults({
-							"autoEcoli": results.ecoli, 
-							"autoTC": results.tc, 
-							"autoAlgo": results.algorithm
-						});
-					}, page.error, 'OpenCVActivity', 'launch', [ "ec-plate",
-							[ path ], "EC Compact Dry Plate" ]);
-
-				}, page.error);
-			}
-		}
+		
+        OpenCVActivity.processList(function(list) {
+        	if (_.contains(list, "ec-plate")) {
+    			if (confirm("Automatically analyze image?")) {
+    				page.imageManager.getImagePath(photoUid, function(path) {
+    					console.log("Analyzing image: " + path);
+    					// Call auto-analysis
+    					OpenCVActivity.process("ec-plate", [ path ], 
+							"EC Compact Dry Plate Counter", 
+							function(results) {
+    							console.log("Got results: " + JSON.stringify(results));
+	    						
+	    						// Display error message
+	    						if (results.error) {
+	    							alert(results.error);
+	    							return;
+	    						}
+    						
+	    						// Record results, deleting manual counts
+	    						page.updateResults({
+	    							"autoEcoli": results.ecoli, 
+	    							"autoTC": results.tc, 
+	    							"autoAlgo": results.algorithm
+	    						});
+    					}, page.error);
+    				}, page.error);
+    			}
+        	}
+        });
 	};
 
 	this.saveResults = function() {
