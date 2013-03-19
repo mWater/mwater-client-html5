@@ -51,7 +51,13 @@ pages.Settings = function() {
             		OpenCVActivity.process("ec-plate", [ imgPath ], 
         				"EC Compact Dry Plate Counter", 
         				function(args) {
- 							alert(JSON.stringify(args));
+	        				if (args.error) {
+	        					res = "Error: " + args.error;
+	        				}
+	        				else {
+	        					res = "E.Coli: " + args.ecoli + "\nTC: " + args.tc + "\nAlgorithm: " + args.algorithm;
+	        				}
+ 							alert(res);
  						}, function(args) {
  							alert("error: " + args);
  						});
