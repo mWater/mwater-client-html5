@@ -5,6 +5,7 @@ i18n = {
 			return i18n[key];
 		return key;
 	},
+	"sources.source_type.null" : "Unknown",
 	"sources.source_type.0" : "Piped into dwelling",
 	"sources.source_type.1" : "Piped into yard/plot",
 	"sources.source_type.2" : "Public tap or standpipe",

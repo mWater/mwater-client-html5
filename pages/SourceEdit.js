@@ -19,7 +19,7 @@ pages.SourceEdit = function(uid) {
 					update = {
 						name : page.$("#name").val(),
 						desc : page.$("#desc").val(),
-						source_type : parseInt(page.$("#source_type").val())
+						source_type : parseInt(page.$("#source_type").val()) || null
 					}
 
 					page.model.transaction(function(tx) {
