@@ -25,6 +25,10 @@ pages.Map = function(center) {
     function centerCurrentLocation() {
         navigator.geolocation.getCurrentPosition(function(position) {
             sourceMap.gmap.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+        }, function() {
+        	sourceMap.gmap.setCenter(new google.maps.LatLng(10.878332, 40.849609)); // Africa
+        	sourceMap.gmap.setZoom(4); // Zoomed out
+        	alert("Unable to get current location");
         });
     }
 
