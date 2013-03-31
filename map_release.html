@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>mWater Data Map</title>
+        <meta name="viewport" content="width=device-width, target-densitydpi=medium-dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <!--[if lt IE 9]>
+        <script>
+        alert("Browser not supported. Chrome, Safari, Firefox or Internet Explorer 9 required.");
+        </script>
+        <![endif]-->
+
+        <!-- Load map api -->
+        <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBxiWnrLHLqqaKtyg6-S0qvOquvcrwRJHM&sensor=true"></script>
+
+        <link rel="stylesheet" type="text/css" href="files/libs.css" />
+        <link rel="stylesheet" type="text/css" href="files/app.css" />
+        
+        <script src="files/libs.js"></script>
+        <script src="files/app.js"></script>
+        <script src="files/templates.js"></script>
+
+        <style>
+			html {
+				height: 100%
+			}
+			body {
+				height: 100%;
+				margin: 0;
+				padding: 0
+			}
+			div#content {
+				bottom: 0;
+				float: left;
+				overflow: hidden;
+				margin-top: 40px;
+				position: absolute;
+				top: 0;
+				width: 100%;
+			}
+			#map_canvas {
+				height: 100%;
+				width: 100%;
+			}
+			#page_container {
+				height: 100%;
+			}
+			#status_control {
+				background-color: #F9EDBE;
+				font-weight: bold;
+				padding: 5px;
+				margin-top: 10px;
+				border: 1px #F0C36D solid;
+				min-width: 100px;
+				text-align: center;
+				color: #222;
+				display: block;
+			}
+        </style>
+
+        <script>
+            var apiUrl = "http://data.mwater.co/mwater/apiv2/";
+            var infowindow = new google.maps.InfoWindow({
+                maxWidth : 410
+            });
+
+            var appOpts = {
+                serverUrl : apiUrl,
+                cacheImages : false,
+                anchorState : false,
+                localDb : false,
+            }
+
+            // Create sync server
+            var syncServer = new SyncServer(apiUrl);
+
+            function sourceClick(source, marker) {
+                var content = $($("#info_window").html());
+                var actionbar = new HtmlActionbar(content, {
+                    fixedTop : false
+                });
+
+                // Create info window
+                var opts = _.defaults({
+                    initialPage : "Source",
+                    initialPageArgs : [source.uid, false, true],
+                    pageContainer : content.find("#page_container"),
+                    requireLogin : false,
+                    actionbar : actionbar
+                }, appOpts);
+
+                var application = new Application(opts);
+
+                infowindow.setContent(content.get(0));
+                infowindow.open(sourceMap.gmap, marker);
+            }
+
+            var modal;
+            function displayModal(opts) {
+                // Display modal
+                modal = $($("#app_modal").html());
+
+                opts = _.defaults(opts, appOpts);
+                opts.pageContainer = modal.find("#page_container");
+
+                var application = new Application(opts);
+                modal.modal();
+            }
+
+            function closeModal() {
+                modal.modal('hide');
+            }
+
+            function addSource() {
+                hideMenu();
+                displayModal({
+                    initialPage : "NewSource",
+                    initialPageArgs : [{
+                        latitude : menu_latLng.lat(),
+                        longitude : menu_latLng.lng()
+                    },
+                    function(uid) {
+                        closeModal();
+                        if (uid) {
+                            // Refresh markers
+                            sourceMap.updateMarkers();
+                        }
+                    }]
+
+                });
+            }
+
+            function hideMenu() {
+                $('#menu').hide();
+            }
+
+            var menu_latLng;
+            function setupRightClickMenu() {
+                function showMenu(event) {
+                    menu_latLng = event.latLng;
+                    $('#menu').css({
+                        top : event.pixel.y + 40 + 'px',
+                        left : event.pixel.x + 'px'
+                    }).show();
+                }
+
+                // Handle right-click
+                google.maps.event.addListener(sourceMap.gmap, "rightclick", showMenu);
+
+                google.maps.event.addListener(sourceMap.gmap, 'click', hideMenu);
+                google.maps.event.addListener(sourceMap.gmap, 'dragstart', hideMenu);
+                google.maps.event.addListener(sourceMap.gmap, 'zoom_changed', hideMenu);
+            }
+
+            var sourceMap;
+            $(function() {
+                mapOptions = {
+                    zoom : 12,
+                    center : new google.maps.LatLng(-2.55, 32.95),
+                    mapTypeId : google.maps.MapTypeId.HYBRID
+                };
+
+                sourceMap = new SourceMap($("#map_canvas").get(0), apiUrl, mapOptions, sourceClick);
+                setupRightClickMenu();
+
+                function refreshLogin() {
+                    if (syncServer.loggedIn())
+                        $("#login_button").text("Logout " + syncServer.getUsername());
+                    else
+                        $("#login_button").text("Login");
+                }
+
+                refreshLogin();
+
+                $("#login_button").click(function() {
+                    if (syncServer.loggedIn()) {
+                        syncServer.logout(refreshLogin);
+                    } else {
+                        displayModal({
+                            requireLogin : false,
+                            initialPage : "Login",
+                            initialPageArgs : [
+                            function() {
+                                modal.modal('hide');
+                                refreshLogin();
+                            }]
+
+                        });
+                    }
+                });
+            });
+
+        </script>
+
+        <script id="info_window" type="text/html">
+            <div style="height: 500px; width: 400px; overflow-x:hidden; overflow-y: auto">
+            <div id="page_container"></div>
+            </div>
+        </script>
+
+        <script id="app_modal" type="text/html">
+            <div class="modal" role="dialog">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <div id="page_container"></div>
+            </div>
+        </script>
+    </head>
+
+    <body>
+        <ul id="menu" class="dropdown-menu">
+            <li>
+                <a tabindex="-1" href="#" onclick="addSource()">Add Water Source</a>
+            </li>
+        </ul>
+
+        <!-- Navbar ================================================== -->
+        <div class="navbar navbar-inverse" id="header">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- the next tag is necessary for bootstrap menus, do not remove -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+
+                    <style>
+						.navbar {
+							margin-bottom: 0px;
+						}
+						.navbar-inverse .navbar-inner {
+							border-radius: 0px;
+							/*background-color: #404040;*/
+						}
+                    </style>
+                    <a class="brand" href="#" style="background: url('images/mwater-small.png') no-repeat left center; padding-left: 55px;">mWater</a>
+                    <div id="navbar"></div>
+                    <div class="nav-collapse">
+                        <ul class="nav pull-right">
+                            <li>
+                                <a href="#" id="login_button">Login</a>
+                            </li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div><!--/top navbar -->
+        <div id="content">
+            <div id="map_canvas"></div>
+        </div>
+    </body>
+</html>

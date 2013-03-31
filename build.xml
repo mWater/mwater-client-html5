@@ -6,6 +6,30 @@
         <delete dir="${build}"/>
     </target>
     
+    <!-- Copies the web client to the correct server directory -->
+    <target name="publish_client" depends="build">
+        <scp 
+             todir="www-data@data.mwater.co:/home/www-data/web2py/applications/mwater/static/client"
+             keyfile="${user.home}/.ssh/mwater_server" 
+             trust="true">
+        	<fileset dir="${build}"/>
+       	</scp>
+        <scp 
+           	 file="map_release.html"
+             remoteTofile="www-data@data.mwater.co:/home/www-data/web2py/applications/mwater/static/client/map.html"
+             keyfile="${user.home}/.ssh/mwater_server" 
+             trust="true"/>
+    </target>
+
+    <!-- Copies the zip file that app clients download to update to the server -->
+    <target name="publish_appupdate" depends="release">
+         <scp 
+             file="${releases}/${build.version}.zip" 
+             todir="www-data@data.mwater.co:/home/www-data/web2py/applications/mwater/private/app_updates"
+             keyfile="${user.home}/.ssh/mwater_server" 
+             trust="true"/>
+    </target>
+    
     <target name="release" depends="incrementversion,build">
 	    <copy todir="${releases}/${build.version}">
 	        <fileset dir="${build}"/>
