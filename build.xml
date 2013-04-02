@@ -1,10 +1,49 @@
 <project name="mWater" default="build" basedir=".">
     <property name="build" location="build"/>
     <property name="releases" location="releases"/>
+    <property name="phonegap-assets" location="../phonegap-android-app/assets"/>
     
     <target name="clean">
         <delete dir="${build}"/>
     </target>
+    
+    <!-- Publishes to web client, all apps and future app releases -->
+    <target name="publish" depends="publish_client,publish_appupdate,publish_phonegap">
+    </target>
+    
+    <!-- Copies the web client to the correct server directory -->
+    <target name="publish_client" depends="build">
+        <scp 
+             todir="www-data@data.mwater.co:/home/www-data/web2py/applications/mwater/static/client"
+             keyfile="${user.home}/.ssh/mwater_server" 
+             trust="true">
+        	<fileset dir="${build}"/>
+       	</scp>
+        <scp 
+           	 file="map_release.html"
+             remoteTofile="www-data@data.mwater.co:/home/www-data/web2py/applications/mwater/static/client/map.html"
+             keyfile="${user.home}/.ssh/mwater_server" 
+             trust="true"/>
+    </target>
+
+    <!-- Copies the zip file that app clients download to update to the server -->
+    <target name="publish_appupdate" depends="release">
+         <scp 
+             file="${releases}/${build.version}.zip" 
+             todir="www-data@data.mwater.co:/home/www-data/web2py/applications/mwater/private/app_updates"
+             keyfile="${user.home}/.ssh/mwater_server" 
+             trust="true"/>
+    </target>
+
+	<!-- Copies the zip file that Android app ships with -->
+	<target name="publish_phonegap" depends="release">
+		<delete>
+			<fileset dir="${phonegap-assets}">
+				<include name="*.zip" />
+			</fileset>
+		</delete>
+		<copy file="${releases}/${build.version}.zip" todir="../phonegap-android-app/assets" />
+	</target>
     
     <target name="release" depends="incrementversion,build">
 	    <copy todir="${releases}/${build.version}">

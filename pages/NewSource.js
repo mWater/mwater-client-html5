@@ -15,7 +15,7 @@ pages.NewSource = function(location, result) {
 				code : code,
 				name : page.$("#name").val(),
 				desc : page.$("#desc").val(),
-				source_type : parseInt(page.$("#source_type").val()),
+				source_type : parseInt(page.$("#source_type").val()) || null,
 				created_by : page.syncServer.getUsername()
 			};
 			
@@ -50,9 +50,9 @@ pages.NewSource = function(location, result) {
 
 			page.$("#create_button").on("tap", function() {
 				if (page.$("#source_type").val() == "")
-					alert("Select source type");
-				else
-					createSource();
+					if (!confirm("Leave source type blank?"))
+						return;
+				createSource();
 			});
 			page.$("#cancel_button").on("tap", function() {
 				if (result)

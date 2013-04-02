@@ -1,6 +1,7 @@
 <div class="page">
     <label class="control-label">Source Type</label>
     <select id="source_type">
+        <option value=""></option>
         {#sourceTypes}
         <option value="{.}">{#loc field="sources.source_type" value=./}</option>
         {/sourceTypes}
