@@ -6,7 +6,7 @@
  * error: called when error has occurred
  * updated: called when photo is updated. Called with uid photo */
 function PhotoDisplayer(page, element, row, error, updated) {
-	function takePicture() {
+	this.takePicture = function() {
 		if (!navigator.camera) {
 			alert("Camera not available");
 			return;
@@ -68,10 +68,11 @@ function PhotoDisplayer(page, element, row, error, updated) {
 	displayPhoto();
 
 	// Listen for clicks to take photo
+	var that = this;
 	element.on("tap", function() {
 		if (row.photo && photoOk)
 			page.pager.loadPage("Photo", [row.photo]);
 		else
-			takePicture();
+			that.takePicture();
 	});
 }

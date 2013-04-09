@@ -1,6 +1,6 @@
 var pages = pages || {}
 
-/* EC Compact Dry Plate*/
+/* EC Compact Dry Plate */
 pages.Test_6 = function(uid) {
 	this.uid = uid;
 	var page = this;
@@ -14,6 +14,18 @@ pages.Test_6 = function(uid) {
 	}
 	
 	this.displayResults = function() {
+		// Show auto-count if present
+		page.$("#auto_count_button").hide();
+        OpenCVActivity.processList(function(list) {
+        	if (_.contains(list, "ec-plate")) {
+        		page.$("#auto_count_button").show();
+        	}
+        });
+        
+        page.$("#auto_count_button").on("tap", function() {
+        	takePhotoAndAnalyse();
+        });
+		
 		if (page.test.resultsData) {
 			page.$("input[name='ecoli']").val(page.test.resultsData.ecoli);
 			page.$("input[name='tc']").val(page.test.resultsData.tc);
@@ -38,6 +50,42 @@ pages.Test_6 = function(uid) {
 		});
 		updateEditResults();
 	};
+	
+	// Auto analyzes photo
+	function performAutoAnalysis(photoUid) {
+		page.imageManager.getImagePath(photoUid, function(path) {
+			console.log("Analyzing image: " + path);
+			// Call auto-analysis
+			OpenCVActivity.process("ec-plate", [ path ], 
+				"EC Compact Dry Plate Counter", 
+				function(results) {
+					console.log("Got results: " + JSON.stringify(results));
+					
+					// Display error message
+					if (results.error) {
+						alert(results.error);
+						return;
+					}
+				
+					// Record results, deleting manual counts
+					page.updateResults({
+						"autoEcoli": results.ecoli, 
+						"autoTC": results.tc, 
+						"autoAlgo": results.algorithm
+					});
+			}, page.error);
+		}, page.error);
+	}
+	
+	// Takes a picture if none present, otherwise re-analyse
+	function takePhotoAndAnalyse() {
+		if (page.test.photo) {
+			performAutoAnalysis(page.test.photo);
+		}
+		else {
+			page.photoDisplayer.takePicture();
+		}
+	}
 
 	this.photoUpdated = function(photoUid) {
 		console.log("photo updated:" + photoUid);
@@ -45,28 +93,7 @@ pages.Test_6 = function(uid) {
         OpenCVActivity.processList(function(list) {
         	if (_.contains(list, "ec-plate")) {
     			if (confirm("Automatically analyze image?")) {
-    				page.imageManager.getImagePath(photoUid, function(path) {
-    					console.log("Analyzing image: " + path);
-    					// Call auto-analysis
-    					OpenCVActivity.process("ec-plate", [ path ], 
-							"EC Compact Dry Plate Counter", 
-							function(results) {
-    							console.log("Got results: " + JSON.stringify(results));
-	    						
-	    						// Display error message
-	    						if (results.error) {
-	    							alert(results.error);
-	    							return;
-	    						}
-    						
-	    						// Record results, deleting manual counts
-	    						page.updateResults({
-	    							"autoEcoli": results.ecoli, 
-	    							"autoTC": results.tc, 
-	    							"autoAlgo": results.algorithm
-	    						});
-    					}, page.error);
-    				}, page.error);
+    				performAutoAnalysis(photoUid);
     			}
         	}
         });
@@ -94,6 +121,10 @@ pages.Test_6 = function(uid) {
 			r.ecoliTNTC = r.ecoli == tntc;
 			r.tc = r.manualTC || r.autoTC;
 			r.tcTNTC = r.tc == tntc;
+			
+			r.ecoliPresent = r.ecoli > 0;
+			r.tcPresent = r.tc > 0;
+			
 		}
 		return view;
 	}

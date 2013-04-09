@@ -3,26 +3,27 @@
 {<display_results}
 	<div class="result">
 		E.Coli: &nbsp;
-		{?resultsData.ecoli}
+		{?resultsData.ecoliPresent}
 			<span class="text-error">
 				{?resultsData.ecoliTNTC}TNTC{:else}{resultsData.ecoli} CFU{/resultsData.ecoliTNTC}
 			</span>
 		{:else} <span class="text-success">Negative</span>
-		{/resultsData.ecoli}
+		{/resultsData.ecoliPresent}
 	</div>
 	
 	<div class="result">
 		Total Coliform: &nbsp;
-		{?resultsData.tc}
+		{?resultsData.tcPresent}
 		<span>
 			{?resultsData.tcTNTC}TNTC{:else}{resultsData.tc} CFU{/resultsData.tcTNTC}
 		</span>
 		{:else} <span>Negative</span>
-		{/resultsData.tc}
+		{/resultsData.tcPresent}
 	</div>
  {/display_results}
 
 {<edit_results}
+	<button id="auto_count_button" type="button" class="btn">Automatic Count</button> 
     <form>
         <label class="edit-label">E.Coli (blue colonies):</label>
         <input name="ecoli" type="number" />

@@ -25,7 +25,7 @@ pages.Test = function() {
 		var page = this;
 
 		// Display photo
-		new PhotoDisplayer(page, page.$("#photo"), page.test, page.error, page.photoUpdated);
+		this.photoDisplayer = new PhotoDisplayer(page, page.$("#photo"), page.test, page.error, page.photoUpdated);
 
 		if (!page.auth.canEdit(page.test)) {
 			page.$("#edit_results_button, #record_results_button, #edit_notes_button").attr("disabled", true);
@@ -137,6 +137,11 @@ pages.Test = function() {
 			}
 		}
 		if (id == "deletePhoto") {
+			if (!page.test.photo) {
+				alert("No photo present");
+				return;
+			}
+			
 			if (!page.auth.canEdit(page.test)) {
 				alert("Insufficient permissions");
 				return;
