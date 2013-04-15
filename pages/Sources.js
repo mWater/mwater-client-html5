@@ -31,9 +31,9 @@ pages.Sources = function() {
         function queryByLocation(position) {
             // Handle case of no position
             if (!position) {
-                // Display unlocated sources if logged in
+                // Display my sources if logged in
                 if (page.syncServer.loggedIn()) {
-                    page.model.queryUnlocatedSources(page.syncServer.getUsername(), query, function(rows) {
+                    page.model.queryMySources(page.syncServer.getUsername(), query, function(rows) {
                         displaySources(rows);
                     }, page.error);
                 }
@@ -62,7 +62,7 @@ pages.Sources = function() {
         }
 
         function locationError(position) {
-            page.$("#message_text").text("Unable to get location: only unlocated sources displayed.");
+            page.$("#message_text").text("Unable to get location: only sources you created displayed.");
             page.$("#message_bar").show();
 
             if (!page.syncServer.loggedIn()) {

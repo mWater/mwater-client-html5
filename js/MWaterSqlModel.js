@@ -150,6 +150,16 @@ function MWaterSqlModel(db, syncDb) {
         query(sql, params, new Row("sources"), success, error);
     };
 
+    this.queryMySources = function(createdBy, search, success, error) {
+    	var where = " WHERE created_by = ?";
+        where += search ? " AND (code LIKE ? OR name LIKE ? OR desc LIKE ?)" : "";
+        var sql = "SELECT * FROM sources" + where + " ORDER BY uid";
+        var params = [createdBy];
+        if (search)
+            params.push(search + "%", search + "%", search + "%");
+        query(sql, params, new Row("sources"), success, error);
+    };
+
     this.queryUnlocatedSources = function(createdBy, search, success, error) {
     	var where = " WHERE created_by = ? AND latitude IS NULL";
         where += search ? " AND (code LIKE ? OR name LIKE ? OR desc LIKE ?)" : "";

@@ -39,6 +39,28 @@ function ModelTests(model, resetTests) {
 		});
 	});
 
+	asyncTest("Insert source and query mine", function() {
+		resetTests(function() {
+			model.transaction(function(tx) {
+				model.insertRow(tx, "sources", {
+					uid : "uid1",
+					code : "code1",
+					created_by : "test"
+				});
+				model.insertRow(tx, "sources", {
+					uid : "uid2",
+					code : "code2",
+					created_by : "test2"
+				});
+			}, error, function() {
+				model.queryMySources("test", "", function(rows) {
+					equal(rows.length, 1);
+					start();
+				});
+			});
+		});
+	});
+	
 	asyncTest("queryNearby location", function() {
 		resetTests(function() {
 			model.transaction(function(tx) {

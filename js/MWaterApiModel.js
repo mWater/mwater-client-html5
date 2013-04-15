@@ -77,6 +77,20 @@ function MWaterApiModel(syncServer) {
 		}).error(error);
 	}
 
+	this.queryMySources = function(createdBy, search, success, error) {
+		$.get(makeUrl("sources"), {
+			created_by : createdBy
+		}, function(data) {
+			var src = data.sources;
+			if (search)
+				src = _.filter(src, function(s) {
+					return (s.name && s.name.indexOf(search) != -1) || (s.code && s.code.indexOf(search) != -1);
+				});
+			rowifyArray(src, "sources");
+			success(src);
+		}).error(error);
+
+	}
 
 	this.queryUnlocatedSources = function(createdBy, search, success, error) {
 		$.get(makeUrl("sources"), {
