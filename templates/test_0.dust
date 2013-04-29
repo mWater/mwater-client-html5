@@ -28,7 +28,7 @@
         <label class="edit-label">E.Coli (blue colonies)</label>
         <input name="ecoli" type="number" />
 
-        <label class="edit-label">TC (red colonies with gas)</label>
+        <label class="edit-label">Total Coliform (red colonies with gas)</label>
         <input name="tc" type="number" />
 
         <label class="edit-label">Other (red colonies w/o gas)</label>

@@ -2,11 +2,30 @@ var pages = pages || {}
 
 /* Displays details of a test */
 pages.Test = function() {
+	// Updates results in the row and updates the display
+	this.updateResults = function(results) {
+		var page = this;
+
+		// Convert to json and save, marking test as read
+		var update = {
+			results : JSON.stringify(results)
+		}
+
+		if (!page.test.read_on)
+			update.read_on = Math.floor(new Date().getTime() / 1000);
+
+		page.model.transaction(function(tx) {
+			page.model.updateRow(tx, page.test, update);
+		}, page.error, function() {
+			page.refresh();
+		});
+	}
+	
 	this.displayTest = function() {
 		var page = this;
 
 		// Display photo
-		new PhotoDisplayer(page, page.$("#photo"), page.test, page.error);
+		this.photoDisplayer = new PhotoDisplayer(page, page.$("#photo"), page.test, page.error, page.photoUpdated);
 
 		if (!page.auth.canEdit(page.test)) {
 			page.$("#edit_results_button, #record_results_button, #edit_notes_button").attr("disabled", true);
@@ -25,20 +44,8 @@ pages.Test = function() {
 			// Allow cancelling
 			if (!results)
 				return;
-
-			// Convert to json and save, marking test as read
-			var update = {
-				results : JSON.stringify(results)
-			}
-
-			if (!page.test.read_on)
-				update.read_on = Math.floor(new Date().getTime() / 1000);
-
-			page.model.transaction(function(tx) {
-				page.model.updateRow(tx, page.test, update);
-			}, page.error, function() {
-				page.refresh();
-			});
+			
+			page.updateResults(results);
 		});
 
 		// Listen for cancel results
@@ -66,6 +73,9 @@ pages.Test = function() {
 
 	}
 
+	this.photoUpdated = function() {
+		// Default does nothing
+	}
 
 	this.activate = function() {
 		this.refresh();
@@ -100,10 +110,13 @@ pages.Test = function() {
 	}
 
 
-	this.actionbarMenu = [{
+	this.actionbarMenu = [ {
 		id : "delete",
-		title : "Delete",
-	}];
+		title : "Delete Test",
+	}, {
+		id : "deletePhoto",
+		title : "Delete Photo",
+	} ];
 
 	this.actionbarTitle = "Test";
 
@@ -120,6 +133,25 @@ pages.Test = function() {
 					page.model.deleteRow(tx, page.test);
 				}, page.error, function() {
 					page.pager.closePage();
+				});
+			}
+		}
+		if (id == "deletePhoto") {
+			if (!page.test.photo) {
+				alert("No photo present");
+				return;
+			}
+			
+			if (!page.auth.canEdit(page.test)) {
+				alert("Insufficient permissions");
+				return;
+			}
+
+			if (confirm("Permanently delete photo?")) {
+				page.model.transaction(function(tx) {
+					page.model.updateRow(tx, page.test, { "photo": null });
+				}, page.error, function() {
+					page.refresh();
 				});
 			}
 		}

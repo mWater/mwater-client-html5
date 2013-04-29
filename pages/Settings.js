@@ -8,8 +8,8 @@ pages.Settings = function() {
         var view = {
             offlineSourceCodes : page.sourceCodeManager.getNumberAvailableCodes(),
             username: page.syncServer.getUsername(),
-            appVersion : page.appVersion
-        }
+            appVersion : page.appVersion,
+        };
 
         page.template("settings", view, function(out) {
             page.$el.html(out);
@@ -37,6 +37,37 @@ pages.Settings = function() {
                     }, page.error);
             });
             
+            // Show EC plates test if available
+            page.$("#test_ecplates").hide();
+            OpenCVActivity.processList(function(list) {
+            	if (_.contains(list, "ec-plate")) {
+            		page.$("#test_ecplates").show();            		
+            	}
+            });
+            
+            page.$("#test_ecplates").on("tap", function() {
+            	// Get camera image
+            	navigator.camera.getPicture(function(imgPath) {
+            		OpenCVActivity.process("ec-plate", [ imgPath ], 
+        				"EC Compact Dry Plate Counter", 
+        				function(args) {
+	        				if (args.error) {
+	        					res = "Error: " + args.error;
+	        				}
+	        				else {
+	        					res = "E.Coli: " + args.ecoli + "\nTC: " + args.tc + "\nAlgorithm: " + args.algorithm;
+	        				}
+ 							alert(res);
+ 						}, function(args) {
+ 							alert("error: " + args);
+ 						});
+            	}, function(message) {
+            		alert("Error getting picture: " + message);
+            	}, {
+          		    destinationType: Camera.DestinationType.FILE_URI 
+            	});
+            });
+
             if (callback)
                 callback();
         });

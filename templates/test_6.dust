@@ -1,0 +1,37 @@
+{>test/}
+
+{<display_results}
+	<div class="result">
+		E.Coli: &nbsp;
+		{?resultsData.ecoliPresent}
+			<span class="text-error">
+				{?resultsData.ecoliTNTC}TNTC{:else}{resultsData.ecoli} CFU{/resultsData.ecoliTNTC}
+			</span>
+		{:else} <span class="text-success">Negative</span>
+		{/resultsData.ecoliPresent}
+	</div>
+	
+	<div class="result">
+		Total Coliform: &nbsp;
+		{?resultsData.tcPresent}
+		<span>
+			{?resultsData.tcTNTC}TNTC{:else}{resultsData.tc} CFU{/resultsData.tcTNTC}
+		</span>
+		{:else} <span>Negative</span>
+		{/resultsData.tcPresent}
+	</div>
+ {/display_results}
+
+{<edit_results}
+	<button id="auto_count_button" type="button" class="btn">Automatic Count</button> 
+    <form>
+        <label class="edit-label">E.Coli (blue colonies):</label>
+        <input name="ecoli" type="number" />
+        <div id="ecoli_tntc" class="checkbox">Too Numerous to Count</div>
+        <br/>
+
+        <label class="edit-label">Total Coliform (red colonies):</label>
+        <input name="tc" type="number" />
+        <div id="tc_tntc" class="checkbox">Too Numerous to Count</div>
+    </form>
+{/edit_results}

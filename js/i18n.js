@@ -29,6 +29,7 @@ i18n = {
 	"tests.test_type.3" : "UNC Compartmentalized Bag",
 	"tests.test_type.4" : "Chlorine",
 	"tests.test_type.5" : "General Microbiology",
+	"tests.test_type.6" : "EC Compact Dry Plate",
 	
 	"tests.test_type.5.type.ecoli" : "E. coli",
 	"tests.test_type.5.type.total_coliforms" : "Total Coliforms",

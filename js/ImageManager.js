@@ -82,11 +82,26 @@ function CachedImageManager(syncServer, cachePath) {
 
 	/* Gets an image, calling success with url */
 	this.getImageUrl = function(imageUid, success, error) {
-		console.log("displayImage:" + imageUid);
+		console.log("getImageUrl:" + imageUid);
 		loadOrDownloadImage([this.cachePath + "/cached/original", this.cachePath + "/pending/original"], syncServer.getImageUrl(imageUid), this.cachePath + "/cached/original", imageUid, success, error);
 	}
 
+	/* Gets an image, calling success with local path */
+	this.getImagePath = function(imageUid, success, error) {
+		console.log("getImagePath:" + imageUid);
+		this.getImageUrl(imageUid, function(url) {
+			window.resolveLocalFileSystemURI(url, function(fileEntry) {
+				// Strip file:// if present (Cordova bug)
+				var path = fileEntry.fullPath;
+				if (path.lastIndexOf("file://", 0) === 0)
+					path = path.substring(7);
+				console.log("resolved to: " + path);
+				success(path);
+			}, error);
+		}, error);
+	};
 
+	/* Adds an image locally. Success is called with new FileEntry */
 	this.addImage = function(uri, photoUid, success, error) {
 		// TODO is this a url passed in or a file?
 		fileSystem.root.getFile(uri, null, function(fileEntry) {

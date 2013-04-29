@@ -19,6 +19,9 @@
 		<li>
 			<a href="#" id="test_2">{#loc field="tests.test_type" value="2"/}</a>
 		</li>
+		<li>
+			<a href="#" id="test_6">{#loc field="tests.test_type" value="6"/}</a>
+		</li>
 	</ul>
 	<h5>Other</h5>
 	<ul class="nav nav-tabs nav-stacked">
