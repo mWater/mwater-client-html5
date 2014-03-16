@@ -1,3 +1,9 @@
+# THIS VERSION IS NOW SUPERCEDED BY VERSION 3
+
+See https://github.com/mWater/app-v3
+
+-------
+
 Copyright 2012 mWater
 
 This program is free software: you can redistribute it and/or modify
